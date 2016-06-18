@@ -15,8 +15,8 @@ import site
 site.addsitedir('/home/arpan/Envs/eventualvenv/lib/python2.7/site-packages')
 
 # Add the app's directory to the PYTHONPATH
-sys.path.append('/home/arpan/eventual')
-sys.path.append('/home/arpan/eventual/eventual')
+sys.path.append('/eventual')
+sys.path.append('/eventual/eventual')
 
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'eventual.settings')
 
