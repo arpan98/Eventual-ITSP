@@ -31,12 +31,13 @@ def create(request):
     return HttpResponse("Na ho paega")
 
 def search(request):
-    if request.method == 'GET':
+    if request.method == 'POST':
+        json_dict = json.loads(request.body)
         params = {}
-        for key, value in request.GET.iteritems():
+        for key, value in json_dict.iteritems():
             params[key] = urllib.unquote(value).replace('+', ' ')
         event = EventData.objects.filter(
-                    username=params["username"],
+                    # username=params["username"],
                     title=params["title"],
                     description=params["description"],
                     location=params["location"],
@@ -51,3 +52,4 @@ def search(request):
                                          ),
                     )
         return HttpResponse(len(event))
+    return HttpResponse("Nothing here")
