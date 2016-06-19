@@ -1,14 +1,13 @@
 from django.http import HttpResponse
 from django.shortcuts import render
 from website.models import EventData
-from django.views.decorators.csrf import csrf_exempt
 import json
 import datetime
+import urllib
 
 def homepage(request):
     return render(request, 'homepage.html', {})
 
-@csrf_exempt
 def create(request):
     if request.method == 'POST':
         json_dict = json.loads(request.body)
@@ -30,3 +29,25 @@ def create(request):
         event.save()
         return HttpResponse(event.startdate)
     return HttpResponse("Na ho paega")
+
+def search(request):
+    if request.method == 'GET':
+        params = {}
+        for key, value in request.GET.iteritems():
+            params[key] = urllib.unquote(value).replace('+', ' ')
+        event = EventData.objects.filter(
+                    username=params["username"],
+                    title=params["title"],
+                    description=params["description"],
+                    location=params["location"],
+                    startdate=datetime.datetime.strptime(params["startdate"], '%d/%m/%Y'),
+                    enddate=datetime.datetime.strptime(params["enddate"], '%d/%m/%Y'),
+                    allday=params["allday"],
+                    starttime=datetime.time(int(params["starttime"].split(':')[0]),
+                                            int(params["starttime"].split(':')[1])
+                                           ),
+                    endtime=datetime.time(int(params["endtime"].split(':')[0]),
+                                          int(params["endtime"].split(':')[1])
+                                         ),
+                    )
+        return HttpResponse(len(event))
