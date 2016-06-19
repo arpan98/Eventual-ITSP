@@ -1,0 +1,304 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/relativelayout"
+    android:fillViewport="true"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:context="com.nihal.arpan.eventual.SearchResult"
+    tools:showIn="@layout/activity_search_result"
+    android:background="#b6e4fa">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <EditText
+            android:layout_width="200dp"
+            android:layout_height="wrap_content"
+            android:id="@+id/title"
+            android:layout_marginTop="15dp"
+            android:clickable="false"
+            android:enabled="true"
+            android:inputType="none"
+            android:editable="false"
+            android:layout_below="@+id/eventinfoheading"
+            android:layout_alignParentEnd="true" />
+
+        <EditText
+            android:layout_width="200dp"
+            android:layout_height="wrap_content"
+            android:inputType="none"
+            android:ems="10"
+            android:id="@+id/description"
+            android:layout_below="@+id/title"
+            android:layout_alignEnd="@+id/title"
+            android:layout_marginTop="20dp"
+            android:clickable="false"
+            android:enabled="true"
+            android:editable="false" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="Event Information"
+            android:id="@+id/eventinfoheading"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            android:textSize="28dp"
+            android:clickable="false" />
+
+        <Switch
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/allday"
+            android:layout_marginTop="39dp"
+            android:checked="false"
+            android:clickable="false"
+            android:layout_below="@+id/description"
+            android:layout_alignStart="@+id/description" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="18sp"
+            android:text="Title"
+            android:id="@+id/titletv"
+            android:layout_above="@+id/description"
+            android:layout_toStartOf="@+id/title"
+            android:layout_marginRight="10dp"
+            android:clickable="false" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="18sp"
+            android:text="Description"
+            android:id="@+id/descriptiontv"
+            android:layout_above="@+id/allday"
+            android:layout_alignEnd="@+id/titletv"
+            android:clickable="false" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="18sp"
+            android:text="All Day"
+            android:id="@+id/alldaytv"
+            android:layout_alignBottom="@+id/allday"
+            android:layout_alignEnd="@+id/descriptiontv"
+            android:clickable="false" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="18sp"
+            android:text="Start Date"
+            android:id="@+id/startdatetv"
+            android:layout_marginTop="35dp"
+            android:layout_below="@+id/alldaytv"
+            android:layout_alignParentStart="true"
+            android:layout_toStartOf="@+id/allday"
+            android:gravity="center_horizontal"
+            android:clickable="false" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="18sp"
+            android:text="Start Time"
+            android:id="@+id/starttimetv"
+            android:layout_toEndOf="@+id/startdatetv"
+            android:layout_alignBottom="@+id/startdatetv"
+            android:layout_alignTop="@+id/startdatetv"
+            android:layout_alignParentEnd="true"
+            android:gravity="center_horizontal"
+            android:clickable="false" />
+
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:id="@+id/startdatedisplay"
+            android:layout_below="@+id/startdatetv"
+            android:layout_marginTop="5dp"
+            android:layout_alignEnd="@+id/alldaytv"
+            android:layout_alignParentStart="true"
+            android:gravity="center_horizontal"
+            android:clickable="false"
+            android:enabled="true"
+            android:editable="false" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:id="@+id/starttimedisplay"
+            android:layout_alignTop="@+id/startdatedisplay"
+            android:layout_alignStart="@+id/starttimetv"
+            android:layout_marginLeft="10dp"
+            android:layout_alignEnd="@+id/description"
+            android:gravity="center_horizontal"
+            android:clickable="false"
+            android:enabled="true"
+            android:editable="false" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="18sp"
+            android:text="End Date"
+            android:id="@+id/enddatetv"
+            android:layout_below="@+id/startdatedisplay"
+            android:layout_alignParentStart="true"
+            android:layout_marginTop="20dp"
+            android:layout_alignEnd="@+id/startdatetv"
+            android:gravity="center_horizontal"
+            android:clickable="false" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="18sp"
+            android:text="End Time"
+            android:id="@+id/endtimetv"
+            android:layout_alignBottom="@+id/enddatetv"
+            android:layout_alignStart="@+id/starttimetv"
+            android:layout_alignEnd="@+id/starttimedisplay"
+            android:gravity="center_horizontal"
+            android:clickable="false" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="18sp"
+            android:layout_below="@+id/enddatetv"
+            android:layout_marginTop="5dp"
+            android:layout_alignParentStart="true"
+            android:layout_alignEnd="@+id/enddatetv"
+            android:gravity="center_horizontal"
+            android:id="@+id/enddatedisplay"
+            android:clickable="false"
+            android:enabled="true"
+            android:editable="false" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="18sp"
+            android:id="@+id/endtimedisplay"
+            android:layout_below="@+id/endtimetv"
+            android:layout_marginTop="5dp"
+            android:layout_alignEnd="@+id/endtimetv"
+            android:layout_alignStart="@+id/endtimetv"
+            android:gravity="center_horizontal"
+            android:clickable="false"
+            android:enabled="true"
+            android:editable="false" />
+
+        <EditText
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/location"
+            android:layout_below="@+id/endtimedisplay"
+            android:layout_marginTop="20dp"
+            android:layout_alignEnd="@+id/endtimedisplay"
+            android:layout_alignStart="@+id/title"
+            android:clickable="false"
+            android:enabled="true"
+            android:inputType="none"
+            android:editable="false" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="18sp"
+            android:text="Location"
+            android:id="@+id/locationtv"
+            android:layout_alignBottom="@+id/location"
+            android:layout_alignEnd="@+id/titletv"
+            android:clickable="false" />
+
+        <Button
+            android:id="@+id/shareqr"
+            android:paddingLeft="5dp"
+            android:paddingRight="10dp"
+            android:drawableLeft="@drawable/ic_share_white_24dp"
+            android:text="Share QR Code"
+            android:textColor="#FFFFFF"
+            android:textSize="13sp"
+            android:layout_width="150dp"
+            android:layout_height="40dp"
+            android:background="@drawable/buttonshape"
+            android:shadowColor="#6B6B63"
+            android:shadowDx="0"
+            android:shadowDy="0"
+            android:shadowRadius="5"
+            android:layout_below="@id/location"
+            android:layout_marginTop="10dp"
+            android:layout_alignParentStart="true"
+            android:onClick="ShareQR" />
+
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/imageView1"
+            android:contentDescription="QR Code"
+            android:layout_below="@+id/shareqr"
+            android:layout_marginTop="10dp"
+            android:layout_alignParentStart="true" />
+
+        <Button
+            android:id="@+id/sharelink"
+            android:paddingLeft="5dp"
+            android:drawableLeft="@drawable/ic_share_white_24dp"
+            android:text="Share Link"
+            android:textColor="#FFFFFF"
+            android:textSize="13sp"
+            android:layout_width="130dp"
+            android:layout_height="40dp"
+            android:background="@drawable/buttonshape"
+            android:shadowColor="#6B6B63"
+            android:shadowDx="0"
+            android:shadowDy="0"
+            android:shadowRadius="5"
+            android:layout_alignTop="@+id/shareqr"
+            android:layout_alignParentEnd="true"
+            android:onClick="ShareLink" />
+
+
+        <Button
+            android:id="@+id/add"
+            android:paddingLeft="10dp"
+            android:drawableLeft="@drawable/ic_event_available_white_48dp"
+            android:text="Add to Calendar"
+            android:textColor="#FFFFFF"
+            android:textSize="18sp"
+            android:layout_width="250dp"
+            android:layout_height="50dp"
+            android:background="@drawable/buttonshape"
+            android:shadowColor="#6B6B63"
+            android:shadowDx="0"
+            android:shadowDy="0"
+            android:shadowRadius="5"
+            android:layout_below="@id/imageView1"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="10dp"
+            android:onClick="add" />
+
+
+    </RelativeLayout>
+
+</ScrollView>
+
+

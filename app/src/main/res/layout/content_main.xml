@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:context="com.nihal.arpan.eventual.MainActivity"
+    android:background="#b6e4fa"
+    tools:showIn="@layout/activity_main">
+
+    <Button
+        android:layout_width="1dp"
+        android:layout_height="1dp"
+        android:text="Add Event"
+        android:id="@+id/add"
+        android:visibility="invisible"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginBottom="62dp"
+        android:enabled="false" />
+
+    <Button
+        android:id="@+id/scan_button"
+        android:paddingLeft="10dp"
+        android:paddingRight="30dp"
+        android:text="Scan QR Code"
+        android:drawableLeft="@drawable/qrscanicon"
+        android:textColor="#FFFFFF"
+        android:textSize="20sp"
+        android:layout_width="270dp"
+        android:layout_height="60dp"
+        android:background="@drawable/buttonshape"
+        android:shadowColor="#6B6B63"
+        android:shadowDx="0"
+        android:shadowDy="0"
+        android:shadowRadius="5"
+        android:layout_below="@+id/search_button"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="20dp"
+        android:onClick="onQRButtonClicked" />
+
+    <Button
+        android:id="@+id/make_button"
+        android:paddingLeft="10dp"
+        android:drawableLeft="@drawable/ic_event_available_white_48dp"
+        android:text="Make New Event"
+        android:textColor="#FFFFFF"
+        android:textSize="20sp"
+        android:layout_width="270dp"
+        android:layout_height="60dp"
+        android:background="@drawable/buttonshape"
+        android:shadowColor="#6B6B63"
+        android:shadowDx="0"
+        android:shadowDy="0"
+        android:shadowRadius="5"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="250dp"
+        android:onClick="onMakeNewEventClicked" />
+
+    <Button
+        android:id="@+id/search_button"
+        android:paddingLeft="10dp"
+        android:paddingRight="30dp"
+        android:drawableLeft="@drawable/ic_search_white_48dp"
+        android:text="Search Event"
+        android:textColor="#FFFFFF"
+        android:textSize="20sp"
+        android:layout_width="270dp"
+        android:layout_height="60dp"
+        android:background="@drawable/buttonshape"
+        android:shadowColor="#6B6B63"
+        android:shadowDx="0"
+        android:shadowDy="0"
+        android:shadowRadius="5"
+        android:layout_below="@+id/make_button"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="20dp"
+        android:onClick="onSearchEventsClicked" />
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/imageView"
+        android:src="@drawable/eventualweb"
+        android:layout_alignEnd="@+id/add"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:adjustViewBounds="true"/>
+
+    <ImageView
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:id="@+id/website"
+        android:src="@drawable/website"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginRight="10dp"
+        android:onClick="linkToWebsite"
+        android:baselineAlignBottom="false" />
+
+</RelativeLayout>
