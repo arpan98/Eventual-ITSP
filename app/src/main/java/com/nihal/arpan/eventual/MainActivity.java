@@ -29,7 +29,12 @@ import com.parse.ParseAnalytics;
 import com.parse.ParseException;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
+import com.squareup.okhttp.Callback;
+import com.squareup.okhttp.MediaType;
+import com.squareup.okhttp.OkHttpClient;
+import com.squareup.okhttp.RequestBody;
 
+import java.io.IOException;
 import java.util.Calendar;
 
 public class MainActivity extends AppCompatActivity {
@@ -41,6 +46,10 @@ public class MainActivity extends AppCompatActivity {
     String HOST = "www.EVENTual.com",QRStart = "EVENTualQR",QRSeperator = "~!#";
     ProgressDialog dialog;
     long stime,now;
+    private final OkHttpClient client = new OkHttpClient();
+    public static final MediaType JSON = MediaType.parse("application/json; charset=utf-8");
+    private static final String CREATE_URL = "http://wncc-iitb.org:8000/create";
+    private static final String SEARCH_URL = "http://wncc-iitb.org:8000/search";
 
     private Handler handler = new Handler();
     private Runnable timeout = new Runnable(){
@@ -66,6 +75,42 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
+        String jsonData = "{\"username\":\"" + "laudu" + "\","
+                + "\"title\": \"" + "laudu ki shaadi" + "\","
+                + "\"description\": \"" + "chut ke saath" + "\","
+                + "\"location\": \"" + "jhaat" + "\","
+                + "\"startdate\": \"" + "21/02/2012" + "\","
+                + "\"enddate\": \"" + "21/02/2012" + "\","
+                + "\"starttime\": \"" + "02:30" + "\","
+                + "\"endtime\": \"" + "04:00" + "\","
+                + "\"allday\": \"" + "False" + "\""
+                + "}";
+
+        Log.d(TAG, "Json: " + jsonData);
+        RequestBody body = RequestBody.create(JSON, jsonData);
+
+        com.squareup.okhttp.Request request = new com.squareup.okhttp.Request.Builder()
+                .url(CREATE_URL)
+                .post(body)
+                .build();
+
+        client.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(com.squareup.okhttp.Request request, IOException throwable) {
+                throwable.printStackTrace();
+            }
+
+            @Override
+            public void onResponse(com.squareup.okhttp.Response response) throws IOException {
+                if (!response.isSuccessful())
+                    throw new IOException("Unexpected code " + response);
+                else {
+                    final String jsonData = response.body().string();
+                    Log.d(TAG, "Response from " + CREATE_URL + ": " + jsonData);
+                }
+            }
+        });
 
         ParseAnalytics.trackAppOpenedInBackground(getIntent());
 

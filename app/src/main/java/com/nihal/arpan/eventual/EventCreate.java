@@ -41,6 +41,10 @@ import com.parse.ParseException;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
 import com.parse.SaveCallback;
+import com.squareup.okhttp.Callback;
+import com.squareup.okhttp.MediaType;
+import com.squareup.okhttp.OkHttpClient;
+import com.squareup.okhttp.RequestBody;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -62,6 +66,12 @@ public class EventCreate extends AppCompatActivity {
     QRCodeEncoder qrCodeEncoder;
     Bitmap b;
     Long stime,now;
+
+    private final OkHttpClient client = new OkHttpClient();
+    public static final MediaType JSON = MediaType.parse("application/json; charset=utf-8");
+    private static final String CREATE_URL = "http://wncc-iitb.org:8000/create";
+    private static final String SEARCH_URL = "http://wncc-iitb.org:8000/search";
+    String create;
 
     private Handler handler = new Handler();
     private Runnable timeout = new Runnable(){
@@ -439,6 +449,10 @@ public class EventCreate extends AppCompatActivity {
                         endyear = (enddatedisplay.getText().toString()).substring(6, 10);
                         starttimestamp = Long.parseLong(startyear + startmonth + startdate);
                         endtimestamp = Long.parseLong(endyear + endmonth + enddate);
+                        starthour = "";
+                        startminute = "";
+                        endhour = "";
+                        endminute = "";
                         eventData.put("starthour", "");
                         eventData.put("startminute", "");
                         eventData.put("endhour", "");
@@ -503,12 +517,13 @@ public class EventCreate extends AppCompatActivity {
                             eventData.put("endminute", endminute);
                         }
                         Pattern emailPattern = Patterns.EMAIL_ADDRESS; // API level 8+
+                        String username = "unknown";
                         try {
                             Account[] accounts = AccountManager.get(EventCreate.this).getAccounts();
                             for (Account account : accounts) {
                                 if (emailPattern.matcher(account.name).matches()) {
                                     String possibleEmail = account.name;
-                                    String username = possibleEmail.split("@")[0];
+                                    username = possibleEmail.split("@")[0];
                                     Log.d("swag", username);
                                     eventData.put("username",username);
                                 }
@@ -518,262 +533,317 @@ public class EventCreate extends AppCompatActivity {
                             Log.d("swag" , "Error in getting username");
                         }
 
-                        ParseQuery<ParseObject> query = ParseQuery.getQuery("EventData");
-                        Log.d(TAG, "Title = " + title);
-                        query.whereEqualTo("title", title);
-                        query.whereEqualTo("startyear", startyear);
-                        query.whereEqualTo("startmonth", startmonth);
-                        query.whereEqualTo("startdate", startdate);
-                        if(!allday) {
-                            query.whereEqualTo("starthour", starthour);
-                            query.whereEqualTo("startminute", startminute);
-                        }
-                        query.whereEqualTo("location",location);
+                        String jsonData = "{"+ "\"title\": \"" + title + "\","
+                                + "\"description\": \"" + description + "\","
+                                + "\"location\": \"" + location + "\","
+                                + "\"startdate\": \"" + startdate + "/" + startmonth + "/" + startyear+ "\","
+                                + "\"enddate\": \"" + enddate + "/" + endmonth + "/" + endyear + "\","
+                                + "\"starttime\": \"" + starthour + ":" + startminute + "\","
+                                + "\"endtime\": \"" + endhour + ":" + endminute + "\","
+                                + "\"allday\": \"" + allday.toString() + "\""
+                                + "}";
+                        RequestBody body = RequestBody.create(JSON, jsonData);
+                        Log.d(TAG, "JSON = " + jsonData);
 
+                        com.squareup.okhttp.Request request = new com.squareup.okhttp.Request.Builder()
+                                .url(SEARCH_URL)
+                                .post(body)
+                                .build();
 
-                        query.getFirstInBackground(new GetCallback<ParseObject>() {
-                            public void done(ParseObject object, ParseException e) {
-                                if (object == null) {
-                                    eventData.saveInBackground(new SaveCallback() {
-                                        @Override
-                                        public void done(ParseException e) {
-                                            handlerneeded = false;
-                                            started=false;
-                                            dialog.dismiss();
-                                            savebutton.setEnabled(true);
+                        client.newCall(request).enqueue(new Callback() {
+                            @Override
+                            public void onFailure(com.squareup.okhttp.Request request, IOException throwable) {
+                                throwable.printStackTrace();
+                            }
 
-                                            if (e == null) {
-
-                                                WindowManager manager = (WindowManager) getSystemService(WINDOW_SERVICE);
-                                                Display display = manager.getDefaultDisplay();
-                                                Point point = new Point();
-                                                display.getSize(point);
-                                                int width = point.x;
-                                                int height = point.y;
-                                                int smallerDimension = width < height ? width : height;
-                                                smallerDimension = smallerDimension * 3 / 4;
-                                                String start, end;
-                                                if (allday) {
-                                                    start = startdatedisplay.getText().toString();
-                                                    end = enddatedisplay.getText().toString();
-                                                } else {
-                                                    start = startdatedisplay.getText().toString() + " " + starttimedisplay.getText().toString();
-                                                    end = enddatedisplay.getText().toString() + " " + endtimedisplay.getText().toString();
-                                                }
-
-                                                String QRText = QRStart + seq + title + seq + description + seq + Boolean.toString(allday) + seq + start + seq + end + seq + location + seq;
-                                                try {
-                                                    qrCodeEncoder = new QRCodeEncoder(QRText, null, Contents.Type.TEXT, BarcodeFormat.QR_CODE.toString(), smallerDimension);
-                                                    Bitmap bitmap = qrCodeEncoder.encodeAsBitmap();
-                                                    ImageView myImage = (ImageView) findViewById(R.id.imageView1);
-                                                    myImage.setImageBitmap(bitmap);
-
-                                                    myImage.setDrawingCacheEnabled(true);
-                                                    // this is the important code :)
-                                                    // Without it the view will have a dimension of 0,0 and the bitmap will be null
-                                                    myImage.measure(View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED),
-                                                            View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED));
-                                                    myImage.layout(0, 0, myImage.getMeasuredWidth(), myImage.getMeasuredHeight());
-                                                    myImage.buildDrawingCache(true);
-                                                    b = Bitmap.createBitmap(myImage.getDrawingCache());
-                                                    myImage.setDrawingCacheEnabled(false); // clear drawing cache
-                                                }
-                                                catch (Exception err) {
-                                                    err.printStackTrace();
-                                                }
-                                                final String objectId = eventData.getObjectId();
-                                                AlertDialog.Builder builder = new AlertDialog.Builder(EventCreate.this);
-                                                builder
-                                                        .setOnKeyListener(new DialogInterface.OnKeyListener() {
-                                                            @Override
-                                                            public boolean onKey (DialogInterface dialog, int keyCode, KeyEvent event) {
-                                                                if (keyCode == KeyEvent.KEYCODE_BACK && event.getAction() == KeyEvent.ACTION_UP && !event.isCanceled()) {
-                                                                    dialog.cancel();
-                                                                    savebutton.setEnabled(true);
-                                                                    return true;
-                                                                }
-                                                                return false;
-                                                            }
-                                                        })
-                                                        .setTitle("Event Saved!")
-                                                        .setMessage("http://www.EVENTual.com/" + objectId)
-                                                        .setIcon(android.R.drawable.ic_menu_my_calendar)
-                                                        .setPositiveButton("Share Link", new DialogInterface.OnClickListener() {
-                                                            public void onClick(DialogInterface dialog, int which) {
-                                                                String shareBody = "EVENTual: \nEvent Title - "+title+"\nEvent Link - http://www.EVENTual.com/"+objectId;
-                                                                Intent sharingIntent = new Intent(android.content.Intent.ACTION_SEND);
-                                                                sharingIntent.setType("text/plain");
-                                                                sharingIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, "Event");
-                                                                sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT, shareBody);
-                                                                startActivity(Intent.createChooser(sharingIntent, getResources().getString(R.string.share_using)));
-
-                                                            }
-                                                        })
-                                                        .setNegativeButton("Share QR Code", new DialogInterface.OnClickListener() {
-                                                            public void onClick(DialogInterface dialog, int which) {
-                                                                try {
-                                                                    Intent share = new Intent(Intent.ACTION_SEND);
-                                                                    share.setType("image/jpeg");
-                                                                    ByteArrayOutputStream bytes = new ByteArrayOutputStream();
-                                                                    b.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
-                                                                    File f = new File(Environment.getExternalStorageDirectory() + File.separator + title+ ".jpg");
-                                                                    try {
-                                                                        f.createNewFile();
-                                                                        FileOutputStream fo = new FileOutputStream(f);
-                                                                        fo.write(bytes.toByteArray());
-                                                                        fo.close();
-                                                                    } catch (IOException e) {
-                                                                        e.printStackTrace();
-                                                                    }
-                                                                    share.putExtra(Intent.EXTRA_STREAM, Uri.parse("file:///sdcard/"+title+".jpg"));
-                                                                    startActivity(Intent.createChooser(share, "Share Image"));
-
-                                                                } catch (Exception e) {
-                                                                    e.printStackTrace();
-                                                                }
-                                                            }
-                                                        })
-                                                        .setNeutralButton("Exit", new DialogInterface.OnClickListener() {
-                                                            public void onClick(DialogInterface dialog, int which) {
-                                                                Intent i = new Intent();
-                                                                i.putExtra("title", title);
-                                                                i.putExtra("description", description);
-                                                                i.putExtra("allday", allday);
-                                                                i.putExtra("startyear", startyear);
-                                                                i.putExtra("startmonth", startmonth);
-                                                                i.putExtra("startdate", startdate);
-                                                                i.putExtra("endyear", endyear);
-                                                                i.putExtra("endmonth", endmonth);
-                                                                i.putExtra("enddate", enddate);
-                                                                i.putExtra("location", location);
-                                                                if (allday) {
-                                                                    i.putExtra("starthour", "");
-                                                                    i.putExtra("startminute", "");
-                                                                    i.putExtra("endhour", "");
-                                                                    i.putExtra("endminute", "");
-                                                                } else {
-                                                                    i.putExtra("starthour", starthour);
-                                                                    i.putExtra("startminute", startminute);
-                                                                    i.putExtra("endhour", endhour);
-                                                                    i.putExtra("endminute", endminute);
-                                                                }
-                                                                setResult(Activity.RESULT_OK, i);
-                                                                finish();
-                                                            }
-                                                        })
-                                                        .show();
-                                            } else {
-                                                Toast.makeText(EventCreate.this,"Error in saving event",Toast.LENGTH_LONG).show();
-                                                Log.d(TAG, "Save error - " + e.toString());
-                                            }
-                                        }
-                                    });
-                                } else {
-                                    duplicate = true;
-                                    handlerneeded = false;
-                                    started=false;
-                                    dialog.dismiss();
-                                    savebutton.setEnabled(true);
-                                    existingOId = object.getObjectId();
-                                    WindowManager manager = (WindowManager) getSystemService(WINDOW_SERVICE);
-                                    Display display = manager.getDefaultDisplay();
-                                    Point point = new Point();
-                                    display.getSize(point);
-                                    int width = point.x;
-                                    int height = point.y;
-                                    int smallerDimension = width < height ? width : height;
-                                    smallerDimension = smallerDimension * 3 / 4;
-                                    String start, end;
-                                    if (allday) {
-                                        start = startdatedisplay.getText().toString();
-                                        end = enddatedisplay.getText().toString();
-                                    } else {
-                                        start = startdatedisplay.getText().toString() + " " + starttimedisplay.getText().toString();
-                                        end = enddatedisplay.getText().toString() + " " + endtimedisplay.getText().toString();
+                            @Override
+                            public void onResponse(com.squareup.okhttp.Response response) throws IOException {
+                                if (!response.isSuccessful())
+                                    throw new IOException("Unexpected code " + response);
+                                else {
+                                    final String jsonData = response.body().string();
+                                    Log.d(TAG, "Response from " + SEARCH_URL + ": " + jsonData);
+                                    if (jsonData.equals("0"))
+                                    {
+                                        Log.d(TAG, "New");
+                                        duplicate = false;
                                     }
-                                    AlertDialog.Builder builder = new AlertDialog.Builder(EventCreate.this);
-                                    builder
-                                            .setOnKeyListener(new DialogInterface.OnKeyListener() {
-                                                @Override
-                                                public boolean onKey (DialogInterface dialog, int keyCode, KeyEvent event) {
-                                                    if (keyCode == KeyEvent.KEYCODE_BACK && event.getAction() == KeyEvent.ACTION_UP && !event.isCanceled()) {
-                                                        dialog.cancel();
-                                                        savebutton.setEnabled(true);
-                                                        return true;
-                                                    }
-                                                    return false;
-                                                }
-                                            })
-                                            .setTitle("Event already exists!!")
-                                            .setMessage("http://www.EVENTual.com/" + existingOId)
-                                            .setIcon(android.R.drawable.ic_menu_my_calendar)
-                                            .setPositiveButton("Share Link", new DialogInterface.OnClickListener() {
-                                                public void onClick(DialogInterface dialog, int which) {
-                                                    String shareBody = "EVENTual: \nEvent Title - "+title+"\nEvent Link - http://www.EVENTual.com/"+existingOId;
-                                                    Intent sharingIntent = new Intent(android.content.Intent.ACTION_SEND);
-                                                    sharingIntent.setType("text/plain");
-                                                    sharingIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, "Event");
-                                                    sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT, shareBody);
-                                                    startActivity(Intent.createChooser(sharingIntent, getResources().getString(R.string.share_using)));
-
-                                                }
-                                            })
-                                            .setNegativeButton("Exit", new DialogInterface.OnClickListener() {
-                                                public void onClick(DialogInterface dialog, int which) {
-                                                    Intent i = new Intent();
-                                                    i.putExtra("title", title);
-                                                    i.putExtra("description", description);
-                                                    i.putExtra("allday", allday);
-                                                    i.putExtra("startyear", startyear);
-                                                    i.putExtra("startmonth", startmonth);
-                                                    i.putExtra("startdate", startdate);
-                                                    i.putExtra("endyear", endyear);
-                                                    i.putExtra("endmonth", endmonth);
-                                                    i.putExtra("enddate", enddate);
-                                                    i.putExtra("location", location);
-                                                    if (allday) {
-                                                        i.putExtra("starthour", "");
-                                                        i.putExtra("startminute", "");
-                                                        i.putExtra("endhour", "");
-                                                        i.putExtra("endminute", "");
-                                                    } else {
-                                                        i.putExtra("starthour", starthour);
-                                                        i.putExtra("startminute", startminute);
-                                                        i.putExtra("endhour", endhour);
-                                                        i.putExtra("endminute", endminute);
-                                                    }
-                                                    setResult(Activity.RESULT_OK, i);
-                                                    finish();
-                                                }
-                                            })
-                                            .setNeutralButton("Share QR Code", new DialogInterface.OnClickListener() {
-                                                public void onClick(DialogInterface dialog, int which) {
-                                                    try {
-                                                        Intent share = new Intent(Intent.ACTION_SEND);
-                                                        share.setType("image/jpeg");
-                                                        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
-                                                        b.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
-                                                        File f = new File(Environment.getExternalStorageDirectory() + File.separator + "temporary_file.jpg");
-                                                        try {
-                                                            f.createNewFile();
-                                                            FileOutputStream fo = new FileOutputStream(f);
-                                                            fo.write(bytes.toByteArray());
-                                                            fo.close();
-                                                        } catch (IOException e) {
-                                                            e.printStackTrace();
-                                                        }
-                                                        share.putExtra(Intent.EXTRA_STREAM, Uri.parse("file:///sdcard/temporary_file.jpg"));
-                                                        startActivity(Intent.createChooser(share, "Share Image"));
-
-                                                    } catch (Exception e) {
-                                                        e.printStackTrace();
-                                                    }
-                                                }
-                                            })
-                                            .show();
+                                    else
+                                    {
+                                        Log.d(TAG, "Old");
+                                        duplicate = true;
+                                    }
                                 }
                             }
                         });
+
+                        if (duplicate==false){
+
+                            jsonData = "{"+ "\"username\": \"" + username + "\","
+                                    + "\"title\": \"" + title + "\","
+                                    + "\"description\": \"" + description + "\","
+                                    + "\"location\": \"" + location + "\","
+                                    + "\"startdate\": \"" + startdate + "/" + startmonth + "/" + startyear+ "\","
+                                    + "\"enddate\": \"" + enddate + "/" + endmonth + "/" + endyear + "\","
+                                    + "\"starttime\": \"" + starthour + ":" + startminute + "\","
+                                    + "\"endtime\": \"" + endhour + ":" + endminute + "\","
+                                    + "\"allday\": \"" + allday.toString() + "\""
+                                    + "}";
+                            body = RequestBody.create(JSON, jsonData);
+                            Log.d(TAG, "JSON = " + jsonData);
+
+                            request = new com.squareup.okhttp.Request.Builder()
+                                    .url(CREATE_URL)
+                                    .post(body)
+                                    .build();
+
+                            client.newCall(request).enqueue(new Callback() {
+                                @Override
+                                public void onFailure(com.squareup.okhttp.Request request, IOException throwable) {
+                                    throwable.printStackTrace();
+                                }
+
+                                @Override
+                                public void onResponse(com.squareup.okhttp.Response response) throws IOException {
+                                    if (!response.isSuccessful())
+                                        throw new IOException("Unexpected code " + response);
+                                    else {
+                                        final String jsonData = response.body().string();
+                                        Log.d(TAG, "Response from " + CREATE_URL + ": " + jsonData);
+                                        create="success";
+                                    }
+                                }
+                            });
+
+                            if (create=="success") {
+                                handlerneeded = false;
+                                started = false;
+                                dialog.dismiss();
+                                savebutton.setEnabled(true);
+
+                                WindowManager manager = (WindowManager) getSystemService(WINDOW_SERVICE);
+                                Display display = manager.getDefaultDisplay();
+                                Point point = new Point();
+                                display.getSize(point);
+                                int width = point.x;
+                                int height = point.y;
+                                int smallerDimension = width < height ? width : height;
+                                smallerDimension = smallerDimension * 3 / 4;
+                                String start, end;
+                                if (allday) {
+                                    start = startdatedisplay.getText().toString();
+                                    end = enddatedisplay.getText().toString();
+                                } else {
+                                    start = startdatedisplay.getText().toString() + " " + starttimedisplay.getText().toString();
+                                    end = enddatedisplay.getText().toString() + " " + endtimedisplay.getText().toString();
+                                }
+
+                                String QRText = QRStart + seq + title + seq + description + seq + Boolean.toString(allday) + seq + start + seq + end + seq + location + seq;
+                                try {
+                                    qrCodeEncoder = new QRCodeEncoder(QRText, null, Contents.Type.TEXT, BarcodeFormat.QR_CODE.toString(), smallerDimension);
+                                    Bitmap bitmap = qrCodeEncoder.encodeAsBitmap();
+                                    ImageView myImage = (ImageView) findViewById(R.id.imageView1);
+                                    myImage.setImageBitmap(bitmap);
+
+                                    myImage.setDrawingCacheEnabled(true);
+                                    // this is the important code :)
+                                    // Without it the view will have a dimension of 0,0 and the bitmap will be null
+                                    myImage.measure(View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED),
+                                            View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED));
+                                    myImage.layout(0, 0, myImage.getMeasuredWidth(), myImage.getMeasuredHeight());
+                                    myImage.buildDrawingCache(true);
+                                    b = Bitmap.createBitmap(myImage.getDrawingCache());
+                                    myImage.setDrawingCacheEnabled(false); // clear drawing cache
+                                } catch (Exception err) {
+                                    err.printStackTrace();
+                                }
+                                final String objectId = eventData.getObjectId();
+                                AlertDialog.Builder builder = new AlertDialog.Builder(EventCreate.this);
+                                builder
+                                        .setOnKeyListener(new DialogInterface.OnKeyListener() {
+                                            @Override
+                                            public boolean onKey(DialogInterface dialog, int keyCode, KeyEvent event) {
+                                                if (keyCode == KeyEvent.KEYCODE_BACK && event.getAction() == KeyEvent.ACTION_UP && !event.isCanceled()) {
+                                                    dialog.cancel();
+                                                    savebutton.setEnabled(true);
+                                                    return true;
+                                                }
+                                                return false;
+                                            }
+                                        })
+                                        .setTitle("Event Saved!")
+                                        .setMessage("http://www.EVENTual.com/" + objectId)
+                                        .setIcon(android.R.drawable.ic_menu_my_calendar)
+                                        .setPositiveButton("Share Link", new DialogInterface.OnClickListener() {
+                                            public void onClick(DialogInterface dialog, int which) {
+                                                String shareBody = "EVENTual: \nEvent Title - " + title + "\nEvent Link - http://www.EVENTual.com/" + objectId;
+                                                Intent sharingIntent = new Intent(android.content.Intent.ACTION_SEND);
+                                                sharingIntent.setType("text/plain");
+                                                sharingIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, "Event");
+                                                sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT, shareBody);
+                                                startActivity(Intent.createChooser(sharingIntent, getResources().getString(R.string.share_using)));
+
+                                            }
+                                        })
+                                        .setNegativeButton("Share QR Code", new DialogInterface.OnClickListener() {
+                                            public void onClick(DialogInterface dialog, int which) {
+                                                try {
+                                                    Intent share = new Intent(Intent.ACTION_SEND);
+                                                    share.setType("image/jpeg");
+                                                    ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+                                                    b.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
+                                                    File f = new File(Environment.getExternalStorageDirectory() + File.separator + title + ".jpg");
+                                                    try {
+                                                        f.createNewFile();
+                                                        FileOutputStream fo = new FileOutputStream(f);
+                                                        fo.write(bytes.toByteArray());
+                                                        fo.close();
+                                                    } catch (IOException e) {
+                                                        e.printStackTrace();
+                                                    }
+                                                    share.putExtra(Intent.EXTRA_STREAM, Uri.parse("file:///sdcard/" + title + ".jpg"));
+                                                    startActivity(Intent.createChooser(share, "Share Image"));
+
+                                                } catch (Exception e) {
+                                                    e.printStackTrace();
+                                                }
+                                            }
+                                        })
+                                        .setNeutralButton("Exit", new DialogInterface.OnClickListener() {
+                                            public void onClick(DialogInterface dialog, int which) {
+                                                Intent i = new Intent();
+                                                i.putExtra("title", title);
+                                                i.putExtra("description", description);
+                                                i.putExtra("allday", allday);
+                                                i.putExtra("startyear", startyear);
+                                                i.putExtra("startmonth", startmonth);
+                                                i.putExtra("startdate", startdate);
+                                                i.putExtra("endyear", endyear);
+                                                i.putExtra("endmonth", endmonth);
+                                                i.putExtra("enddate", enddate);
+                                                i.putExtra("location", location);
+                                                if (allday) {
+                                                    i.putExtra("starthour", "");
+                                                    i.putExtra("startminute", "");
+                                                    i.putExtra("endhour", "");
+                                                    i.putExtra("endminute", "");
+                                                } else {
+                                                    i.putExtra("starthour", starthour);
+                                                    i.putExtra("startminute", startminute);
+                                                    i.putExtra("endhour", endhour);
+                                                    i.putExtra("endminute", endminute);
+                                                }
+                                                setResult(Activity.RESULT_OK, i);
+                                                finish();
+                                            }
+                                        })
+                                        .show();
+                            }
+                        }
+                        else{
+                            handlerneeded = false;
+                            started=false;
+                            dialog.dismiss();
+                            savebutton.setEnabled(true);
+//                                        existingOId = object.getObjectId(); Object ID ka kuch karna hai
+                            WindowManager manager = (WindowManager) getSystemService(WINDOW_SERVICE);
+                            Display display = manager.getDefaultDisplay();
+                            Point point = new Point();
+                            display.getSize(point);
+                            int width = point.x;
+                            int height = point.y;
+                            int smallerDimension = width < height ? width : height;
+                            smallerDimension = smallerDimension * 3 / 4;
+                            String start, end;
+                            if (allday) {
+                                start = startdatedisplay.getText().toString();
+                                end = enddatedisplay.getText().toString();
+                            } else {
+                                start = startdatedisplay.getText().toString() + " " + starttimedisplay.getText().toString();
+                                end = enddatedisplay.getText().toString() + " " + endtimedisplay.getText().toString();
+                            }
+                            AlertDialog.Builder builder = new AlertDialog.Builder(EventCreate.this);
+                            builder
+                                    .setOnKeyListener(new DialogInterface.OnKeyListener() {
+                                        @Override
+                                        public boolean onKey (DialogInterface dialog, int keyCode, KeyEvent event) {
+                                            if (keyCode == KeyEvent.KEYCODE_BACK && event.getAction() == KeyEvent.ACTION_UP && !event.isCanceled()) {
+                                                dialog.cancel();
+                                                savebutton.setEnabled(true);
+                                                return true;
+                                            }
+                                            return false;
+                                        }
+                                    })
+                                    .setTitle("Event already exists!!")
+                                    .setMessage("http://www.EVENTual.com/" + existingOId)
+                                    .setIcon(android.R.drawable.ic_menu_my_calendar)
+                                    .setPositiveButton("Share Link", new DialogInterface.OnClickListener() {
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            String shareBody = "EVENTual: \nEvent Title - "+title+"\nEvent Link - http://www.EVENTual.com/"+existingOId;
+                                            Intent sharingIntent = new Intent(android.content.Intent.ACTION_SEND);
+                                            sharingIntent.setType("text/plain");
+                                            sharingIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, "Event");
+                                            sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT, shareBody);
+                                            startActivity(Intent.createChooser(sharingIntent, getResources().getString(R.string.share_using)));
+
+                                        }
+                                    })
+                                    .setNegativeButton("Exit", new DialogInterface.OnClickListener() {
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            Intent i = new Intent();
+                                            i.putExtra("title", title);
+                                            i.putExtra("description", description);
+                                            i.putExtra("allday", allday);
+                                            i.putExtra("startyear", startyear);
+                                            i.putExtra("startmonth", startmonth);
+                                            i.putExtra("startdate", startdate);
+                                            i.putExtra("endyear", endyear);
+                                            i.putExtra("endmonth", endmonth);
+                                            i.putExtra("enddate", enddate);
+                                            i.putExtra("location", location);
+                                            if (allday) {
+                                                i.putExtra("starthour", "");
+                                                i.putExtra("startminute", "");
+                                                i.putExtra("endhour", "");
+                                                i.putExtra("endminute", "");
+                                            } else {
+                                                i.putExtra("starthour", starthour);
+                                                i.putExtra("startminute", startminute);
+                                                i.putExtra("endhour", endhour);
+                                                i.putExtra("endminute", endminute);
+                                            }
+                                            setResult(Activity.RESULT_OK, i);
+                                            finish();
+                                        }
+                                    })
+                                    .setNeutralButton("Share QR Code", new DialogInterface.OnClickListener() {
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            try {
+                                                Intent share = new Intent(Intent.ACTION_SEND);
+                                                share.setType("image/jpeg");
+                                                ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+                                                b.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
+                                                File f = new File(Environment.getExternalStorageDirectory() + File.separator + "temporary_file.jpg");
+                                                try {
+                                                    f.createNewFile();
+                                                    FileOutputStream fo = new FileOutputStream(f);
+                                                    fo.write(bytes.toByteArray());
+                                                    fo.close();
+                                                } catch (IOException e) {
+                                                    e.printStackTrace();
+                                                }
+                                                share.putExtra(Intent.EXTRA_STREAM, Uri.parse("file:///sdcard/temporary_file.jpg"));
+                                                startActivity(Intent.createChooser(share, "Share Image"));
+
+                                            } catch (Exception e) {
+                                                e.printStackTrace();
+                                            }
+                                        }
+                                    })
+                                    .show();
+                        }
+
                         handlerneeded=true;
                         started=false;
                         handler.post(timeout);
