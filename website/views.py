@@ -1,5 +1,6 @@
 from django.http import HttpResponse
 from django.shortcuts import render
+from django.core import serializers
 from website.models import EventData
 import json
 import datetime
@@ -27,29 +28,16 @@ def create(request):
                                   ),
             )
         event.save()
-        return HttpResponse(event.startdate)
-    return HttpResponse("Na ho paega")
+        return HttpResponse(event.id)
+    elif request.method == 'GET':
+        return render(request, 'create.html', {})
 
 def search(request):
     if request.method == 'POST':
         json_dict = json.loads(request.body)
-        params = {}
+        kwargs = {}
         for key, value in json_dict.iteritems():
-            params[key] = urllib.unquote(value).replace('+', ' ')
-        event = EventData.objects.filter(
-                    # username=params["username"],
-                    title=params["title"],
-                    description=params["description"],
-                    location=params["location"],
-                    startdate=datetime.datetime.strptime(params["startdate"], '%d/%m/%Y'),
-                    enddate=datetime.datetime.strptime(params["enddate"], '%d/%m/%Y'),
-                    allday=params["allday"],
-                    starttime=datetime.time(int(params["starttime"].split(':')[0]),
-                                            int(params["starttime"].split(':')[1])
-                                           ),
-                    endtime=datetime.time(int(params["endtime"].split(':')[0]),
-                                          int(params["endtime"].split(':')[1])
-                                         ),
-                    )
-        return HttpResponse(len(event))
+            kwargs[key] = urllib.unquote(value).replace('+', ' ')
+        event = EventData.objects.filter(**kwargs)
+        return HttpResponse(serializers.serialize("json", event))
     return HttpResponse("Nothing here")
