@@ -76,42 +76,6 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
-        String jsonData = "{\"username\":\"" + "laudu" + "\","
-                + "\"title\": \"" + "laudu ki shaadi" + "\","
-                + "\"description\": \"" + "chut ke saath" + "\","
-                + "\"location\": \"" + "jhaat" + "\","
-                + "\"startdate\": \"" + "21/02/2012" + "\","
-                + "\"enddate\": \"" + "21/02/2012" + "\","
-                + "\"starttime\": \"" + "02:30" + "\","
-                + "\"endtime\": \"" + "04:00" + "\","
-                + "\"allday\": \"" + "False" + "\""
-                + "}";
-
-        Log.d(TAG, "Json: " + jsonData);
-        RequestBody body = RequestBody.create(JSON, jsonData);
-
-        com.squareup.okhttp.Request request = new com.squareup.okhttp.Request.Builder()
-                .url(CREATE_URL)
-                .post(body)
-                .build();
-
-        client.newCall(request).enqueue(new Callback() {
-            @Override
-            public void onFailure(com.squareup.okhttp.Request request, IOException throwable) {
-                throwable.printStackTrace();
-            }
-
-            @Override
-            public void onResponse(com.squareup.okhttp.Response response) throws IOException {
-                if (!response.isSuccessful())
-                    throw new IOException("Unexpected code " + response);
-                else {
-                    final String jsonData = response.body().string();
-                    Log.d(TAG, "Response from " + CREATE_URL + ": " + jsonData);
-                }
-            }
-        });
-
         ParseAnalytics.trackAppOpenedInBackground(getIntent());
 
         requestWindowFeature(Window.FEATURE_NO_TITLE);
