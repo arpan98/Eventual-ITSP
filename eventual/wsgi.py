@@ -21,8 +21,8 @@ sys.path.append('/eventual/eventual')
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'eventual.settings')
 
 # Activating virtual env
-# activate_env=os.path.expanduser("/home/arpan/Envs/eventualvenv/bin/activate_this.py")
-# execfile(activate_env, dict(__file__=activate_env))
+activate_env=os.path.expanduser("/home/arpan/Envs/eventualvenv/bin/activate_this.py")
+execfile(activate_env, dict(__file__=activate_env))
 
 from django.core.wsgi import get_wsgi_application
 application = get_wsgi_application()
