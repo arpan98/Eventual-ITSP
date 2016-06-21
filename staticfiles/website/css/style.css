@@ -1,0 +1,274 @@
+/*--
+Author: W3layouts
+Author URL: http://w3layouts.com
+License: Creative Commons Attribution 3.0 Unported
+License URL: http://creativecommons.org/licenses/by/3.0/
+--*/
+
+/* reset */
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,img,ins,kbd,q,s,samp,small,strike,strong,sub,sup,tt,var,b,u,i,dl,dt,dd,ol,nav ul,nav li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td,article,aside,canvas,details,embed,figure,figcaption,footer,header,hgroup,menu,nav,output,ruby,section,summary,time,mark,audio,video{margin:0;padding:0;border:0;font-size:100%;font:inherit;vertical-align:baseline;}
+article, aside, details, figcaption, figure,footer, header, hgroup, menu, nav, section {display: block;}
+ol,ul{list-style:none;margin:0px;padding:0px;}
+blockquote,q{quotes:none;}
+blockquote:before,blockquote:after,q:before,q:after{content:'';content:none;}
+table{border-collapse:collapse;border-spacing:0;}
+/* start editing from here */
+a{text-decoration:none;}
+.txt-rt{text-align:right;}/* text align right */
+.txt-lt{text-align:left;}/* text align left */
+.txt-center{text-align:center;}/* text align center */
+.float-rt{float:right;}/* float right */
+.float-lt{float:left;}/* float left */
+.clear{clear:both;}/* clear float */
+.pos-relative{position:relative;}/* Position Relative */
+.pos-absolute{position:absolute;}/* Position Absolute */
+.vertical-base{	vertical-align:baseline;}/* vertical align baseline */
+.vertical-top{	vertical-align:top;}/* vertical align top */
+nav.vertical ul li{	display:block;}/* vertical menu */
+nav.horizontal ul li{	display: inline-block;}/* horizontal menu */
+img{max-width:100%;}
+/*end reset*/
+
+body{
+	padding:0;
+	margin:0;
+    background:url(../images/pic8.jpg) no-repeat center;
+    background-size: cover;
+    -webkit-background-size: cover;
+    -o-background-size: cover;
+    -ms-background-size: cover;
+    -moz-background-size: cover;
+	font-family: 'Open Sans', sans-serif !important;
+	min-height:800px;
+}
+h1,h2,h3,h4,h5,h6{
+	margin:0;
+font-family: 'Montserrat', sans-serif;	
+}	
+p{
+	margin:0;
+}
+/*-- w3layouts --*/
+ul{
+	margin:0;
+	padding:0;
+}
+label{
+	margin:0;
+}
+/*-- main --*/
+.content {
+    padding: 62px 0;
+}
+.content h1{
+    color: #fff;
+    font-size: 36px;
+    text-align: center;
+    letter-spacing: 1px;
+	text-transform:capitalize;
+}
+.main {
+    width: 29%;
+    margin: 59px auto;
+}
+p.copy_rights {
+    color: #fff;
+    font-size: 14px;
+    text-align: center;
+}
+p.copy_rights a{
+	text-decoration:none;
+	color:#fff;
+}
+p.copy_rights a:hover{
+	text-decoration:underline;
+}
+.creditly-wrapper .form-control:hover{
+	border: 1px solid #1F76D2;
+	transition:0.5s all;
+	-webkit-transition:0.5s all;
+	-moz-transition:0.5s all;
+	-o-transition:0.5s all;
+	-ms-transition:0.5s all;
+}
+/*-- responsive media queries --*/
+
+@media (max-width: 1440px){
+	
+}
+
+/*-- agileits --*/
+@media (max-width: 1366px){
+	.main {
+		width: 34%;
+	}
+	.content h1 {
+		font-size: 34px;
+	}	
+}
+@media (max-width: 1280px){
+	
+}
+@media (max-width: 1080px){
+	.main {
+		width: 45%;
+	}	
+}
+@media (max-width: 1024px){
+	.content h1 {
+		font-size: 32px;
+	}	
+}
+@media (max-width: 991px){
+	.main {
+		width: 48%;
+	}	
+}
+@media (max-width: 800px){
+	.content h1 {
+		font-size: 28px;
+	}
+	.main {
+		width: 60%;
+	}	
+}
+@media (max-width: 768px){
+	body {
+		min-height: 929px;
+	}
+	.content {
+		padding: 134px 0;
+	}	
+}
+@media (max-width: 736px){
+	.content {
+		padding: 90px 0;
+	}
+	.main {
+		width: 66%;
+	}
+/*-- w3layouts --*/
+	
+	body {
+		min-height: 830px;
+	}
+}
+@media (max-width: 667px){
+	.content h1 {
+		font-size: 26px;
+	}
+	.main {
+		width: 71%;
+	}	
+}
+@media (max-width: 640px){
+	.content {
+		padding: 60px 0;
+	}
+	.content h1 {
+		font-size: 24px;
+	}
+	.main {
+		margin: 45px auto;
+	}
+	.creditly-card-form .submit span {
+		font-size: 15px;
+	}	
+	body {
+		min-height: 743px;
+	}
+}
+@media (max-width: 600px){
+	
+}
+@media (max-width: 568px){
+	.creditly-wrapper .credit-card-wrapper {
+		padding: 20px 20px;
+	}
+	p.copy_rights {
+		font-size: 13px;
+	}	
+	.main {
+		width: 79%;
+	}
+}
+@media (max-width: 480px){
+	.main {
+		width: 87%;
+	}
+	.creditly-wrapper .credit-card-wrapper {
+		padding: 25px 25px;
+	}
+	/*-- agileits --*/
+	.creditly-wrapper .form-control {
+		width: 92%;
+	}	
+	p.copy_rights {
+		line-height: 1.8em;
+	}
+}
+@media (max-width: 414px){
+	.content h1 {
+		font-size: 22px;
+	}
+	.main {
+		width: 90%;
+	}	
+	.creditly-wrapper .form-control {
+		padding: 10px 12px;
+	}
+	.creditly-card-form .submit span {
+		padding: 9px 17px;
+	}
+	.creditly-wrapper .form-control {
+		margin-bottom: 20px;
+	}
+	body {
+		min-height: 714px;
+	}
+}
+@media (max-width: 384px){
+	p.copy_rights {
+		width: 93%;
+		margin: 0 auto;
+	}
+	.content h1 {
+		font-size: 23px;
+		line-height: 1.4em;
+	}
+	.main {
+		margin: 27px auto;
+	}	
+	.content {
+		padding: 45px 0;
+	}
+	body {
+		min-height: 677px;
+	}
+}
+@media (max-width: 375px){
+	.creditly-wrapper .credit-card-wrapper {
+		padding: 16px 16px;
+	}
+	.creditly-wrapper .form-control {
+		width: 91%;
+	}	
+}
+@media (max-width: 320px){
+	.content h1 {
+		font-size: 19px;
+	}
+	.creditly-wrapper label {
+		font-size: 14px;
+	}
+	.creditly-card-form .submit span {
+		padding: 7px 10px;
+	}
+	.creditly-card-form .submit span {
+		font-size: 14px;
+	}
+	body {
+		min-height: 646px;
+	}	
+}
+/*-- responsive media queries --*/
