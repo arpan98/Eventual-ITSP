@@ -1,0 +1,192 @@
+
+<!--
+Author: W3layouts
+Author URL: http://w3layouts.com
+License: Creative Commons Attribution 3.0 Unported
+License URL: http://creativecommons.org/licenses/by/3.0/
+-->
+{%  load staticfiles %}
+<!DOCTYPE html>
+<html>
+<head>
+<title>Create Event - EVENTual</title>
+<!-- for-mobile-apps -->
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="keywords" content="Credit Card Validation Widget Responsive, Login form web template, Sign up Web Templates, Flat Web Templates, Login signup Responsive web template, Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, SonyEricsson, Motorola web design" />
+<!-- //for-mobile-apps -->
+<link href='//fonts.googleapis.com/css?family=Montserrat:400,700' rel='stylesheet' type='text/css'>
+<link href='//fonts.googleapis.com/css?family=Open+Sans:400,300,300italic,400italic,600,600italic,700,700italic,800,800italic' rel='stylesheet' type='text/css'>
+<link rel="stylesheet" href="{% static "website/css/creditly.css" %}">
+<link href="{% static "website/css/style.css" %}" rel="stylesheet" type="text/css" media="all" />
+<script type="text/javascript" src="{% static "website/js/creditly.js" %}"></script>
+<!-- DATEPICKER JQUERY-->
+        <link rel="stylesheet" type="text/css" href="{% static "website/css/DateTimePicker.css" %}" />
+        <script type="text/javascript" src="{% static "website/js/jquery-1.11.0.min.js" %}"></script>
+        <script type="text/javascript" src="{% static "website/js/DateTimePicker.js" %}"></script>
+
+        <!-- SWITCH BUTTON FOR CHECKBOX JQUERY-->
+        <link rel="stylesheet" href="{% static "website/css/switchery.css" %}" />
+        <script src="{% static "website/js/switchery.js" %}"></script>
+
+        <!-- QRCODE JQUERY-->
+        <script type="text/javascript" src="{% static "website/js/jquery.qrcode-0.12.0.js" %}"></script>
+        <script type="text/javascript" src="{% static "website/js/jquery.qrcode-0.12.0.min.js" %}"></script>
+        <!-- Clipboard JQUERY-->
+        <script type="text/javascript" src="{% static "website/js/ZeroClipboard.js" %}"></script>
+
+    <script type="text/javascript" src="{%  static "website/js/jquery.form.js" %}"></script>
+<script type="text/javascript">
+
+    function print()
+            {
+                console.log(document.getElementById('reminder').value);
+            }
+    function alldayfn()
+    {
+        var allday = document.getElementById('allday').checked;
+        var section1 = document.getElementById('alldayon');
+        var section2 = document.getElementById('alldayoff');
+
+        if (allday==true)
+        {
+            section1.style.visibility = "hidden";
+            section1.style.display = "none";
+            section2.style.visibility = "visible";
+            section2.style.display = "block";
+        }
+        else
+        {
+            section2.style.visibility = "hidden";
+            section2.style.display = "none";
+            section1.style.visibility = "visible";
+            section1.style.display = "block";
+        }
+    }
+
+    function savedata() {
+                $("#detailsForm").ajaxSubmit({
+                    url: '/create/web',
+                    type: 'POST',
+                    success: function(response) {
+                        alert(response);
+                    },
+                    error: function(a, b) {
+                        console.log(a);
+                        console.log(b);
+                    }
+                });
+            }
+            function check()
+            {
+              var allday = document.getElementsByName('allday')[0].checked;
+              if (allday==true)
+              {
+                var start = document.getElementsByName('start')[0].value;
+                var end = document.getElementsByName('end')[0].value;
+              }
+              else
+              {
+              var start = document.getElementsByName('start')[0].value;
+              var end = document.getElementsByName('end')[0].value;
+              }
+              if(!start || !end) {
+                document.getElementById('mandatory').style.visibility = "visible";
+                console.log("Not filled");
+              }
+              else
+                {
+                document.getElementById('mandatory').style.visibility = "hidden";
+                savedata();
+              }
+            }
+
+    $(document).ready(function()
+    {
+
+        var elem = document.querySelector('.js-switch');
+        var init = new Switchery(elem,{ size: 'small' });
+
+        $("#dtBox").DateTimePicker(
+        {
+            dateFormat: "dd-mm-yyyy",
+
+            addEventHandlers: function()
+            {
+                var dtPickerObj = this;
+                var currentdate = new Date();
+                var addedtime = new Date();
+                addedtime.setHours ( currentdate.getHours() + 1 );
+                dtPickerObj.setDateTimeStringInInputField($("#start"));
+                dtPickerObj.setDateTimeStringInInputField($("#date1"));
+                document.getElementById('alldayoff').style.visibility = "hidden";
+                document.getElementById('alldayoff').style.display = "none";
+                document.getElementById('result').style.visibility = "hidden";
+                document.getElementById('mandatory').style.visibility = "hidden";
+
+                //dtPickerObj.setDateTimeStringInInputField($("#end"),addedtime);
+            }
+
+        });
+
+    });
+</script>
+</head>
+<body>
+
+<div id="dtBox"></div>
+
+<div class="content">
+	<h1>Add Eventually</h1>
+		<div class="main">
+			<div class="row">
+				<form id="detailsForm" method="post" class="creditly-card-form">
+					<section class="creditly-wrapper">
+						<div class="credit-card-wrapper">
+							<div class="second-row form-group">
+                                <div class="controls">
+                                    <label class="control-label">Title</label>
+                                    <input class="billing-address-name form-control" type="text" name="title" placeholder="Name of the Event" maxlength="50">
+                                </div>
+                                <div class="controls">
+                                    <label class="control-label">Description</label>
+                                    <input class="billing-address-name form-control" type="text" name="description" placeholder="More about the Event">
+                                </div>
+                                <label for="field1"><span>All-day</span></label>&nbsp;&nbsp;&nbsp;<input type="checkbox"  class="js-switch"  id ="allday" name="allday" onChange = "alldayfn()"><br><br>
+
+                                <div id = "alldayon" class="controls">
+                                <label class="control-label" for="field4"><span>Start DateTime <span class="required">*</span></span></label>
+                                <input class="startDateTime1 form-control" type="text" data-field="datetime" data-startend="startdatetime" data-startendelem=".endDateTime1" readonly id= "start" name="start" placeholder="DD / MM / YY hh:mm">
+
+                                <label class="control-label" for="field4"><span>End DateTime <span class="required">*</span></span></label>
+                                <input class="endDateTime1 form-control" type="text" data-field="datetime" data-startend="enddatetime" data-startendelem=".startDateTime1" readonly id= "end" name="end" placeholder="DD / MM / YY hh:mm">
+                                </div>
+
+                                <div id = "alldayoff" class="controls">
+                                <label for="field5" lass="control-label"><span>Start Date<span class="required">*</span></span></label>
+                                <input id= "date1" name="startdate" class="startDate1  form-control" type="text" data-field="date" data-startend="start" data-startendelem=".endDate1" placeholder="DD / MM / YY" readonly>
+
+                                <label for="field5" lass="control-label"><span>End Date<span class="required">*</span></span></label>
+                                <input id= "date1" name="enddate" class="endtDate1  form-control" type="text" data-field="date" data-startend="end" data-startendelem=".startDate1" placeholder="DD / MM / YY" readonly>
+                                </div>
+
+                                <div class="controls">
+                                    <label class="control-label">Location</label>
+                                    <input class="billing-address-name form-control" type="text" name="location" placeholder="The Event is at" maxlength="50">
+                                </div>
+
+                                <label for="field1"><span>Private</span></label>&nbsp;&nbsp;&nbsp;<input type="checkbox" class="js-switch" ><br><br>
+							<button type="button" class="submit" id="Save" onclick="check()"><span>Save</span></button>
+
+                                <p id="mandatory" style="visibility: hidden;">Please fill mandatory(<span style="color: red">*</span>) fields.</p>
+						</div>
+					</div>
+                        </section>
+				</form>
+			</div>
+		</div>
+	<p class="copy_rights">&copy; 2016 EVENTual. All Rights Reserved | Design by Ferozepurvaale</p>
+</div>
+</body>
+</html>
