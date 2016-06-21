@@ -16,11 +16,12 @@ Including another URLconf
 from django.conf.urls import url
 from django.contrib import admin
 from django.http import HttpResponse
-from website.views import homepage, create, search
+from website.views import homepage, create, search, create_web
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^$', homepage),
-    url(r'^create/?', create),
+    url(r'^create/web/?$', create_web),
+    url(r'^create/?$', create),
     url(r'^search/?', search),
 ]
