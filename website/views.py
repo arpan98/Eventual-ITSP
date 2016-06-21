@@ -91,5 +91,5 @@ def search(request):
             cleaned_event["endtime"] = event.endtime.strftime('%H:%M')
             cleaned_events.append(cleaned_event)
         # return HttpResponse(serializers.serialize("json", events))
-        return HttpResponse(cleaned_events)
+        return HttpResponse(str(cleaned_events))
     return HttpResponse("Nothing here")
