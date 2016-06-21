@@ -75,6 +75,21 @@ def search(request):
                 kwargs[key] = datetime.time(int(value.split(':')[0]),
                                       int(value.split(':')[1])
                                      )
-        event = EventData.objects.filter(**kwargs)
-        return HttpResponse(serializers.serialize("json", event))
+        events = EventData.objects.filter(**kwargs)
+        cleaned_events = []
+        cleaned_event = {}
+        for event in events:
+            cleaned_event["id"] = event.id
+            cleaned_event["username"] = event.username.encode('ascii', 'ignore')
+            cleaned_event["title"] = event.title.encode('ascii', 'ignore')
+            cleaned_event["description"] = event.description.encode('ascii', 'ignore')
+            cleaned_event["location"] = event.location.encode('ascii', 'ignore')
+            cleaned_event["startdate"] = event.startdate.strftime('%d/%m/%Y')
+            cleaned_event["enddate"] = event.enddate.strftime('%d/%m/%Y')
+            cleaned_event["allday"] = event.allday
+            cleaned_event["starttime"] = event.starttime.strftime('%H:%M')
+            cleaned_event["endtime"] = event.endtime.strftime('%H:%M')
+            cleaned_events.append(cleaned_event)
+        # return HttpResponse(serializers.serialize("json", events))
+        return HttpResponse(cleaned_events)
     return HttpResponse("Nothing here")
