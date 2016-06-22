@@ -1,0 +1,36 @@
+<html>
+{%  load staticfiles %}
+<h3>{{ eventdata.title }}</h3>
+
+<p>{{ eventdata.description }}</p>
+
+<h4>{{ eventdata.location }}</h4>
+
+<h4>Starts: {{ eventdata.startdate }}  &nbsp;  {{ eventdata.starttime }}</h4>
+
+<h4>Ends: {{ eventdata.enddate }}   &nbsp; {{ eventdata.endtime }}</h4>
+
+        <!-- QRCODE JQUERY-->
+        <script type="text/javascript" src="{% static "website/js/jquery.qrcode-0.12.0.js" %}"></script>
+        <script type="text/javascript" src="{% static "website/js/jquery.qrcode-0.12.0.min.js" %}"></script>
+
+	<div id="result" >
+
+		<h3 id="resulth">Event link and QR code:</h3>
+		<br><br>
+		<center>
+		<input type="text" id ="linkaddress" name="linkaddress" size="40" readonly>
+        <button id="copylink" onClick="linkcopy()">Double Click To Copy</button>
+
+		<br><br>
+		<script src="{%  static "website/js/save.js" %}"></script>
+
+		<div id="qrcode"></div>
+		<br><br>
+
+		<a class= "downloadqrcode" href="#" onclick="prepHref(this)" download>Download QR Code</a>
+		</center>
+		<p id="resultp">Share the link and QR Code generated with others to allow them to save this event to their calendars automatically by opening the link with EVENTual or scanning the QR Code using EVENTual QR Code Scanner.</p>
+	</div>
+
+</html>

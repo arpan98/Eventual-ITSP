@@ -103,3 +103,5 @@ def event_get_or_create(params):
         return HttpResponse(event.id)
     else:
         return HttpResponse("Duplicate")
+
+
