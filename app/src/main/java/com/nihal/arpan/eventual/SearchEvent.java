@@ -1,5 +1,7 @@
 package com.nihal.arpan.eventual;
 
+import android.accounts.Account;
+import android.accounts.AccountManager;
 import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.app.ProgressDialog;
@@ -14,6 +16,7 @@ import android.os.Handler;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.util.Patterns;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
@@ -29,30 +32,45 @@ import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.parse.FindCallback;
 import com.parse.ParseException;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
+import com.squareup.okhttp.Callback;
+import com.squareup.okhttp.MediaType;
+import com.squareup.okhttp.OkHttpClient;
+import com.squareup.okhttp.RequestBody;
 
+import java.io.IOException;
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
+import java.util.regex.Pattern;
 
 public class SearchEvent extends AppCompatActivity {
 
-    String TAG = "swag";
+    String TAG = "SearchEvent", username;
     Switch alldayswitch;
-    CheckBox titlecheck,startdatetimecheck,locationcheck;
-    TextView titletv, startdatetv,startdatedisplay, starttimetv, starttimedisplay, locationtv;
-    EditText titlefield,locationfield;
-    String title,startyear,startmonth,startdate,starthour,startminute,location;
+    CheckBox titlecheck, startdatetimecheck, locationcheck;
+    TextView titletv, startdatetv, startdatedisplay, starttimetv, starttimedisplay, locationtv;
+    EditText titlefield, locationfield;
+    String title, startyear, startmonth, startdate, starthour, startminute, location;
     DatePickerDialog.OnDateSetListener date1;
     MyArrayAdapter adapter;
     ListView listView;
     Button search;
     ProgressDialog dialog;
-    Boolean handlerneeded=false,started=false;
-    long stime,now;
+    Boolean handlerneeded = false, started = false, allday;
+    long stime, now;
+    ArrayList<Event> eventList;
+
+    private final OkHttpClient client = new OkHttpClient();
+    public static final MediaType JSON = MediaType.parse("application/json; charset=utf-8");
+    private static final String CREATE_URL = "http://wncc-iitb.org:8000/create";
+    private static final String SEARCH_URL = "http://wncc-iitb.org:8000/search";
 
     private Handler handler = new Handler();
     private Runnable timeout = new Runnable(){
@@ -315,141 +333,56 @@ public class SearchEvent extends AppCompatActivity {
         return netInfo != null && netInfo.isConnectedOrConnecting();
     }
 
-    public void Search(View v) {
-        Boolean valid = true;
+    public void getUsername() {
+        Pattern emailPattern = Patterns.EMAIL_ADDRESS; // API level 8+
         try {
-            if (isNetworkConnected()) {
-                if (titlecheck.isChecked() || startdatetimecheck.isChecked() || locationcheck.isChecked()) {
-                    ParseQuery<ParseObject> query = ParseQuery.getQuery("EventData");
-                    if (titlecheck.isChecked()) {
-                        if (titlefield.getText().toString().equals("")) {
-                            title = "(No Title)";
-                        } else {
-                            title = titlefield.getText().toString();
+            Account[] accounts = AccountManager.get(SearchEvent.this).getAccounts();
+            for (Account account : accounts) {
+                if (emailPattern.matcher(account.name).matches()) {
+                    String possibleEmail = account.name;
+                    username = possibleEmail;
+                    Log.d(TAG, "Username: " + username);
+                    return;
+                }
+            }
+        }
+        catch(Exception err) {
+            Log.d(TAG , "Error in getting username");
+        }
+        username = "unknown";
+    }
+
+    public void Search(View v) {
+
+        if (!isNetworkConnected()) {
+            Toast.makeText(getApplicationContext(), "Please connect to the internet and try again.", Toast.LENGTH_LONG).show();
+            return;
+        }
+
+        if (!(titlecheck.isChecked() || startdatetimecheck.isChecked() || locationcheck.isChecked())) {
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder
+                    .setTitle("Invalid Search")
+                    .setMessage("At least one of the search parameters must be defined!")
+                    .setIcon(android.R.drawable.ic_dialog_alert)
+                    .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            //Yes button clicked, do something
                         }
-                        query.whereEqualTo("title", title);
-                    }
-                    if (startdatetimecheck.isChecked()) {
-                        query.whereEqualTo("allday",alldayswitch.isChecked());
-                        if (!alldayswitch.isChecked()) {
-                            if (startdatedisplay.getText().toString().equals("") || starttimedisplay.getText().toString().equals("")) {
-                                AlertDialog.Builder builder = new AlertDialog.Builder(this);
-                                builder
-                                        .setTitle("Invalid Entry")
-                                        .setMessage("Both Date and Time fields must be filled!")
-                                        .setIcon(android.R.drawable.ic_dialog_alert)
-                                        .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
-                                            public void onClick(DialogInterface dialog, int which) {
-                                                //Yes button clicked, do something
-                                            }
-                                        })
-                                        .show();
-                                valid = false;
-                            } else {
-                                startdate = (startdatedisplay.getText().toString()).substring(0, 2);
-                                startmonth = (startdatedisplay.getText().toString()).substring(3, 5);
-                                startyear = (startdatedisplay.getText().toString()).substring(6, 10);
-                                starthour = (starttimedisplay.getText().toString()).substring(0, 2);
-                                startminute = (starttimedisplay.getText().toString()).substring(3, 5);
+                    })
+                    .show();
+            return;
+        }
 
-                                query.whereEqualTo("startyear", startyear);
-                                query.whereEqualTo("startmonth", startmonth);
-                                query.whereEqualTo("startdate", startdate);
-                                query.whereEqualTo("starthour", starthour);
-                                query.whereEqualTo("startminute", startminute);
-                            }
-                        } else {
-                            if (startdatedisplay.getText().toString().equals("")) {
-                                AlertDialog.Builder builder = new AlertDialog.Builder(this);
-                                builder
-                                        .setTitle("Invalid Entry")
-                                        .setMessage("Date field cannot be empty!")
-                                        .setIcon(android.R.drawable.ic_dialog_alert)
-                                        .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
-                                            public void onClick(DialogInterface dialog, int which) {
-                                                //Yes button clicked, do something
-                                            }
-                                        })
-                                        .show();
-                                valid = false;
-                            } else {
-                                startdate = (startdatedisplay.getText().toString()).substring(0, 2);
-                                startmonth = (startdatedisplay.getText().toString()).substring(3, 5);
-                                startyear = (startdatedisplay.getText().toString()).substring(6, 10);
+        if (startdatetimecheck.isChecked()) {
+            allday = alldayswitch.isChecked();
 
-                                query.whereEqualTo("startyear", startyear);
-                                query.whereEqualTo("startmonth", startmonth);
-                                query.whereEqualTo("startdate", startdate);
-                            }
-                        }
-                    }
-                    if (locationcheck.isChecked()) {
-                        location = locationfield.getText().toString();
-                        query.whereEqualTo("location", location);
-                    }
-                    if (valid) {
-                        query.findInBackground(new FindCallback<ParseObject>() {
-                            public void done(List<ParseObject> eventList, ParseException e) {
-                                handlerneeded=false;
-                                started=false;
-                                search.setEnabled(true);
-                                dialog.dismiss();
-                                try {
-                                    InputMethodManager inputManager = (InputMethodManager)
-                                            getSystemService(Context.INPUT_METHOD_SERVICE);
-
-                                    inputManager.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(),
-                                            InputMethodManager.HIDE_NOT_ALWAYS);
-                                } catch (Exception err) {
-                                    Log.d(TAG, "Keyboard already down");
-                                    err.printStackTrace();
-                                }
-                                if (e == null) {
-                                    Log.d(TAG, "Retrieved " + eventList.size() + " scores");
-                                    if (eventList.size() > 0) {
-
-                                        List<String> titlelist = new ArrayList<String>();
-                                        List<String> locationlist = new ArrayList<String>();
-                                        List<String> objectIdlist = new ArrayList<String>();
-                                        for (int i = 0; i < eventList.size(); i++) {
-                                            titlelist.add(eventList.get(i).getString("title"));
-                                            locationlist.add(eventList.get(i).getString("location"));
-                                            objectIdlist.add(eventList.get(i).getObjectId());
-                                        }
-                                        adapter = new MyArrayAdapter(SearchEvent.this, titlelist, locationlist, objectIdlist);
-                                        listView.setAdapter(adapter);
-
-                                        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                                            @Override
-                                            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                                                ListObject obj = adapter.getItem(position);
-                                                Log.d(TAG, "CLICKED = " + obj.objectId);
-                                                Intent i = new Intent(SearchEvent.this, SearchResult.class);
-                                                i.putExtra("objectId", obj.objectId);
-                                                startActivity(i);
-                                            }
-                                        });
-
-                                    } else {
-                                        Toast.makeText(getApplicationContext(), "No Events Found", Toast.LENGTH_LONG).show();
-                                        listView.setAdapter(null);
-                                    }
-
-                                } else {
-                                    Log.d(TAG, "Error: " + e.getMessage());
-                                }
-                            }
-                        });
-                        search.setEnabled(false);
-                        handlerneeded=true;
-                        handler.post(timeout);
-                        dialog = ProgressDialog.show(SearchEvent.this, "Retrieving", "Please wait...", true);
-                    }
-                } else {
+            if (!alldayswitch.isChecked()) {
+                if (startdatedisplay.getText().toString().equals("") || starttimedisplay.getText().toString().equals("")) {
                     AlertDialog.Builder builder = new AlertDialog.Builder(this);
                     builder
-                            .setTitle("Invalid Search")
-                            .setMessage("At least one of the search parameters must be defined!")
+                            .setTitle("Invalid Entry")
+                            .setMessage("Both Date and Time fields must be filled!")
                             .setIcon(android.R.drawable.ic_dialog_alert)
                             .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog, int which) {
@@ -457,14 +390,138 @@ public class SearchEvent extends AppCompatActivity {
                                 }
                             })
                             .show();
+                    return;
+                } else {
+                    startdate = (startdatedisplay.getText().toString()).substring(0, 2);
+                    startmonth = (startdatedisplay.getText().toString()).substring(3, 5);
+                    startyear = (startdatedisplay.getText().toString()).substring(6, 10);
+                    starthour = (starttimedisplay.getText().toString()).substring(0, 2);
+                    startminute = (starttimedisplay.getText().toString()).substring(3, 5);
                 }
             } else {
-                Toast.makeText(getApplicationContext(), "Please connect to the internet and try again.", Toast.LENGTH_LONG).show();
+                if (startdatedisplay.getText().toString().equals("")) {
+                    AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                    builder
+                            .setTitle("Invalid Entry")
+                            .setMessage("Date field cannot be empty!")
+                            .setIcon(android.R.drawable.ic_dialog_alert)
+                            .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int which) {
+                                    //Yes button clicked, do something
+                                }
+                            })
+                            .show();
+                    return;
+                } else {
+                    startdate = (startdatedisplay.getText().toString()).substring(0, 2);
+                    startmonth = (startdatedisplay.getText().toString()).substring(3, 5);
+                    startyear = (startdatedisplay.getText().toString()).substring(6, 10);
+                }
             }
         }
-        catch(Exception e) {
-            Toast.makeText(getApplicationContext(), "Error in searching", Toast.LENGTH_LONG).show();
-            e.printStackTrace();
+
+        if (locationcheck.isChecked()) {
+            location = locationfield.getText().toString();
+        }
+
+        getUsername();
+
+        /* after all checks */
+        handlerneeded = false;
+        started = false;
+        search.setEnabled(true);
+        dialog.dismiss();
+        try {
+            InputMethodManager inputManager = (InputMethodManager)
+                    getSystemService(Context.INPUT_METHOD_SERVICE);
+
+            inputManager.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(),
+                    InputMethodManager.HIDE_NOT_ALWAYS);
+        } catch (Exception err) {
+            Log.d(TAG, "Keyboard already down");
+            err.printStackTrace();
+        }
+
+        String starttime, endtime= "00:00";
+        if (allday) {
+            starttime = "00:00";
+            endtime = "00:00";
+        } else {
+            starttime = starthour + ":" + startminute;
+//            endtime = endhour + ":" + endminute;
+        }
+
+        String jsonData = "{"+ "\"allday\": \"" + allday.toString() + "\"";
+        if (titlecheck.isChecked())
+            jsonData += "\"title\": \"" + title + "\",";
+        if (locationcheck.isChecked())
+                jsonData += "\"location\": \"" + location + "\",";
+        if (startdatetimecheck.isChecked())
+            if (allday)
+                jsonData += "\"startdate\": \"" + startdate + "/" + startmonth + "/" + startyear+ "\","
+                + "\"starttime\": \"" + starttime + "\",";
+            else
+                jsonData += "\"startdate\": \"" + startdate + "/" + startmonth + "/" + startyear+ "\",";
+
+        jsonData += "}";
+
+        RequestBody body = RequestBody.create(JSON, jsonData);
+        Log.d(TAG, "search JSON = " + jsonData);
+
+        com.squareup.okhttp.Request request = new com.squareup.okhttp.Request.Builder()
+                .url(SEARCH_URL)
+                .post(body)
+                .build();
+
+        client.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(com.squareup.okhttp.Request request, IOException throwable) {
+                throwable.printStackTrace();
+            }
+
+            @Override
+            public void onResponse(com.squareup.okhttp.Response response) throws IOException {
+                if (!response.isSuccessful())
+                    throw new IOException("Unexpected code " + response);
+                else {
+                    final String jsonData = response.body().string();
+                    Log.d(TAG, "Response from " + SEARCH_URL + ": " + jsonData);
+                    Gson gson = new Gson();
+                    Type type = new TypeToken<ArrayList<Event>>() {
+                    }.getType();
+                    eventList = gson.fromJson(jsonData, type);
+                }
+            }
+        });
+
+        Log.d(TAG, "Retrieved " + eventList.size() + " scores");
+        if (eventList.size() > 0) {
+            List<String> titlelist = new ArrayList<String>();
+            List<String> locationlist = new ArrayList<String>();
+            List<String> objectIdlist = new ArrayList<String>();
+            for (int i = 0; i < eventList.size(); i++) {
+                titlelist.add(eventList.get(i).title);
+                locationlist.add(eventList.get(i).location);
+                objectIdlist.add(eventList.get(i).id);
+            }
+            adapter = new MyArrayAdapter(SearchEvent.this, titlelist, locationlist, objectIdlist);
+            listView.setAdapter(adapter);
+
+            listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                    ListObject obj = adapter.getItem(position);
+                    Log.d(TAG, "CLICKED = " + obj.objectId);
+                    Intent i = new Intent(SearchEvent.this, SearchResult.class);
+                    i.putExtra("objectId", obj.objectId);
+                    startActivity(i);
+                }
+            });
+
+            search.setEnabled(false);
+            handlerneeded = true;
+            handler.post(timeout);
+            dialog = ProgressDialog.show(SearchEvent.this, "Retrieving", "Please wait...", true);
         }
     }
 

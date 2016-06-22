@@ -22,30 +22,30 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.Toast;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
-import com.parse.GetCallback;
-import com.parse.ParseAnalytics;
-import com.parse.ParseException;
-import com.parse.ParseObject;
-import com.parse.ParseQuery;
 import com.squareup.okhttp.Callback;
 import com.squareup.okhttp.MediaType;
 import com.squareup.okhttp.OkHttpClient;
 import com.squareup.okhttp.RequestBody;
 
 import java.io.IOException;
+import java.lang.reflect.Type;
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Iterator;
 
 public class MainActivity extends AppCompatActivity {
 
     int MAKE_REQUEST_CODE=1;
-    boolean allday=false,handlerneeded=false,started=false;
-    String TAG = "swag";
-    String title,description,location,startyear,startmonth,startdate,starthour,startminute,endyear,endmonth,enddate,endhour,endminute;
-    String HOST = "www.EVENTual.com",QRStart = "EVENTualQR",QRSeperator = "~!#";
+    boolean allday = false, handlerneeded = false, started = false;
+    String TAG = "MainActivity";
+    String title,description, location, startyear, startmonth, startdate, starthour, startminute, endyear, endmonth, enddate, endhour, endminute;
+    String HOST = "www.EVENTual.com", QRStart = "EVENTualQR", QRSeperator = "~!#";
     ProgressDialog dialog;
-    long stime,now;
+    long stime, now;
     private final OkHttpClient client = new OkHttpClient();
     public static final MediaType JSON = MediaType.parse("application/json; charset=utf-8");
     private static final String CREATE_URL = "http://wncc-iitb.org:8000/create";
@@ -75,8 +75,6 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-
-        ParseAnalytics.trackAppOpenedInBackground(getIntent());
 
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
@@ -436,47 +434,7 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
 
                 if(isNetworkConnected()) {
-                    ParseQuery<ParseObject> query = ParseQuery.getQuery("EventData");
-                    query.getInBackground(objectId, new GetCallback<ParseObject>() {
-                        public void done(ParseObject object, ParseException e) {
-                            if (e == null) {
-                                try {
-                                    handlerneeded=false;
-                                    started=false;
-                                    dialog.dismiss();
 
-                                    title = object.getString("title");
-                                    description = object.getString("description");
-                                    location = object.getString("location");
-                                    startyear = object.getString("startyear");
-                                    startmonth = object.getString("startmonth");
-                                    startdate = object.getString("startdate");
-                                    starthour = object.getString("starthour");
-                                    startminute = object.getString("startminute");
-                                    endyear = object.getString("endyear");
-                                    endmonth = object.getString("endmonth");
-                                    enddate = object.getString("enddate");
-                                    endhour = object.getString("endhour");
-                                    endminute = object.getString("endminute");
-                                    allday = object.getBoolean("allday");
-                                    makeCalenderEvent();
-                                } catch (Exception exception) {
-                                    Toast.makeText(getApplicationContext(), "Error in getting from Database", Toast.LENGTH_LONG).show();
-                                    exception.printStackTrace();
-                                }
-                            } else {
-                                handlerneeded=false;
-                                started=false;
-                                dialog.dismiss();
-
-                                Log.d(TAG, e.toString());
-                                Toast.makeText(getApplicationContext(), "Event not found", Toast.LENGTH_LONG).show();
-                            }
-                        }
-                    });
-                    dialog = ProgressDialog.show(MainActivity.this, "Loading", "Please wait...", true);
-                    handler.post(timeout);
-                    handlerneeded=true;
                 }
                 else{
                     Toast.makeText(getApplicationContext(), "Please connect to the internet and try again.", Toast.LENGTH_LONG).show();
