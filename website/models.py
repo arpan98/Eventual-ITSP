@@ -11,4 +11,4 @@ class EventData(models.Model):
     allday = models.BooleanField()
     starttime = models.TimeField()
     endtime = models.TimeField()
-    private = models.BooleanField()
+    private = models.BooleanField(default=False)

@@ -78,29 +78,29 @@ License URL: http://creativecommons.org/licenses/by/3.0/
                     }
                 });
             }
-            function check()
-            {
-              var allday = document.getElementsByName('allday')[0].checked;
-              if (allday==true)
-              {
-                var start = document.getElementsByName('start')[0].value;
-                var end = document.getElementsByName('end')[0].value;
-              }
-              else
-              {
-              var start = document.getElementsByName('start')[0].value;
-              var end = document.getElementsByName('end')[0].value;
-              }
-              if(!start || !end) {
-                document.getElementById('mandatory').style.visibility = "visible";
-                console.log("Not filled");
-              }
-              else
-                {
-                document.getElementById('mandatory').style.visibility = "hidden";
-                savedata();
-              }
-            }
+    function check()
+    {
+      var allday = document.getElementsByName('allday')[0].checked;
+      if (allday==true)
+      {
+        var start = document.getElementsByName('start')[0].value;
+        var end = document.getElementsByName('end')[0].value;
+      }
+      else
+      {
+      var start = document.getElementsByName('start')[0].value;
+      var end = document.getElementsByName('end')[0].value;
+      }
+      if(!start || !end) {
+        document.getElementById('mandatory').style.visibility = "visible";
+        console.log("Not filled");
+      }
+      else
+        {
+        document.getElementById('mandatory').style.visibility = "hidden";
+        savedata();
+      }
+    }
 
     $(document).ready(function()
     {

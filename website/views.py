@@ -46,6 +46,7 @@ def validate_web(request):
     elif request.method == 'GET':
         return redirect('/create')
 
+
 def search(request):
     if request.method == 'POST':
         json_dict = json.loads(request.body)
@@ -81,6 +82,7 @@ def search(request):
         return HttpResponse(str(cleaned_events))
     elif request.method == 'GET':
         return render(request, 'website/search.html', {})
+
 
 def event_get_or_create(params):
     event, created = EventData.objects.get_or_create(
