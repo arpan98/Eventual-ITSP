@@ -20,26 +20,7 @@
 		<!-- Page Wrapper -->
 			<div id="page-wrapper">
 
-				<!-- Header -->
-					<header id="header" class="alt">
-						<h1><a href="landing.html">EVENTual</a></h1>
-						<nav id="nav">
-							<ul>
-								<li class="special">
-									<a href="#menu" class="menuToggle"><span>Menu</span></a>
-									<div id="menu">
-										<ul>
-											<li><a href="landing.html">Home</a></li>
-											<li><a href="generic.html">Generic</a></li>
-											<li><a href="elements.html">Elements</a></li>
-											<li><a href="#">Sign Up</a></li>
-											<li><a href="#">Log In</a></li>
-										</ul>
-									</div>
-								</li>
-							</ul>
-						</nav>
-					</header>
+				{% include "website/header.html" %}
 
 				<!-- Banner -->
 					<section id="banner">
@@ -73,19 +54,19 @@
 				<!-- Two -->
 					<section id="two" class="wrapper alt style2">
 						<section class="spotlight">
-							<div class="image"><img src="{% static "website/images/pic01.jpg" %}" alt="" /></div><div class="content">
+							<div class="image"><img src="{% static "website/images/createevent.jpg" %}" alt="" /></div><div class="content">
 								<h2>Create an Event</h2>
 								<p>Going to the movies tomorrow? Or is it a friend's birthday? Find an event you want to share and use our simple <a href="/create">web interface</a> or the android application to create the event by filling out event details like timings, location and description.</p>
 							</div>
 						</section>
 						<section class="spotlight">
-							<div class="image"><img src="{% static "website/images/pic02.jpg" %}" alt="" /></div><div class="content">
+							<div class="image"><img src="{% static "website/images/shareevent.jpg" %}" alt="" /></div><div class="content">
 								<h2>Share the Event</h2>
 								<p>Click on "Save" and get your Event link and QR Code. Share the link amongst friends. Anybody having the android app can open the link using our app and save it to their default calendar instantly. The event link can also be opened in a browser and later added to Google Calendar.</p>
 							</div>
 						</section>
 						<section class="spotlight">
-							<div class="image"><img src="{% static "website/images/pic03.jpg" %}" alt="" /></div><div class="content">
+							<div class="image"><img src="{% static "website/images/qrcode.jpg" %}" alt="" /></div><div class="content">
 								<h2>QR Code</h2>
 								<p>If the event is big, you can just add a small sized QR code at a corner of the event poster or invitation. Anybody having our app can scan it and save the event to their default calendar. Download the QR Code if you are using the web interface. If you are using the app, the QR Code can be saved to a desired location on your phone after the event is created.</p>
 							</div>
@@ -96,34 +77,33 @@
 					<section id="three" class="wrapper style3 special">
 						<div class="inner">
 							<header class="major">
-								<h2>Accumsan mus tortor nunc aliquet</h2>
-								<p>Aliquam ut ex ut augue consectetur interdum. Donec amet imperdiet eleifend<br />
-								fringilla tincidunt. Nullam dui leo Aenean mi ligula, rhoncus ullamcorper.</p>
+								<h2>Features and Advantages</h2>
+								<p>Using EVENTual helps you and people around you to keep track easily.</p>
 							</header>
 							<ul class="features">
-								<li class="icon fa-paper-plane-o">
-									<h3>Arcu accumsan</h3>
-									<p>Augue consectetur sed interdum imperdiet et ipsum. Mauris lorem tincidunt nullam amet leo Aenean ligula consequat consequat.</p>
+								<li class="icon fa-clock-o">
+									<h3>Save time</h3>
+									<p>People are often reluctant to save events in their calendar due to the effort required to type down every single detail regarding the event.</p>
 								</li>
-								<li class="icon fa-laptop">
-									<h3>Ac Augue Eget</h3>
-									<p>Augue consectetur sed interdum imperdiet et ipsum. Mauris lorem tincidunt nullam amet leo Aenean ligula consequat consequat.</p>
+								<li class="icon fa-share-alt">
+									<h3>Sharable Links</h3>
+									<p>Using EVENTual, only one person has to fill in the details and share the link. Every one else can just save it with the click of a button. These links can also be shared on facebook event pages, google forms etc.</p>
 								</li>
-								<li class="icon fa-code">
-									<h3>Mus Scelerisque</h3>
-									<p>Augue consectetur sed interdum imperdiet et ipsum. Mauris lorem tincidunt nullam amet leo Aenean ligula consequat consequat.</p>
+								<li class="icon fa-qrcode">
+									<h3>QR Code</h3>
+									<p>QR codes can be easily generated and shared after an event has been created. These can be added to the corner of a poster or at the bottom of an invitation.</p>
 								</li>
-								<li class="icon fa-headphones">
-									<h3>Mauris Imperdiet</h3>
-									<p>Augue consectetur sed interdum imperdiet et ipsum. Mauris lorem tincidunt nullam amet leo Aenean ligula consequat consequat.</p>
+								<li class="icon fa-mobile">
+									<h3>Scan and Save</h3>
+									<p>Using the app, the QR Code generated can be scanned and saved to the device's default calendar instantly.</p>
 								</li>
-								<li class="icon fa-heart-o">
-									<h3>Aenean Primis</h3>
-									<p>Augue consectetur sed interdum imperdiet et ipsum. Mauris lorem tincidunt nullam amet leo Aenean ligula consequat consequat.</p>
+								<li class="icon fa-search">
+									<h3>Search Events</h3>
+									<p>Any public event can be searched for by filtering according to fields like title location and timing. One can also search for all events created by oneself using the app.</p>
 								</li>
-								<li class="icon fa-flag-o">
-									<h3>Tortor Ut</h3>
-									<p>Augue consectetur sed interdum imperdiet et ipsum. Mauris lorem tincidunt nullam amet leo Aenean ligula consequat consequat.</p>
+								<li class="icon fa-lock">
+									<h3>Privacy</h3>
+									<p>Marking an event as private would hide it from all searches. Only the person who created it can search for it and only people having the link can view it.</p>
 								</li>
 							</ul>
 						</div>
@@ -143,19 +123,7 @@
 						</div>
 					</section>
 
-				<!-- Footer -->
-					<footer id="footer">
-						<ul class="icons">
-							<li><a href="#" class="icon fa-twitter"><span class="label">Twitter</span></a></li>
-							<li><a href="#" class="icon fa-facebook"><span class="label">Facebook</span></a></li>
-							<li><a href="#" class="icon fa-instagram"><span class="label">Instagram</span></a></li>
-							<li><a href="#" class="icon fa-dribbble"><span class="label">Dribbble</span></a></li>
-							<li><a href="#" class="icon fa-envelope-o"><span class="label">Email</span></a></li>
-						</ul>
-						<!-- <ul class="copyright">
-							<li>&copy; Untitled</li><li>Design: <a href="http://html5up.net">HTML5 UP</a></li>
-						</ul> -->
-					</footer>
+				{% include "website/footer.html" %}
 
 			</div>
 
