@@ -4,10 +4,10 @@
 	html5up.net | @ajlkn
 	Free for personal and commercial use under the CCA 3.0 license (html5up.net/license)
 -->
-{% load staticfiles %}
+{% load staticfiles %} 
 <html>
 	<head>
-		<title>Spectral by HTML5 UP</title>
+		<title>EVENTual</title>
 		<meta charset="utf-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1" />
 		<!--[if lte IE 8]><script src="{% static "website/js/ie/html5shiv.js" %}"></script><![endif]-->
@@ -22,7 +22,7 @@
 
 				<!-- Header -->
 					<header id="header" class="alt">
-						<h1><a href="landing.html">Spectral</a></h1>
+						<h1><a href="landing.html">EVENTual</a></h1>
 						<nav id="nav">
 							<ul>
 								<li class="special">
@@ -44,12 +44,10 @@
 				<!-- Banner -->
 					<section id="banner">
 						<div class="inner">
-							<h2>Spectral</h2>
-							<p>Another fine responsive<br />
-							site template freebie<br />
-							crafted by <a href="http://html5up.net">HTML5 UP</a>.</p>
+							<h2>EVENTual</h2>
+							<p>A new way to <br/>create and share events <br/>instantly</p>
 							<ul class="actions">
-								<li><a href="#" class="button special">Activate</a></li>
+								<li><a href="#cta" class="button special">Get Started</a></li>
 							</ul>
 						</div>
 						<a href="#one" class="more scrolly">Learn More</a>
@@ -59,15 +57,15 @@
 					<section id="one" class="wrapper style1 special">
 						<div class="inner">
 							<header class="major">
-								<h2>Arcu aliquet vel lobortis ata nisl<br />
-								eget augue amet aliquet nisl cep donec</h2>
-								<p>Aliquam ut ex ut augue consectetur interdum. Donec amet imperdiet eleifend<br />
-								fringilla tincidunt. Nullam dui leo Aenean mi ligula, rhoncus ullamcorper.</p>
+								<h2>CREATING AND SHARING EVENTS <br/>HAS NEVER BEEN EASIER</h2>
+								<p>No more painstakingly filling or remembering event details. Save events to your default calendar with one tap. Fill out the details and get a sharable link and QR code. Use our android app to directly add that event to your default calendar by opening the sharable link or scanning the QR code.</p>
 							</header>
 							<ul class="icons major">
-								<li><span class="icon fa-diamond major style1"><span class="label">Lorem</span></span></li>
-								<li><span class="icon fa-heart-o major style2"><span class="label">Ipsum</span></span></li>
-								<li><span class="icon fa-code major style3"><span class="label">Dolor</span></span></li>
+								<li><span class="icon fa-calendar major style1"><span class="label">Lorem</span></span></li>
+								<li><span class="icon fa-pencil-square-o major style2"><span class="label">Ipsum</span></span></li>
+								<li><span class="icon fa-share-alt major style3"><span class="label">Dolor</span></span></li>
+								<li><span class="icon fa-mobile major style2"><span class="label">Ipsum</span></span></li>
+								<li><span class="icon fa-qrcode major style3"><span class="label">Dolor</span></span></li>
 							</ul>
 						</div>
 					</section>
@@ -76,23 +74,20 @@
 					<section id="two" class="wrapper alt style2">
 						<section class="spotlight">
 							<div class="image"><img src="{% static "website/images/pic01.jpg" %}" alt="" /></div><div class="content">
-								<h2>Magna primis lobortis<br />
-								sed ullamcorper</h2>
-								<p>Aliquam ut ex ut augue consectetur interdum. Donec hendrerit imperdiet. Mauris eleifend fringilla nullam aenean mi ligula.</p>
+								<h2>Create an Event</h2>
+								<p>Going to the movies tomorrow? Or is it a friend's birthday? Find an event you want to share and use our simple <a href="/create">web interface</a> or the android application to create the event by filling out event details like timings, location and description.</p>
 							</div>
 						</section>
 						<section class="spotlight">
 							<div class="image"><img src="{% static "website/images/pic02.jpg" %}" alt="" /></div><div class="content">
-								<h2>Tortor dolore feugiat<br />
-								elementum magna</h2>
-								<p>Aliquam ut ex ut augue consectetur interdum. Donec hendrerit imperdiet. Mauris eleifend fringilla nullam aenean mi ligula.</p>
+								<h2>Share the Event</h2>
+								<p>Click on "Save" and get your Event link and QR Code. Share the link amongst friends. Anybody having the android app can open the link using our app and save it to their default calendar instantly. The event link can also be opened in a browser and later added to Google Calendar.</p>
 							</div>
 						</section>
 						<section class="spotlight">
 							<div class="image"><img src="{% static "website/images/pic03.jpg" %}" alt="" /></div><div class="content">
-								<h2>Augue eleifend aliquet<br />
-								sed condimentum</h2>
-								<p>Aliquam ut ex ut augue consectetur interdum. Donec hendrerit imperdiet. Mauris eleifend fringilla nullam aenean mi ligula.</p>
+								<h2>QR Code</h2>
+								<p>If the event is big, you can just add a small sized QR code at a corner of the event poster or invitation. Anybody having our app can scan it and save the event to their default calendar. Download the QR Code if you are using the web interface. If you are using the app, the QR Code can be saved to a desired location on your phone after the event is created.</p>
 							</div>
 						</section>
 					</section>
@@ -138,12 +133,12 @@
 					<section id="cta" class="wrapper style4">
 						<div class="inner">
 							<header>
-								<h2>Arcue ut vel commodo</h2>
-								<p>Aliquam ut ex ut augue consectetur interdum endrerit imperdiet amet eleifend fringilla.</p>
+								<h2>Stay punctual with EVENTual</h2>
+								<p>EVENTual is easy to use. Get Started by creating and sharing your first event.</p>
 							</header>
 							<ul class="actions vertical">
-								<li><a href="#" class="button fit special">Activate</a></li>
-								<li><a href="#" class="button fit">Learn More</a></li>
+								<li><a href="/create" class="button fit special">Create Event</a></li>
+								<li><a href="/search" class="button fit">Search Event</a></li>
 							</ul>
 						</div>
 					</section>
@@ -157,9 +152,9 @@
 							<li><a href="#" class="icon fa-dribbble"><span class="label">Dribbble</span></a></li>
 							<li><a href="#" class="icon fa-envelope-o"><span class="label">Email</span></a></li>
 						</ul>
-						<ul class="copyright">
+						<!-- <ul class="copyright">
 							<li>&copy; Untitled</li><li>Design: <a href="http://html5up.net">HTML5 UP</a></li>
-						</ul>
+						</ul> -->
 					</footer>
 
 			</div>
