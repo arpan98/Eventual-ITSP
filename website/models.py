@@ -11,4 +11,10 @@ class EventData(models.Model):
     allday = models.BooleanField()
     starttime = models.TimeField()
     endtime = models.TimeField()
-    private = models.BooleanField()
+    private = models.BooleanField(default=False)
+
+
+class Share(models.Model):
+    event = models.OneToOneField(EventData, related_name='share',on_delete=models.CASCADE)
+    link = models.URLField()
+    qrcode = models.ImageField()

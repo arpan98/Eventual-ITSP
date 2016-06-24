@@ -67,7 +67,7 @@ License URL: http://creativecommons.org/licenses/by/3.0/
 
     function savedata() {
                 $("#detailsForm").ajaxSubmit({
-                    url: '/create/web',
+                    url: '/validate/web',
                     type: 'POST',
                     success: function(response) {
                         alert(response);
@@ -78,29 +78,29 @@ License URL: http://creativecommons.org/licenses/by/3.0/
                     }
                 });
             }
-            function check()
-            {
-              var allday = document.getElementsByName('allday')[0].checked;
-              if (allday==true)
-              {
-                var start = document.getElementsByName('start')[0].value;
-                var end = document.getElementsByName('end')[0].value;
-              }
-              else
-              {
-              var start = document.getElementsByName('start')[0].value;
-              var end = document.getElementsByName('end')[0].value;
-              }
-              if(!start || !end) {
-                document.getElementById('mandatory').style.visibility = "visible";
-                console.log("Not filled");
-              }
-              else
-                {
-                document.getElementById('mandatory').style.visibility = "hidden";
-                savedata();
-              }
-            }
+    function check()
+    {
+      var allday = document.getElementsByName('allday')[0].checked;
+      if (allday==true)
+      {
+        var start = document.getElementsByName('start')[0].value;
+        var end = document.getElementsByName('end')[0].value;
+      }
+      else
+      {
+      var start = document.getElementsByName('start')[0].value;
+      var end = document.getElementsByName('end')[0].value;
+      }
+      if(!start || !end) {
+        document.getElementById('mandatory').style.visibility = "visible";
+        console.log("Not filled");
+      }
+      else
+        {
+        document.getElementById('mandatory').style.visibility = "hidden";
+        savedata();
+      }
+    }
 
     $(document).ready(function()
     {
@@ -120,6 +120,8 @@ License URL: http://creativecommons.org/licenses/by/3.0/
                 addedtime.setHours ( currentdate.getHours() + 1 );
                 dtPickerObj.setDateTimeStringInInputField($("#start"));
                 dtPickerObj.setDateTimeStringInInputField($("#date1"));
+                dtPickerObj.setDateTimeStringInInputField($("#end"),addedtime);
+                dtPickerObj.setDateTimeStringInInputField($("#date2"));
                 document.getElementById('alldayoff').style.visibility = "hidden";
                 document.getElementById('alldayoff').style.display = "none";
                 document.getElementById('result').style.visibility = "hidden";
@@ -168,7 +170,7 @@ License URL: http://creativecommons.org/licenses/by/3.0/
                                 <input id= "date1" name="startdate" class="startDate1  form-control" type="text" data-field="date" data-startend="start" data-startendelem=".endDate1" placeholder="DD / MM / YY" readonly>
 
                                 <label for="field5" lass="control-label"><span>End Date<span class="required">*</span></span></label>
-                                <input id= "date1" name="enddate" class="endtDate1  form-control" type="text" data-field="date" data-startend="end" data-startendelem=".startDate1" placeholder="DD / MM / YY" readonly>
+                                <input id= "date2" name="enddate" class="endtDate1  form-control" type="text" data-field="date" data-startend="end" data-startendelem=".startDate1" placeholder="DD / MM / YY" readonly>
                                 </div>
 
                                 <div class="controls">

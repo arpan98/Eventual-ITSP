@@ -81,8 +81,8 @@ License URL: http://creativecommons.org/licenses/by/3.0/
                 var currentdate = new Date();
                 var addedtime = new Date();
                 addedtime.setHours ( currentdate.getHours() + 1 );
-                dtPickerObj.setDateTimeStringInInputField($("#start"));
-                dtPickerObj.setDateTimeStringInInputField($("#date1"));
+                //dtPickerObj.setDateTimeStringInInputField($("#start"));
+                //dtPickerObj.setDateTimeStringInInputField($("#date1"));
                 document.getElementById('alldayoff').style.visibility = "hidden";
                 document.getElementById('alldayoff').style.display = "none";
                 document.getElementById('result').style.visibility = "hidden";
@@ -93,7 +93,12 @@ License URL: http://creativecommons.org/licenses/by/3.0/
 
         });
 
+        $( ".startDateTime1,.startDate1" ).datepicker({
+            defaultDate: ''
+        });
+
     });
+
 </script>
 </head>
 <body>
@@ -120,7 +125,7 @@ License URL: http://creativecommons.org/licenses/by/3.0/
 
                                 <div id = "alldayon" class="controls">
                                 <label class="control-label" for="field4"><span>Start DateTime <span class="required">*</span></span></label>
-                                <input class="startDateTime1 form-control" type="text" data-field="datetime" data-startend="startdatetime" data-startendelem=".endDateTime1" readonly id= "start" name="start" placeholder="DD / MM / YY hh:mm">
+                                <input class="startDateTime1 form-control" type="text" data-field="datetime"  data-startend="startdatetime" data-startendelem=".endDateTime1" readonly id= "start" name="start" placeholder="DD / MM / YY hh:mm">
 
                                 <label class="control-label" for="field4"><span>End DateTime <span class="required">*</span></span></label>
                                 <input class="endDateTime1 form-control" type="text" data-field="datetime" data-startend="enddatetime" data-startendelem=".startDateTime1" readonly id= "end" name="end" placeholder="DD / MM / YY hh:mm">
