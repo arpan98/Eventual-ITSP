@@ -1,36 +1,127 @@
-<html>
+<!DOCTYPE HTML>
+<!--
+	Spectral by HTML5 UP
+	html5up.net | @ajlkn
+	Free for personal and commercial use under the CCA 3.0 license (html5up.net/license)
+-->
 {%  load staticfiles %}
-<h3>{{ eventdata.title }}</h3>
+<html xmlns="http://www.w3.org/1999/html">
+	<head>
+		<title>{{ eventdata.title }}</title>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<!--[if lte IE 8]><script src="assets/js/ie/html5shiv.js"></script><![endif]-->
+		<link rel="stylesheet" href="{% static "website/css/main.css" %}"/>
+		<!--[if lte IE 8]><link rel="stylesheet" href="assets/css/ie8.css" /><![endif]-->
+		<!--[if lte IE 9]><link rel="stylesheet" href="assets/css/ie9.css" /><![endif]-->
+        		<!-- Scripts -->
+			<script src="{% static "website/js/jquery.min.js" %}"></script>
+			<script src="{% static "website/js/jquery.scrollex.min.js" %}"></script>
+			<script src="{% static "website/js/jquery.scrolly.min.js" %}"></script>
+			<script src="{% static "website/js/skel.min.js" %}"></script>
+			<script src="{% static "website/js/util.js" %}"></script>
+			<!--[if lte IE 8]><script src="assets/js/ie/respond.min.js" %}"></script><![endif]-->
+			<script src="{% static "website/js/main.js" %}"></script>
+	</head>
+	<body>
 
-<p>{{ eventdata.description }}</p>
+		<!-- Page Wrapper -->
+			<div id="page-wrapper">
 
-<h4>{{ eventdata.location }}</h4>
+				<!-- Header -->
+					<header id="header">
+						<h1><a href="index.html">EVENTual</a></h1>
+						<nav id="nav">
+							<ul>
+								<li class="special">
+									<a href="#menu" class="menuToggle"><span>Menu</span></a>
+									<div id="menu">
+										<ul>
+											<li><a href="index.html">Home</a></li>
+											<li><a href="event.html">Generic</a></li>
+											<li><a href="elements.html">Elements</a></li>
+											<li><a href="#">Sign Up</a></li>
+											<li><a href="#">Log In</a></li>
+										</ul>
+									</div>
+								</li>
+							</ul>
+						</nav>
+					</header>
 
-<h4>Starts: {{ eventdata.startdate }}  &nbsp;  {{ eventdata.starttime }}</h4>
+				<!-- Main -->
+					<article id="main">
+						<header>
+							<h2>{{ eventdata.title }}</h2>
+							<p>{{ eventdata.description }}</p>
+						</header>
+						<section class="wrapper style5">
+							<div class="inner" style="text-align: center">
+                                <h4>{{ eventdata.location }}</h4>
 
-<h4>Ends: {{ eventdata.enddate }}   &nbsp; {{ eventdata.endtime }}</h4>
+                                <h4>Starts: {{ eventdata.startdate }}  &nbsp;  {{ eventdata.starttime }}</h4>
 
-        <!-- QRCODE JQUERY-->
-        <script type="text/javascript" src="{% static "website/js/jquery.qrcode-0.12.0.js" %}"></script>
-        <script type="text/javascript" src="{% static "website/js/jquery.qrcode-0.12.0.min.js" %}"></script>
+                                <h4>Ends: {{ eventdata.enddate }}   &nbsp; {{ eventdata.endtime }}</h4>
 
-	<div id="result" >
+							</div>
+						</section>
+					</article>
 
-		<h3 id="resulth">Event link and QR code:</h3>
-		<br><br>
-		<center>
-		<input type="text" id ="linkaddress" name="linkaddress" size="40" readonly>
-        <button id="copylink" onClick="linkcopy()">Double Click To Copy</button>
+                <!-- QRCODE JQUERY-->
+                <script type="text/javascript" src="{% static "website/js/jquery.qrcode-0.12.0.js" %}"></script>
+                <script type="text/javascript" src="{% static "website/js/jquery.qrcode-0.12.0.min.js" %}"></script>
 
-		<br><br>
-		<script src="{%  static "website/js/save.js" %}"></script>
+            <div id="result" style="text-align: center">
 
-		<div id="qrcode"></div>
-		<br><br>
+                <h3 id="resulth">Event link and QR code:</h3>
+                <br><br>
+                <center>
+                <input type="text" id ="linkaddress" name="linkaddress" size="40" style="text-align: center" readonly>
+                <button id="copylink" onClick="linkcopy()">Double Click To Copy</button>
 
-		<a class= "downloadqrcode" href="#" onclick="prepHref(this)" download>Download QR Code</a>
-		</center>
-		<p id="resultp">Share the link and QR Code generated with others to allow them to save this event to their calendars automatically by opening the link with EVENTual or scanning the QR Code using EVENTual QR Code Scanner.</p>
-	</div>
+                <br><br>
+{#                <script src="{%  static "website/js/save.js" %}"></script>#}
 
+                <div id="qrcode"></div>
+                <br><br>
+
+                <a class= "downloadqrcode" href="#" onclick="prepHref(this)" download>Download QR Code</a>
+                </center>
+                <p id="resultp">Share the link and QR Code generated with others to allow them to save this event to their calendars automatically by opening the link with EVENTual or scanning the QR Code using EVENTual QR Code Scanner.</p>
+            </div>
+                <script>
+
+                       $(document).ready(function() {
+                           var seq = "~!#";
+                           $(qrcode).empty();
+                           $(qrcode).qrcode({
+                               "size": 300,
+                               "color": "#3a3",
+                               "render": "image",
+                               "background": "white",
+                               "text": "EVENTualQR" + seq + "{{ eventdata.title }}" +seq + "{{ eventdata.description }}" +seq + String("{{ eventdata.allday }}") + seq + "{{ eventdata.startime }}" +seq + "{{ eventdata.endtime }}" +seq + "{{ eventdata.location }}" +seq
+                           });
+                           console.log("cool");
+                           document.getElementById("linkaddress").value = "www.wncc-iitb.org:8000/events/" + "{{ eventdata.id }}";
+                       });
+                </script>
+				<!-- Footer -->
+					<footer id="footer">
+						<ul class="icons">
+							<li><a href="#" class="icon fa-twitter"><span class="label">Twitter</span></a></li>
+							<li><a href="#" class="icon fa-facebook"><span class="label">Facebook</span></a></li>
+							<li><a href="#" class="icon fa-instagram"><span class="label">Instagram</span></a></li>
+							<li><a href="#" class="icon fa-dribbble"><span class="label">Dribbble</span></a></li>
+							<li><a href="#" class="icon fa-envelope-o"><span class="label">Email</span></a></li>
+						</ul>
+						<ul class="copyright">
+							<li>&copy; Untitled</li><li>Design: <a href="http://html5up.net">HTML5 UP</a></li>
+						</ul>
+					</footer>
+
+			</div>
+
+
+
+	</body>
 </html>
