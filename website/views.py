@@ -52,13 +52,18 @@ def search(request):
         json_dict = json.loads(request.body)
         kwargs = {}
         for key, value in json_dict.iteritems():
-            kwargs[key] = urllib.unquote(value).replace('+', ' ')
+            print(key)
+            if key != "private" and key != "allday":
+                kwargs[key] = urllib.unquote(value).replace('+', ' ')
+            else:
+                kwargs[key] = value
             if 'date' in key:
                 kwargs[key] = datetime.datetime.strptime(value, '%d/%m/%Y')
             if 'time' in key:
                 kwargs[key] = datetime.time(
                     int(value.split(':')[0]), int(value.split(':')[1]))
         events = EventData.objects.filter(**kwargs)
+        print(kwargs)
         cleaned_events = []
         cleaned_event = {}
         for event in events:
@@ -77,6 +82,7 @@ def search(request):
             cleaned_event["allday"] = event.allday
             cleaned_event["starttime"] = event.starttime.strftime('%H:%M')
             cleaned_event["endtime"] = event.endtime.strftime('%H:%M')
+            cleaned_event["private"] = event.private
             cleaned_events.append(cleaned_event)
         # return HttpResponse(serializers.serialize("json", events))
         return HttpResponse(str(cleaned_events))
