@@ -59,7 +59,7 @@
 							<div class="inner" style="text-align: center">
                                 <h4>{{ eventdata.location }}</h4>
 
-                                <h4>Starts: {{ eventdata.startdate }}  &nbsp;  {{ eventdata.starttime }}</h4>
+                                <h4>Starts: {{ eventdata.startdate }}  &nbsp;  < id="alldayof" {{ eventdata.starttime }} /></h4>
 
                                 <h4>Ends: {{ eventdata.enddate }}   &nbsp; {{ eventdata.endtime }}</h4>
 
@@ -99,7 +99,7 @@
                                "color": "#3a3",
                                "render": "image",
                                "background": "white",
-                               "text": "EVENTualQR" + seq + "{{ eventdata.title }}" +seq + "{{ eventdata.description }}" +seq + String("{{ eventdata.allday }}") + seq + "{{ eventdata.startime }}" +seq + "{{ eventdata.endtime }}" +seq + "{{ eventdata.location }}" +seq
+                               "text": "EVENTualQR" + seq + "{{ eventdata.title }}" +seq + "{{ eventdata.description }}" +seq + String("{{ eventdata.allday }}") + seq + "{{ eventdata.startdate }}" + seq + "{{ eventdata.startime }}" +seq + "{{ eventdata.enddate }}" +"{{ eventdata.endtime }}" + seq + "{{ eventdata.location }}" +seq + "{{ eventdata.private }}"
                            });
                            console.log("cool");
                            document.getElementById("linkaddress").value = "www.wncc-iitb.org:8000/events/" + "{{ eventdata.id }}";

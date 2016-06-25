@@ -1,2 +1,4 @@
 /eventual/static/*
 .DS_Store
+
+*.pyc

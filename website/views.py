@@ -98,7 +98,8 @@ def event_get_or_create(params):
             int(params['starttime'].split(':')[1])),
         endtime=datetime.time(
             int(params['endtime'].split(':')[0]),
-            int(params['endtime'].split(':')[1])), )
+            int(params['endtime'].split(':')[1])),
+        private=bool(params['private']))
     if created:
         return HttpResponse(event.id)
     else:
