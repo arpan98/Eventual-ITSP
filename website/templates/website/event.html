@@ -22,46 +22,29 @@
 			<script src="{% static "website/js/util.js" %}"></script>
 			<!--[if lte IE 8]><script src="assets/js/ie/respond.min.js" %}"></script><![endif]-->
 			<script src="{% static "website/js/main.js" %}"></script>
+			<script src="{%  static "website/js/save.js" %}"></script>
 	</head>
 	<body>
 
 		<!-- Page Wrapper -->
 			<div id="page-wrapper">
 
-				<!-- Header -->
-					<header id="header">
-						<h1><a href="index.html">EVENTual</a></h1>
-						<nav id="nav">
-							<ul>
-								<li class="special">
-									<a href="#menu" class="menuToggle"><span>Menu</span></a>
-									<div id="menu">
-										<ul>
-											<li><a href="index.html">Home</a></li>
-											<li><a href="event.html">Generic</a></li>
-											<li><a href="elements.html">Elements</a></li>
-											<li><a href="#">Sign Up</a></li>
-											<li><a href="#">Log In</a></li>
-										</ul>
-									</div>
-								</li>
-							</ul>
-						</nav>
-					</header>
+		
+		{% include "website/header.html" %}
 
 				<!-- Main -->
 					<article id="main">
 						<header>
 							<h2>{{ eventdata.title }}</h2>
-							<p>{{ eventdata.description }}</p>
+							{% if eventdata.description %} <p>{{ eventdata.description }}</p> {% endif %}
 						</header>
 						<section class="wrapper style5">
 							<div class="inner" style="text-align: center">
-                                <h4>{{ eventdata.location }}</h4>
+                                {% if eventdata.location %}<h4>Location: {{ eventdata.location }}</h4>{% endif %}
 
-                                <h4>Starts: {{ eventdata.startdate }}  &nbsp;  < id="alldayof" {{ eventdata.starttime }} /></h4>
+                                <h4>Starts: {{ eventdata.startdate }}  &nbsp; {% if eventdata.allday == False %} {{ eventdata.starttime }}  {% endif %}</h4>
 
-                                <h4>Ends: {{ eventdata.enddate }}   &nbsp; {{ eventdata.endtime }}</h4>
+                                <h4>Ends: {{ eventdata.enddate }}   &nbsp; {% if eventdata.allday == False %} {{ eventdata.endtime }} {% endif %}</h4>
 
 							</div>
 						</section>
@@ -74,18 +57,18 @@
             <div id="result" style="text-align: center">
 
                 <h3 id="resulth">Event link and QR code:</h3>
-                <br><br>
+                <br/><br/>
                 <center>
                 <input type="text" id ="linkaddress" name="linkaddress" size="40" style="text-align: center" readonly>
+                <br/>
                 <button id="copylink" onClick="linkcopy()">Double Click To Copy</button>
 
-                <br><br>
-{#                <script src="{%  static "website/js/save.js" %}"></script>#}
+                <br/><br/>
 
                 <div id="qrcode"></div>
-                <br><br>
+                <br/><br/>
 
-                <a class= "downloadqrcode" href="#" onclick="prepHref(this)" download>Download QR Code</a>
+                <a class= "downloadqrcode button" href="#" onclick="prepHref(this)" download>Download QR Code</a>
                 </center>
                 <p id="resultp">Share the link and QR Code generated with others to allow them to save this event to their calendars automatically by opening the link with EVENTual or scanning the QR Code using EVENTual QR Code Scanner.</p>
             </div>
@@ -101,23 +84,12 @@
                                "background": "white",
                                "text": "EVENTualQR" + seq + "{{ eventdata.title }}" +seq + "{{ eventdata.description }}" +seq + String("{{ eventdata.allday }}") + seq + "{{ eventdata.startdate }}" + seq + "{{ eventdata.startime }}" +seq + "{{ eventdata.enddate }}" +"{{ eventdata.endtime }}" + seq + "{{ eventdata.location }}" +seq + "{{ eventdata.private }}"
                            });
-                           console.log("cool");
-                           document.getElementById("linkaddress").value = "www.wncc-iitb.org:8000/events/" + "{{ eventdata.id }}";
+                           document.getElementById("linkaddress").value = "www.wncc-iitb.org:8000/event/" + "{{ eventdata.id }}";
                        });
+
+                       var qrcodedownload = "{{eventdata.title}}" + ".png";
                 </script>
-				<!-- Footer -->
-					<footer id="footer">
-						<ul class="icons">
-							<li><a href="#" class="icon fa-twitter"><span class="label">Twitter</span></a></li>
-							<li><a href="#" class="icon fa-facebook"><span class="label">Facebook</span></a></li>
-							<li><a href="#" class="icon fa-instagram"><span class="label">Instagram</span></a></li>
-							<li><a href="#" class="icon fa-dribbble"><span class="label">Dribbble</span></a></li>
-							<li><a href="#" class="icon fa-envelope-o"><span class="label">Email</span></a></li>
-						</ul>
-						<ul class="copyright">
-							<li>&copy; Untitled</li><li>Design: <a href="http://html5up.net">HTML5 UP</a></li>
-						</ul>
-					</footer>
+				{% include "website/footer.html" %}
 
 			</div>
 

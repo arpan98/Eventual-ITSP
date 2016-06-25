@@ -1921,7 +1921,7 @@
 			}
 
 		.icon.style1 {
-			color: #00ffcc;
+			color: #66FF00;
 		}
 
 		.icon.style2 {
@@ -1929,7 +1929,15 @@
 		}
 
 		.icon.style3 {
-			color: #76ddff;
+			color: #8B008B;
+		}
+
+		.icon.style4 {
+			color: #002E63;
+		}
+
+		.icon.style5 {
+			color: #000000;
 		}
 
 /* Image */

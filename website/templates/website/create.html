@@ -19,9 +19,17 @@ License URL: http://creativecommons.org/licenses/by/3.0/
 <link href='//fonts.googleapis.com/css?family=Montserrat:400,700' rel='stylesheet' type='text/css'>
 <link href='//fonts.googleapis.com/css?family=Open+Sans:400,300,300italic,400italic,600,600italic,700,700italic,800,800italic' rel='stylesheet' type='text/css'>
 <link rel="stylesheet" href="{% static "website/css/creditly.css" %}">
+
+<script src="{% static "website/js/jquery.min.js" %}"></script>
+<script src="{% static "website/js/jquery.scrollex.min.js" %}"></script>
+<script src="{% static "website/js/jquery.scrolly.min.js" %}"></script>
+<script src="{% static "website/js/skel.min.js" %}"></script>
+<script src="{% static "website/js/util.js" %}"></script>
+<script src="{% static "website/js/main.js" %}"></script>
+
 <link href="{% static "website/css/style.css" %}" rel="stylesheet" type="text/css" media="all" />
 <script type="text/javascript" src="{% static "website/js/creditly.js" %}"></script>
-<!-- DATEPICKER JQUERY-->
+        <!-- DATEPICKER JQUERY-->
         <link rel="stylesheet" type="text/css" href="{% static "website/css/DateTimePicker.css" %}" />
         <script type="text/javascript" src="{% static "website/js/jquery-1.11.0.min.js" %}"></script>
         <script type="text/javascript" src="{% static "website/js/DateTimePicker.js" %}"></script>
@@ -39,12 +47,11 @@ License URL: http://creativecommons.org/licenses/by/3.0/
     <script type="text/javascript" src="{%  static "website/js/jquery.form.js" %}"></script>
 <script type="text/javascript">
 
-    function print()
-            {
-                console.log(document.getElementById('reminder').value);
-            }
-    function alldayfn()
-    {
+    function print() {
+        console.log(document.getElementById('reminder').value);
+    }
+
+    function alldayfn() {
         var allday = document.getElementById('allday').checked;
         var section1 = document.getElementById('alldayon');
         var section2 = document.getElementById('alldayoff');
@@ -66,18 +73,19 @@ License URL: http://creativecommons.org/licenses/by/3.0/
     }
 
     function savedata() {
-                $("#detailsForm").ajaxSubmit({
-                    url: '/validate/web',
-                    type: 'POST',
-                    success: function(response) {
-                        alert(response);
-                    },
-                    error: function(a, b) {
-                        console.log(a);
-                        console.log(b);
-                    }
-                });
+        $("#detailsForm").ajaxSubmit({
+            url: '/create/web',
+            type: 'POST',
+            success: function(response) {
+                alert(response);
+            },
+            error: function(a, b) {
+                console.log(a);
+                console.log(b);
             }
+        });
+    }
+
     function check()
     {
       var allday = document.getElementsByName('allday')[0].checked;
@@ -124,7 +132,7 @@ License URL: http://creativecommons.org/licenses/by/3.0/
                 dtPickerObj.setDateTimeStringInInputField($("#date2"));
                 document.getElementById('alldayoff').style.visibility = "hidden";
                 document.getElementById('alldayoff').style.display = "none";
-                document.getElementById('result').style.visibility = "hidden";
+                // document.getElementById('result').style.visibility = "hidden";
                 document.getElementById('mandatory').style.visibility = "hidden";
 
                 //dtPickerObj.setDateTimeStringInInputField($("#end"),addedtime);
@@ -137,10 +145,11 @@ License URL: http://creativecommons.org/licenses/by/3.0/
 </head>
 <body>
 
+{% include "website/header.html" %}
 <div id="dtBox"></div>
 
 <div class="content">
-	<h1>Add Eventually</h1>
+	<h1>Add EVENTually</h1>
 		<div class="main">
 			<div class="row">
 				<form id="detailsForm" method="post" class="creditly-card-form">
@@ -178,7 +187,7 @@ License URL: http://creativecommons.org/licenses/by/3.0/
                                     <input class="billing-address-name form-control" type="text" name="location" placeholder="The Event is at" maxlength="50">
                                 </div>
 
-                                <label for="field1"><span>Private</span></label>&nbsp;&nbsp;&nbsp;<input type="checkbox" class="js-switch" ><br><br>
+                                <label for="field1"><span>Private</span></label>&nbsp;&nbsp;&nbsp;<input type="checkbox" name="private" class="js-switch" ><br><br>
 							<button type="button" class="submit" id="Save" onclick="check()"><span>Save</span></button>
 
                                 <p id="mandatory" style="visibility: hidden;">Please fill mandatory(<span style="color: red">*</span>) fields.</p>
@@ -190,5 +199,7 @@ License URL: http://creativecommons.org/licenses/by/3.0/
 		</div>
 	<p class="copy_rights">&copy; 2016 EVENTual. All Rights Reserved | Design by Ferozepurvaale</p>
 </div>
+
+{% include "website/footer.html" %}
 </body>
 </html>

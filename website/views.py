@@ -20,74 +20,99 @@ def create(request):
 
 
 # Validation method for web form
-def validate_web(request):
+def create_web(request):
     if request.method == 'POST':
         params = deepcopy(request.POST)
         params['username'] = "web"
-        params.method = "POST"
         if request.POST.get('allday', 'off') == 'off':
-            params['allday'] = "False"
+            params['allday'] = "false"
             params['startdate'] = request.POST['start'].split()[0].replace('-',
                                                                            '/')
             params['enddate'] = request.POST['end'].split()[0].replace('-',
                                                                        '/')
             params['starttime'] = request.POST['start'].split()[1]
             params['endtime'] = request.POST['end'].split()[1]
-        elif request.POST.get('allday', 'on') == 'on':
-            params['allday'] = "True"
+        elif request.POST.get('allday', 'off') == 'on':
+            params['allday'] = "true"
             params['startdate'] = request.POST['start'].split()[0].replace('-',
                                                                            '/')
             params['enddate'] = request.POST['end'].split()[0].replace('-',
                                                                        '/')
             params['starttime'] = '00:00'
             params['endtime'] = '00:00'
+        if request.POST.get('private', 'off') == 'off':
+            params['private'] = "false"
+        elif request.POST.get('private', 'on') == 'on':
+            params['private'] = "true"
         response = event_get_or_create(params)
         return response
     elif request.method == 'GET':
         return redirect('/create')
 
 
+def searchHandler(kwargs):
+    events = EventData.objects.filter(**kwargs)
+    cleaned_events = format_query_data(events)
+    return cleaned_events
+
 def search(request):
     if request.method == 'POST':
         json_dict = json.loads(request.body)
         kwargs = {}
         for key, value in json_dict.iteritems():
-            print(key)
-            if key != "private" and key != "allday":
-                kwargs[key] = urllib.unquote(value).replace('+', ' ')
-            else:
+            if key == "private" or key == "allday":
                 kwargs[key] = value
+            else:
+                kwargs[key] = urllib.unquote(value).replace('+', ' ')
             if 'date' in key:
                 kwargs[key] = datetime.datetime.strptime(value, '%d/%m/%Y')
             if 'time' in key:
                 kwargs[key] = datetime.time(
                     int(value.split(':')[0]), int(value.split(':')[1]))
-        events = EventData.objects.filter(**kwargs)
-        print(kwargs)
-        cleaned_events = []
-        cleaned_event = {}
-        for event in events:
-            cleaned_event["id"] = event.id
-
-            cleaned_event["username"] = event.username.encode('ascii',
-                                                              'ignore')
-            cleaned_event["title"] = event.title.encode('ascii', 'ignore')
-            cleaned_event["description"] = event.description.encode('ascii',
-                                                                    'ignore')
-            cleaned_event["location"] = event.location.encode('ascii',
-                                                              'ignore')
-
-            cleaned_event["startdate"] = event.startdate.strftime('%d/%m/%Y')
-            cleaned_event["enddate"] = event.enddate.strftime('%d/%m/%Y')
-            cleaned_event["allday"] = event.allday
-            cleaned_event["starttime"] = event.starttime.strftime('%H:%M')
-            cleaned_event["endtime"] = event.endtime.strftime('%H:%M')
-            cleaned_event["private"] = event.private
-            cleaned_events.append(cleaned_event)
-        # return HttpResponse(serializers.serialize("json", events))
-        return HttpResponse(str(cleaned_events))
+        cleaned_events = searchHandler(kwargs)
+        return HttpResponse(json.dumps(cleaned_events))
     elif request.method == 'GET':
         return render(request, 'website/search.html', {})
+
+def search_web(request):
+    if request.method == 'POST':
+        params = deepcopy(request.POST)
+        keys_to_be_removed = []
+        for key in params:
+            if params[key] == "":
+                keys_to_be_removed.append(key)
+        for key in keys_to_be_removed:
+            params.pop(key, None)
+        kwargs = deepcopy(params)
+        kwargs.pop('start', None)
+        kwargs.pop('end', None)
+        if (('allday' in params and params['allday'] == 'off') or
+            ('allday' not in params)):
+            kwargs["allday"] = "false"
+            if 'start' in params:
+                kwargs['startdate'] = params['start'].split()[0]
+                kwargs['starttime'] = params['start'].split()[1]
+            if 'end' in params:
+                kwargs['enddate'] = params['end'].split()[0]
+                kwargs['endtime'] = params['end'].split()[1]
+        elif 'allday' in params and params['allday'] == 'on':
+            kwargs["allday"] = "true"
+            if 'start' in params:
+                kwargs['startdate'] = params['start'].split()[0]
+            if 'end' in params:
+                kwargs['enddate'] = params['end'].split()[0]
+        for key, value in kwargs.iteritems():
+            if 'date' in key:
+                kwargs[key] = datetime.datetime.strptime(value, '%d-%m-%Y')
+            if 'time' in key:
+                kwargs[key] = datetime.time(
+                    int(value.split(':')[0]), int(value.split(':')[1]))
+        # return HttpResponse(json.dumps(kwargs))
+        # if not check_if_any_field_present(kwargs):
+        #     return HttpResponse("No fields entered.")
+
+        cleaned_events = searchHandler( dict(kwargs.iteritems()))
+        return HttpResponse(json.dumps(cleaned_events))
 
 
 def event_get_or_create(params):
@@ -98,17 +123,46 @@ def event_get_or_create(params):
         location=params['location'],
         startdate=datetime.datetime.strptime(params['startdate'], '%d/%m/%Y'),
         enddate=datetime.datetime.strptime(params['enddate'], '%d/%m/%Y'),
-        allday=bool(params['allday']),
+        allday=params['allday'],
         starttime=datetime.time(
             int(params['starttime'].split(':')[0]),
             int(params['starttime'].split(':')[1])),
         endtime=datetime.time(
             int(params['endtime'].split(':')[0]),
             int(params['endtime'].split(':')[1])),
-        private=bool(params['private']))
+        private=params['private'])
     if created:
         return HttpResponse(event.id)
     else:
         return HttpResponse("Duplicate")
 
+def format_query_data(events):
+    cleaned_events = []
+    for event in events:
+        cleaned_event = {}
+        cleaned_event["id"] = event.id
 
+        cleaned_event["username"] = event.username.encode('ascii',
+                                                          'ignore')
+        cleaned_event["title"] = event.title.encode('ascii', 'ignore')
+        cleaned_event["description"] = event.description.encode('ascii',
+                                                                'ignore')
+        cleaned_event["location"] = event.location.encode('ascii',
+                                                          'ignore')
+
+        cleaned_event["startdate"] = event.startdate.strftime('%d/%m/%Y')
+        cleaned_event["enddate"] = event.enddate.strftime('%d/%m/%Y')
+        cleaned_event["allday"] = event.allday.encode('ascii', 'ignore')
+        cleaned_event["starttime"] = event.starttime.strftime('%H:%M')
+        cleaned_event["endtime"] = event.endtime.strftime('%H:%M')
+        cleaned_event["private"] = event.private.encode('ascii', 'ignore')
+        cleaned_events.append(cleaned_event)
+    return cleaned_events
+
+def check_if_any_field_present(params):
+    if 'allday' in params and params['allday'] == False:
+        params.pop('allday', None)
+    if all(params[key] == "" for key in params):
+        return False
+    else:
+        return True

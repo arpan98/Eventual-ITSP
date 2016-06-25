@@ -8,8 +8,8 @@ class EventData(models.Model):
     location = models.CharField(max_length=255, blank=True)
     startdate = models.DateField()
     enddate = models.DateField()
-    allday = models.BooleanField()
+    allday = models.CharField(max_length=5)
     starttime = models.TimeField()
     endtime = models.TimeField()
-    private = models.BooleanField(default=False)
+    private = models.CharField(max_length=5, default="false")
 

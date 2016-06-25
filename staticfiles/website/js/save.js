@@ -213,7 +213,7 @@ else
 function prepHref(linkElement) {
     
     linkElement.href =$('#qrcode').children('img').attr('src');
-    linkElement.download =document.getElementsByName('title')[0].value;
+    linkElement.download = qrcodedownload;
 }
 
 function searchcheck()

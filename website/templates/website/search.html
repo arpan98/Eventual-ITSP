@@ -9,40 +9,57 @@ License URL: http://creativecommons.org/licenses/by/3.0/
 <!DOCTYPE html>
 <html>
 <head>
-<title>Create Event - EVENTual</title>
+<title>Search Event - EVENTual</title>
 <!-- for-mobile-apps -->
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<meta name="keywords" content="Credit Card Validation Widget Responsive, Login form web template, Sign up Web Templates, Flat Web Templates, Login signup Responsive web template, Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, SonyEricsson, Motorola web design" />
+
 <!-- //for-mobile-apps -->
 <link href='//fonts.googleapis.com/css?family=Montserrat:400,700' rel='stylesheet' type='text/css'>
 <link href='//fonts.googleapis.com/css?family=Open+Sans:400,300,300italic,400italic,600,600italic,700,700italic,800,800italic' rel='stylesheet' type='text/css'>
+
 <link rel="stylesheet" href="{% static "website/css/creditly.css" %}">
 <link href="{% static "website/css/style.css" %}" rel="stylesheet" type="text/css" media="all" />
+
+<script src="{% static "website/js/jquery.min.js" %}"></script>
+<script src="{% static "website/js/jquery.scrollex.min.js" %}"></script>
+<script src="{% static "website/js/jquery.scrolly.min.js" %}"></script>
+<script src="{% static "website/js/skel.min.js" %}"></script>
+<script src="{% static "website/js/util.js" %}"></script>
+<script src="{% static "website/js/main.js" %}"></script>
+
 <script type="text/javascript" src="{% static "website/js/creditly.js" %}"></script>
+
+<!-- JQUERY -->
+<script type="text/javascript" src="{% static "website/js/jquery-1.11.0.min.js" %}"></script>
+
+<!-- TABLE -->
+<link rel="stylesheet" href="https://cdn.datatables.net/1.10.10/css/jquery.dataTables.min.css" />
+<script type="text/javascript" src="https://cdn.datatables.net/1.10.10/js/jquery.dataTables.min.js"></script>
+
 <!-- DATEPICKER JQUERY-->
-        <link rel="stylesheet" type="text/css" href="{% static "website/css/DateTimePicker.css" %}" />
-        <script type="text/javascript" src="{% static "website/js/jquery-1.11.0.min.js" %}"></script>
-        <script type="text/javascript" src="{% static "website/js/DateTimePicker.js" %}"></script>
+<link rel="stylesheet" type="text/css" href="{% static "website/css/DateTimePicker.css" %}" />
+<script type="text/javascript" src="{% static "website/js/DateTimePicker.js" %}"></script>
 
-        <!-- SWITCH BUTTON FOR CHECKBOX JQUERY-->
-        <link rel="stylesheet" href="{% static "website/css/switchery.css" %}" />
-        <script src="{% static "website/js/switchery.js" %}"></script>
+<!-- SWITCH BUTTON FOR CHECKBOX JQUERY-->
+<link rel="stylesheet" href="{% static "website/css/switchery.css" %}" />
+<script src="{% static "website/js/switchery.js" %}"></script>
 
-        <!-- QRCODE JQUERY-->
-        <script type="text/javascript" src="{% static "website/js/jquery.qrcode-0.12.0.js" %}"></script>
-        <script type="text/javascript" src="{% static "website/js/jquery.qrcode-0.12.0.min.js" %}"></script>
-        <!-- Clipboard JQUERY-->
-        <script type="text/javascript" src="{% static "website/js/ZeroClipboard.js" %}"></script>
+<!-- QRCODE JQUERY-->
+<script type="text/javascript" src="{% static "website/js/jquery.qrcode-0.12.0.js" %}"></script>
+<script type="text/javascript" src="{% static "website/js/jquery.qrcode-0.12.0.min.js" %}"></script>
 
-    <script type="text/javascript" src="{%  static "website/js/jquery.form.js" %}"></script>
+<!-- Clipboard JQUERY-->
+<script type="text/javascript" src="{% static "website/js/ZeroClipboard.js" %}"></script>
+
+<script type="text/javascript" src="{%  static "website/js/jquery.form.js" %}"></script>
 <script type="text/javascript">
+    var results = [];
 
     function print()
-            {
-                console.log(document.getElementById('reminder').value);
-            }
+    {
+        console.log(document.getElementById('reminder').value);
+    }
     function alldayfn()
     {
         var allday = document.getElementById('allday').checked;
@@ -65,11 +82,61 @@ License URL: http://creativecommons.org/licenses/by/3.0/
         }
     }
 
+    function search() {
+        $("#detailsForm").ajaxSubmit({
+            url: '/search/web',
+            type: 'POST',
+            success: function(response) {
+                console.log(response);
+                displayInTable(response);
+            },
+            error: function(a, b) {
+                console.log(a);
+                console.log(b);
+            }
+        });
+    }
+
+
+    function displayInTable(response) {
+
+        $('#example').dataTable().api().clear().draw();
+
+        var json = String(response);
+        var i=0;
+        results = [];
+        $.each(JSON.parse(json), function(idx, obj) {
+            results.push(obj);
+            if (obj.allday == "false")
+                $('#example').dataTable().api().row.add([i+1, obj.title, obj.description, obj.location, obj.allday, obj.startdate + ' ' + obj.starttime, obj.enddate + ' ' + obj.endtime, obj.id]).draw();
+            else
+                $('#example').dataTable().api().row.add([i+1, obj.title, obj.description, obj.location, obj.allday, obj.startdate, obj.enddate, obj.id]).draw();
+            i = i+1;
+        });
+
+    }
+
+    function tableclick (data) {
+      var x = data[0]-1;
+      console.log(results[x].id);
+      window.open("http://wncc-iitb.org:8000/event/" + results[x].id);
+    }
+
     $(document).ready(function()
     {
 
         var elem = document.querySelector('.js-switch');
         var init = new Switchery(elem,{ size: 'small' });
+
+        var table = $('#example').dataTable();
+        $('#example tbody').on('click', 'tr', function () {
+            var data = table.fnGetData( this );
+            tableclick(data);
+        });
+
+        $('.previous').attr('style', 'color: #fff !important');
+        $('.next').attr('style', 'color: #fff !important');
+        
 
         $("#dtBox").DateTimePicker(
         {
@@ -85,16 +152,12 @@ License URL: http://creativecommons.org/licenses/by/3.0/
                 //dtPickerObj.setDateTimeStringInInputField($("#date1"));
                 document.getElementById('alldayoff').style.visibility = "hidden";
                 document.getElementById('alldayoff').style.display = "none";
-                document.getElementById('result').style.visibility = "hidden";
-                document.getElementById('mandatory').style.visibility = "hidden";
+                // document.getElementById('result').style.visibility = "hidden";
+                // document.getElementById('mandatory').style.visibility = "hidden";
 
                 //dtPickerObj.setDateTimeStringInInputField($("#end"),addedtime);
             }
 
-        });
-
-        $( ".startDateTime1,.startDate1" ).datepicker({
-            defaultDate: ''
         });
 
     });
@@ -102,7 +165,7 @@ License URL: http://creativecommons.org/licenses/by/3.0/
 </script>
 </head>
 <body>
-
+{% include "website/header.html" %}
 <div id="dtBox"></div>
 
 <div class="content">
@@ -150,7 +213,47 @@ License URL: http://creativecommons.org/licenses/by/3.0/
 				</form>
 			</div>
 		</div>
+        <div id="table" align="center" style="width:80%; margin:0 auto;">
+            <table id="example" class="display" cellspacing="0" width="90%">
+                <thead>
+                    <tr>
+                        <th>Id</th>
+                        <th>Title</th>
+                        <th>Description</th>
+                        <th>Location</th>
+                        <th>All day</th>
+                        <th>Start date</th>
+                        <th>End date</th>
+                    </tr>
+                </thead>
+                <tr>
+                    <td>Id</td>
+                    <td>Title</td>
+                    <td>Description</td>
+                    <td>Location</td>
+                    <td>All day</td>
+                    <td>Start date</td>
+                    <td>End date</td>
+                </tr>
+                <tfoot>
+                    <tr>
+                        <th>Id</th>
+                        <th>Title</th>
+                        <th>Description</th>
+                        <th>Location</th>
+                        <th>All day</th>
+                        <th>Start date</th>
+                        
+                    </tr>
+                </tfoot>
+                <tbody>
+                    
+                </tbody>
+                
+            </table>
+        </div>
 	<p class="copy_rights">&copy; 2016 EVENTual. All Rights Reserved | Design by Ferozepurvaale</p>
 </div>
+{% include "website/footer.html" %}
 </body>
 </html>
