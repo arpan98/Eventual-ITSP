@@ -28,19 +28,18 @@
 <script src="https://apis.google.com/js/platform.js" async defer></script>
 
 	<body>
-  <div id="fb-root"></div>
-  <script>(function(d, s, id) {
-    var js, fjs = d.getElementsByTagName(s)[0];
-    if (d.getElementById(id)) return;
-    js = d.createElement(s); js.id = id;
-    js.src = "//connect.facebook.net/en_GB/sdk.js#xfbml=1&version=v2.6&appId=1005417809514868";
-    fjs.parentNode.insertBefore(js, fjs);
-  }(document, 'script', 'facebook-jssdk'));
-  </script>
+<div id="fb-root"></div>
+<script>(function(d, s, id) {
+  var js, fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) return;
+  js = d.createElement(s); js.id = id;
+  js.src = "//connect.facebook.net/en_US/sdk.js#xfbml=1&version=v2.6";
+  fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));</script>
 		<!-- Page Wrapper -->
 			<div id="page-wrapper">
 
-		
+
 		{% include "website/header.html" %}
 
 				<!-- Main -->
@@ -101,7 +100,7 @@
                        var qrcodedownload = "{{eventdata.title}}" + ".png";
                 </script>
             <div style="line-height: 0.8em; margin: 0 auto; width: 250px;">
-              <div class="fb-share-button" data-href="http://wncc-iitb.org:8000/event/{{ eventdata.id }}/" data-layout="button_count" data-mobile-iframe="false"><a class="fb-xfbml-parse-ignore" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http%3A%2F%2Fwncc-iitb.org%3A8000%2Fevent%2F{{ eventdata.id }}/%2F&amp;src=sdkpreparse">Share</a></div>
+                <div  class="fb-share-button" data-href="http://wncc-iitb.org:8000/event/{{ eventdata.id }}" data-layout="button_count" data-mobile-iframe="true"><a class="fb-xfbml-parse-ignore" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http%3A%2F%2Fwncc-iitb.org%3A8000%2Fevent%2F{{ eventdata.id }}&amp;src=sdkpreparse">Share</a></div>
 
               <button class="g-plus" id="google-share" style="visibility: hidden;" data-action="share" data-annotation="bubble" data-href="http://wncc-iitb.org:8000/event/{{ eventdata.id }}"></button>
 
@@ -109,7 +108,7 @@
               <br/><br/>
 
             </div>
-           
+
                 {% include "website/footer.html" %}
 
 			</div>
