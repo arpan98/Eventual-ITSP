@@ -6,9 +6,15 @@ from website.models import EventData
 urlpatterns = [
     url(r'^$', views.landing, name='landing'),
     url(r'^create/?$', views.create, name='create'),
-    url(r'^event/(?P<pk>\d+)/$', DetailView.as_view(model=EventData, template_name="website/event.html"), name='event'),
+    url(r'^event/(?P<pk>\d+)/$',
+        DetailView.as_view(model=EventData,
+                           template_name="website/event.html"),
+        name='event'),
     url(r'^create/web/?$',
-        views.create_web, name='create_web'),
+        views.create_web,
+        name='create_web'),
     url(r'^search/?$', views.search, name='search'),
-    url(r'^search/web/?$', views.search_web, name='search_web'),
+    url(r'^search/web/?$',
+        views.search_web,
+        name='search_web'),
 ]

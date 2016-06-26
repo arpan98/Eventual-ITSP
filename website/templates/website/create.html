@@ -77,7 +77,7 @@ License URL: http://creativecommons.org/licenses/by/3.0/
             url: '/create/web',
             type: 'POST',
             success: function(response) {
-                alert(response);
+                window.location.href = response;
             },
             error: function(a, b) {
                 console.log(a);

@@ -12,4 +12,3 @@ class EventData(models.Model):
     starttime = models.TimeField()
     endtime = models.TimeField()
     private = models.CharField(max_length=5, default="false")
-

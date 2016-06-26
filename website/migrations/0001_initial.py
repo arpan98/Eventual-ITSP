@@ -9,24 +9,27 @@ class Migration(migrations.Migration):
 
     initial = True
 
-    dependencies = [
-    ]
+    dependencies = []
 
     operations = [
-        migrations.CreateModel(
-            name='EventData',
-            fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('username', models.CharField(blank=True, max_length=255)),
-                ('title', models.CharField(max_length=255)),
-                ('description', models.CharField(blank=True, max_length=255)),
-                ('location', models.CharField(blank=True, max_length=255)),
-                ('startdate', models.DateField()),
-                ('enddate', models.DateField()),
-                ('allday', models.BooleanField()),
-                ('starttime', models.TimeField()),
-                ('endtime', models.TimeField()),
-                ('private', models.BooleanField()),
-            ],
-        ),
+        migrations.CreateModel(name='EventData',
+                               fields=[
+                                   ('id', models.AutoField(auto_created=True,
+                                                           primary_key=True,
+                                                           serialize=False,
+                                                           verbose_name='ID')),
+                                   ('username', models.CharField(
+                                       blank=True, max_length=255)),
+                                   ('title', models.CharField(max_length=255)),
+                                   ('description', models.CharField(
+                                       blank=True, max_length=255)),
+                                   ('location', models.CharField(
+                                       blank=True, max_length=255)),
+                                   ('startdate', models.DateField()),
+                                   ('enddate', models.DateField()),
+                                   ('allday', models.BooleanField()),
+                                   ('starttime', models.TimeField()),
+                                   ('endtime', models.TimeField()),
+                                   ('private', models.BooleanField()),
+                               ], ),
     ]

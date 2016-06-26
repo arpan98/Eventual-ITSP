@@ -7,14 +7,10 @@ from django.db import migrations, models
 
 class Migration(migrations.Migration):
 
-    dependencies = [
-        ('website', '0001_initial'),
-    ]
+    dependencies = [('website', '0001_initial'), ]
 
     operations = [
-        migrations.AlterField(
-            model_name='eventdata',
-            name='private',
-            field=models.BooleanField(default=False),
-        ),
+        migrations.AlterField(model_name='eventdata',
+                              name='private',
+                              field=models.BooleanField(default=False), ),
     ]

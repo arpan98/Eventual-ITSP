@@ -6,6 +6,7 @@ import datetime
 import urllib
 from copy import deepcopy
 
+
 def landing(request):
     return render(request, 'website/landing.html', {})
 
@@ -13,8 +14,8 @@ def landing(request):
 def create(request):
     if request.method == 'POST':
         params = json.loads(request.body)
-        response = event_get_or_create(params)
-        return response
+        id = event_get_or_create(params)
+        return HttpResponse(str(id))
     elif request.method == 'GET':
         return render(request, 'website/create.html', {})
 
@@ -44,8 +45,8 @@ def create_web(request):
             params['private'] = "false"
         elif request.POST.get('private', 'on') == 'on':
             params['private'] = "true"
-        response = event_get_or_create(params)
-        return response
+        id = event_get_or_create(params)
+        return HttpResponse('/event/' + str(id))
     elif request.method == 'GET':
         return redirect('/create')
 
@@ -54,6 +55,7 @@ def searchHandler(kwargs):
     events = EventData.objects.filter(**kwargs)
     cleaned_events = format_query_data(events)
     return cleaned_events
+
 
 def search(request):
     if request.method == 'POST':
@@ -73,6 +75,7 @@ def search(request):
         return HttpResponse(json.dumps(cleaned_events))
     elif request.method == 'GET':
         return render(request, 'website/search.html', {})
+
 
 def search_web(request):
     if request.method == 'POST':
@@ -111,7 +114,7 @@ def search_web(request):
         # if not check_if_any_field_present(kwargs):
         #     return HttpResponse("No fields entered.")
 
-        cleaned_events = searchHandler( dict(kwargs.iteritems()))
+        cleaned_events = searchHandler(dict(kwargs.iteritems()))
         return HttpResponse(json.dumps(cleaned_events))
 
 
@@ -131,10 +134,8 @@ def event_get_or_create(params):
             int(params['endtime'].split(':')[0]),
             int(params['endtime'].split(':')[1])),
         private=params['private'])
-    if created:
-        return HttpResponse(event.id)
-    else:
-        return HttpResponse("Duplicate")
+    return event.id
+
 
 def format_query_data(events):
     cleaned_events = []
@@ -142,13 +143,11 @@ def format_query_data(events):
         cleaned_event = {}
         cleaned_event["id"] = event.id
 
-        cleaned_event["username"] = event.username.encode('ascii',
-                                                          'ignore')
+        cleaned_event["username"] = event.username.encode('ascii', 'ignore')
         cleaned_event["title"] = event.title.encode('ascii', 'ignore')
         cleaned_event["description"] = event.description.encode('ascii',
                                                                 'ignore')
-        cleaned_event["location"] = event.location.encode('ascii',
-                                                          'ignore')
+        cleaned_event["location"] = event.location.encode('ascii', 'ignore')
 
         cleaned_event["startdate"] = event.startdate.strftime('%d/%m/%Y')
         cleaned_event["enddate"] = event.enddate.strftime('%d/%m/%Y')
@@ -158,6 +157,7 @@ def format_query_data(events):
         cleaned_event["private"] = event.private.encode('ascii', 'ignore')
         cleaned_events.append(cleaned_event)
     return cleaned_events
+
 
 def check_if_any_field_present(params):
     if 'allday' in params and params['allday'] == False:
