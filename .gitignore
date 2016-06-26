@@ -1,6 +1,6 @@
 /eventual/static/*
 .DS_Store
-
+.idea/*
 # Compiled python files
 
 *.pyc

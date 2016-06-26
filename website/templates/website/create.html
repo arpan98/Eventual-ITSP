@@ -99,7 +99,8 @@ License URL: http://creativecommons.org/licenses/by/3.0/
       var start = document.getElementsByName('start')[0].value;
       var end = document.getElementsByName('end')[0].value;
       }
-      if(!start || !end) {
+      var title = document.getElementsByName('title')[0].value;
+      if(!start || !end || !title) {
         document.getElementById('mandatory').style.visibility = "visible";
         console.log("Not filled");
       }
@@ -157,7 +158,7 @@ License URL: http://creativecommons.org/licenses/by/3.0/
 						<div class="credit-card-wrapper">
 							<div class="second-row form-group">
                                 <div class="controls">
-                                    <label class="control-label">Title</label>
+                                    <label class="control-label">Title</label><span class="required">*</span>
                                     <input class="billing-address-name form-control" type="text" name="title" placeholder="Name of the Event" maxlength="50">
                                 </div>
                                 <div class="controls">
