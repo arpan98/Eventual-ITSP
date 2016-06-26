@@ -5,7 +5,7 @@
 	Free for personal and commercial use under the CCA 3.0 license (html5up.net/license)
 -->
 {%  load staticfiles %}
-<html xmlns="http://www.w3.org/1999/html">
+<html xmlns="http://www.w3.org/1999/html" xmlns="http://www.w3.org/1999/html">
 	<head>
 		<title>{{ eventdata.title }}</title>
 		<meta charset="utf-8" />
@@ -23,6 +23,14 @@
 			<!--[if lte IE 8]><script src="assets/js/ie/respond.min.js" %}"></script><![endif]-->
 			<script src="{% static "website/js/main.js" %}"></script>
 			<script src="{%  static "website/js/save.js" %}"></script>
+        <div id="fb-root"></div>
+        <script>(function(d, s, id) {
+          var js, fjs = d.getElementsByTagName(s)[0];
+          if (d.getElementById(id)) return;
+          js = d.createElement(s); js.id = id;
+          js.src = "//connect.facebook.net/en_US/sdk.js#xfbml=1&version=v2.6";
+          fjs.parentNode.insertBefore(js, fjs);
+        }(document, 'script', 'facebook-jssdk'));</script>
 	</head>
 	<body>
 
@@ -89,7 +97,9 @@
 
                        var qrcodedownload = "{{eventdata.title}}" + ".png";
                 </script>
-				{% include "website/footer.html" %}
+            <center><div  class="fb-share-button" data-href="http://wncc-iitb.org:8000/event/{{ eventdata.id }}" data-layout="button_count" data-mobile-iframe="true"><a class="fb-xfbml-parse-ignore" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http%3A%2F%2Fwncc-iitb.org%3A8000%2Fevent%2F{{ eventdata.id }}&amp;src=sdkpreparse">Share</a></div></center>
+				<br><br>
+                {% include "website/footer.html" %}
 
 			</div>
 
