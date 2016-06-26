@@ -32,6 +32,9 @@
           fjs.parentNode.insertBefore(js, fjs);
         }(document, 'script', 'facebook-jssdk'));</script>
 	</head>
+    <!-- Place this tag in your head or just before your close body tag. -->
+<script src="https://apis.google.com/js/platform.js" async defer></script>
+
 	<body>
 
 		<!-- Page Wrapper -->
@@ -97,8 +100,15 @@
 
                        var qrcodedownload = "{{eventdata.title}}" + ".png";
                 </script>
-            <center><div  class="fb-share-button" data-href="http://wncc-iitb.org:8000/event/{{ eventdata.id }}" data-layout="button_count" data-mobile-iframe="true"><a class="fb-xfbml-parse-ignore" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http%3A%2F%2Fwncc-iitb.org%3A8000%2Fevent%2F{{ eventdata.id }}&amp;src=sdkpreparse">Share</a></div></center>
-				<br><br>
+            <center>
+                <div  class="fb-share-button" data-href="http://wncc-iitb.org:8000/event/{{ eventdata.id }}" data-layout="button_count" data-mobile-iframe="true"><a class="fb-xfbml-parse-ignore" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http%3A%2F%2Fwncc-iitb.org%3A8000%2Fevent%2F{{ eventdata.id }}&amp;src=sdkpreparse">Share</a></div>
+            </center>
+            <center style="padding-left: 287px">
+                <div class="g-plus" data-action="share" data-href="http://wncc-iitb.org:8000/event/{{ eventdata.id }}"></div>
+            </center>
+            <center>
+<a href="https://twitter.com/share" class="twitter-share-button" data-hashtags="EVENTual">Tweet</a> <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script>            </center>
+                <br><br>
                 {% include "website/footer.html" %}
 
 			</div>
