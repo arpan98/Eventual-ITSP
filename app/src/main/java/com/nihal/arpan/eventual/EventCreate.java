@@ -465,7 +465,8 @@ public class EventCreate extends AppCompatActivity {
         while(itr.hasNext()){
             Event e=(Event)itr.next();
             Log.d("Event:", e.id + e.username);
-            objectId = e.id;Intent i = new Intent(EventCreate.this, SearchResult.class);
+            objectId = String.valueOf(e.id);
+            Intent i = new Intent(EventCreate.this, SearchResult.class);
             i.putExtra("objectId", e.id);
             startActivity(i);
             finish();
