@@ -59,10 +59,10 @@ public class EventCreate extends AppCompatActivity {
     String TAG = "EventCreate", objectId="", QRStart="EVENTualQR", seq="~!#", username="unknown";
     TextView startdatedisplay, starttimedisplay, enddatedisplay, endtimedisplay, startdatetv, starttimetv, enddatetv, endtimetv;
     EditText titlefield, descriptionfield, locationfield;
-    Switch alldayfield;
+    Switch alldayfield, privatefield;
     DatePickerDialog.OnDateSetListener date1, date2;
     Button savebutton;
-    Boolean allday, duplicate, handlerneeded=false, started=false;
+    Boolean allday, privateswitch, duplicate, handlerneeded=false, started=false;
     String title, description, location, startyear, startmonth, startdate, starthour, startminute, endyear, endmonth, enddate, endhour, endminute;
     ProgressDialog dialog;
     QRCodeEncoder qrCodeEncoder;
@@ -113,6 +113,7 @@ public class EventCreate extends AppCompatActivity {
         titlefield=(EditText)findViewById(R.id.title);
         descriptionfield=(EditText)findViewById(R.id.description);
         alldayfield=(Switch)findViewById(R.id.allday);
+        privatefield=(Switch)findViewById(R.id.privateswitch);
         locationfield=(EditText)findViewById(R.id.location);
 
         savebutton = (Button)findViewById(R.id.savebutton);
@@ -411,7 +412,8 @@ public class EventCreate extends AppCompatActivity {
                 + "\"enddate\": \"" + enddate + "/" + endmonth + "/" + endyear + "\","
                 + "\"starttime\": \"" + starttime + "\","
                 + "\"endtime\": \"" + endtime + "\","
-                + "\"allday\": \"" + allday.toString() + "\""
+                + "\"allday\": \"" + allday.toString() + "\","
+                + "\"private\": \"" + privateswitch.toString().toLowerCase() + "\""
                 + "}";
 
         RequestBody body = RequestBody.create(JSON, jsonData);
@@ -586,11 +588,12 @@ public class EventCreate extends AppCompatActivity {
                 + "\"enddate\": \"" + enddate + "/" + endmonth + "/" + endyear + "\","
                 + "\"starttime\": \"" + starttime + "\","
                 + "\"endtime\": \"" + endtime + "\","
-                + "\"allday\": \"" + allday.toString() + "\""
+                + "\"allday\": \"" + allday.toString().toLowerCase() + "\","
+                + "\"private\": \"" + privateswitch.toString().toLowerCase() + "\""
                 + "}";
 
         RequestBody body = RequestBody.create(JSON, jsonData);
-        Log.d(TAG, "JSON = " + jsonData);
+        Log.d(TAG, "Create JSON = " + jsonData);
 
         Request request = new com.squareup.okhttp.Request.Builder()
                 .url(CREATE_URL)
@@ -853,6 +856,7 @@ public class EventCreate extends AppCompatActivity {
         description = descriptionfield.getText().toString();
         location = locationfield.getText().toString();
         allday = alldayfield.isChecked();
+        privateswitch = privatefield.isChecked();
         getUsername();
 
         Log.d(TAG, "Save clicked");
