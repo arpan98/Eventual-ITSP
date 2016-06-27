@@ -166,6 +166,39 @@ public class SearchResult extends AppCompatActivity {
                                     }
                                     isPrivate = e.isPrivate;
                                 }
+
+                                WindowManager manager = (WindowManager) getSystemService(WINDOW_SERVICE);
+                                Display display = manager.getDefaultDisplay();
+                                Point point = new Point();
+                                display.getSize(point);
+                                int width = point.x;
+                                int height = point.y;
+                                int smallerDimension = width < height ? width : height;
+                                smallerDimension = smallerDimension * 3 / 4;
+
+                                String QRText = QRStart + seq + title.getText().toString() + seq + description.getText().toString() + seq + Boolean.toString(alldayswitch.isChecked()).toLowerCase() + seq + startdatedisplay.getText().toString() + seq + starttimedisplay.getText().toString() + seq + enddatedisplay.getText().toString() + seq + endtimedisplay.getText().toString() + seq + location.getText().toString() + seq + isPrivate;
+                                Log.d(TAG,QRText);
+                                try {
+                                    qrCodeEncoder = new QRCodeEncoder(QRText, null, Contents.Type.TEXT, BarcodeFormat.QR_CODE.toString(), smallerDimension);
+                                    Bitmap bitmap = qrCodeEncoder.encodeAsBitmap();
+                                    ImageView myImage = (ImageView) findViewById(R.id.imageView1);
+                                    myImage.setImageBitmap(bitmap);
+
+                                    myImage.setDrawingCacheEnabled(true);
+                                    // this is the important code :)
+                                    // Without it the view will have a dimension of 0,0 and the bitmap will be null
+                                    myImage.measure(View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED),
+                                            View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED));
+                                    myImage.layout(0, 0, myImage.getMeasuredWidth(), myImage.getMeasuredHeight());
+                                    myImage.buildDrawingCache(true);
+                                    b = Bitmap.createBitmap(myImage.getDrawingCache());
+                                    myImage.setDrawingCacheEnabled(false); // clear drawing cache
+                                }
+                                catch (Exception err) {
+                                    Toast.makeText(getApplicationContext(), "Error in QR Code creation", Toast.LENGTH_LONG).show();
+                                    err.printStackTrace();
+                                }
+
                             }
                         });
                     }
