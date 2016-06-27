@@ -11,6 +11,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
+import android.provider.CalendarContract;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Display;
@@ -40,6 +41,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Iterator;
 
 public class SearchResult extends AppCompatActivity {
@@ -57,6 +59,7 @@ public class SearchResult extends AppCompatActivity {
     Type type = new TypeToken<ArrayList<Event>>() {
     }.getType();
     ArrayList<Event> arrayList;
+    Event e;
     private final OkHttpClient client = new OkHttpClient();
     public static final MediaType JSON = MediaType.parse("application/json; charset=utf-8");
     private static final String CREATE_URL = "http://wncc-iitb.org:5697/create";
@@ -141,7 +144,7 @@ public class SearchResult extends AppCompatActivity {
                             public void run() {
                                 Iterator itr = arrayList.iterator();
                                 while (itr.hasNext()) {
-                                    Event e = (Event) itr.next();
+                                    e = (Event) itr.next();
                                     Log.d("Event:", "id: " + e.id + " username: " + e.username);
                                     title.setText(e.title);
                                     description.setText(e.description);
@@ -187,11 +190,40 @@ public class SearchResult extends AppCompatActivity {
     }
 
     public void add(View v) {
-        Intent i = new Intent(SearchResult.this, MainActivity.class);
-        i.putExtra("identifier","SearchResult");
-        i.putExtra("objectId", oId);
-        finish();
-        startActivity(i);
+        try {
+            Intent intent = new Intent(Intent.ACTION_INSERT);
+            intent.setType("vnd.android.cursor.item/event");
+
+            Calendar beginTime = Calendar.getInstance();
+            Calendar endTime = Calendar.getInstance();
+            long startMillis = 0;
+            long endMillis = 0;
+
+            if (e.allday.equals("true")) {
+                intent.putExtra(CalendarContract.EXTRA_EVENT_ALL_DAY, true);
+                beginTime.set(Integer.parseInt(e.startdate.split("/")[2]), Integer.parseInt(e.startdate.split("/")[1]) - 1, Integer.parseInt(e.startdate.split("/")[0]));
+                endTime.set(Integer.parseInt(e.enddate.split("/")[2]), Integer.parseInt(e.enddate.split("/")[1]) - 1, Integer.parseInt(e.enddate.split("/")[0]));
+            }
+            else {
+                intent.putExtra(CalendarContract.EXTRA_EVENT_ALL_DAY, false);
+                beginTime.set(Integer.parseInt(e.startdate.split("/")[2]), Integer.parseInt(e.startdate.split("/")[1]) - 1, Integer.parseInt(e.startdate.split("/")[0]), Integer.parseInt(e.starttime.split(":")[0]), Integer.parseInt(e.starttime.split(":")[1]));              //year,month,day,hour of day,minute
+                endTime.set(Integer.parseInt(e.enddate.split("/")[2]), Integer.parseInt(e.enddate.split("/")[1]) - 1, Integer.parseInt(e.enddate.split("/")[0]), Integer.parseInt(e.endtime.split(":")[0]), Integer.parseInt(e.endtime.split(":")[1]));
+            }
+
+            startMillis = beginTime.getTimeInMillis();
+            endMillis = endTime.getTimeInMillis();
+            intent.putExtra(CalendarContract.EXTRA_EVENT_BEGIN_TIME, startMillis);
+            intent.putExtra(CalendarContract.EXTRA_EVENT_END_TIME, endMillis);
+            intent.putExtra(CalendarContract.Events.TITLE, e.title);
+            intent.putExtra(CalendarContract.Events.DESCRIPTION, e.description);
+            intent.putExtra(CalendarContract.Events.EVENT_LOCATION, e.location);
+
+            startActivity(intent);
+        }
+        catch(Exception e) {
+            Toast.makeText(getApplicationContext(), "Error in opening Calendar", Toast.LENGTH_LONG).show();
+            e.printStackTrace();
+        }
     }
 
     public void ShareQR(View v) {
@@ -225,7 +257,7 @@ public class SearchResult extends AppCompatActivity {
     };
 
     public void ShareLink(View v) {
-        String shareBody = "EVENTual: \nEvent Title - "+title.getText().toString()+"\nEvent Link - http://www.EVENTual.com/"+oId;
+        String shareBody = "EVENTual: \nEvent Title - "+title.getText().toString()+"\nEvent Link - http://www.wncc-iitb.org:5697/event/"+oId;
         Intent sharingIntent = new Intent(android.content.Intent.ACTION_SEND);
         sharingIntent.setType("text/plain");
         sharingIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, "Event");
