@@ -83,10 +83,8 @@
             <state vertical-scroll-proportion="-6.0735292">
               <caret line="113" column="57" selection-start-line="113" selection-start-column="57" selection-end-line="113" selection-end-column="57" />
               <folding />
+
             </state>
-          </provider>
-          <provider selected="true" editor-type-id="android-designer">
-            <state />
           </provider>
         </entry>
       </file>
@@ -1775,11 +1773,16 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/app/src/main/java/com/nihal/arpan/eventual/Event.java" />
         <option value="$PROJECT_DIR$/app/src/main/java/com/nihal/arpan/eventual/ParseInitialize.java" />
         <option value="$PROJECT_DIR$/app/build.gradle" />
+<<<<<<< HEAD
         <option value="$PROJECT_DIR$/app/src/main/java/com/nihal/arpan/eventual/MainActivity.java" />
+=======
+>>>>>>> 71bebe3b9c6358f4b44b43ce552f8f5de8fc6480
         <option value="$PROJECT_DIR$/app/src/main/res/layout/content_event_create.xml" />
+        <option value="$PROJECT_DIR$/app/src/main/java/com/nihal/arpan/eventual/SearchEvent.java" />
+        <option value="$PROJECT_DIR$/app/src/main/java/com/nihal/arpan/eventual/Event.java" />
+        <option value="$PROJECT_DIR$/app/src/main/java/com/nihal/arpan/eventual/MainActivity.java" />
         <option value="$PROJECT_DIR$/app/src/main/java/com/nihal/arpan/eventual/EventCreate.java" />
         <option value="$PROJECT_DIR$/app/src/main/res/layout/content_search_event.xml" />
         <option value="$PROJECT_DIR$/app/src/main/java/com/nihal/arpan/eventual/SearchEvent.java" />
@@ -2284,7 +2287,9 @@
     <option name="myLimit" value="2678400000" />
   </component>
   <component name="XDebuggerManager">
-    <breakpoint-manager />
+    <breakpoint-manager>
+      <option name="time" value="2" />
+    </breakpoint-manager>
     <watches-manager />
   </component>
   <component name="editorHistoryManager">

@@ -71,8 +71,8 @@ public class SearchEvent extends AppCompatActivity {
 
     private final OkHttpClient client = new OkHttpClient();
     public static final MediaType JSON = MediaType.parse("application/json; charset=utf-8");
-    private static final String CREATE_URL = "http://wncc-iitb.org:8000/create";
-    private static final String SEARCH_URL = "http://wncc-iitb.org:8000/search";
+    private static final String CREATE_URL = "http://wncc-iitb.org:5697/create";
+    private static final String SEARCH_URL = "http://wncc-iitb.org:5697/search";
 
     private Handler handler = new Handler();
     private Runnable timeout = new Runnable(){
@@ -434,15 +434,30 @@ public class SearchEvent extends AppCompatActivity {
             }
         }
 
-        String jsonData = "{"+ "\"username\": \"" + username + "\","
-                + "\"title\": \"" + title + "\","
-                + "\"description\": \"" + description + "\","
-                + "\"location\": \"" + location + "\","
-                + "\"startdate\": \"" + totalstartdate + "\","
-                + "\"enddate\": \"" + totalenddate + "\","
-                + "\"starttime\": \"" + starttime + "\","
-                + "\"endtime\": \"" + endtime + "\","
-                + "\"allday\": \"" + allday.toString().toLowerCase() + "\","
+        String jsonData = "{"+ "\"username\": \"" + username + "\",";
+
+        if (!title.equals("")) {
+           jsonData += "\"title\": \"" + title + "\",";
+        }
+        if (!description.equals("")) {
+            jsonData += "\"description\": \"" + description + "\",";
+        }
+        if (!location.equals("")) {
+            jsonData += "\"location\": \"" + location + "\",";
+        }
+        if (!totalstartdate.equals("")) {
+            jsonData += "\"startdate\": \"" + totalstartdate + "\",";
+        }
+        if (!totalenddate.equals("")) {
+            jsonData += "\"enddate\": \"" + totalenddate + "\",";
+        }
+        if (!starttime.equals("")) {
+            jsonData += "\"starttime\": \"" + starttime + "\",";
+        }
+        if (!endtime.equals("")) {
+            jsonData += "\"endtime\": \"" + endtime + "\",";
+        }
+        jsonData += "\"allday\": \"" + allday.toString().toLowerCase() + "\","
                 + "\"private\": \"" + String.valueOf(privateswitch.isChecked()).toLowerCase() + "\""
                 + "}";
 

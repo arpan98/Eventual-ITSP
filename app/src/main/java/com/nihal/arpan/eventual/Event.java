@@ -14,4 +14,5 @@ public class Event {
     String starttime;
     String endtime;
     String allday;
+    String isPrivate;
 }
