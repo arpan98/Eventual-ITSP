@@ -24,7 +24,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="Search event by"
+        android:text="Search event"
         android:id="@+id/headingtv"
         android:layout_alignParentTop="true"
         android:layout_alignParentStart="true" />
@@ -45,129 +45,195 @@
             android:shadowDy="0"
             android:shadowRadius="5"
             android:layout_alignParentTop="true"
-            android:layout_alignEnd="@+id/linearLayout"
+            android:layout_alignParentEnd="true"
             android:onClick="Search"
             android:nestedScrollingEnabled="false" />
 
-        <LinearLayout
-            android:layout_width="match_parent"
+        <EditText
+            android:layout_width="200dp"
             android:layout_height="wrap_content"
-            android:layout_below="@id/headingtv"
+            android:id="@+id/title"
+            android:maxLength="50"
+            android:layout_alignParentTop="true"
+            android:layout_marginTop="50dp"
+            android:layout_alignParentEnd="true" />
+
+        <EditText
+            android:layout_width="200dp"
+            android:layout_height="wrap_content"
+            android:id="@+id/description"
+            android:maxLength="100"
+            android:layout_below="@+id/title"
+            android:layout_alignEnd="@+id/title"
+            android:layout_marginTop="20dp" />
+
+        <Switch
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/alldayswitch"
+            android:layout_below="@+id/description"
+            android:layout_alignStart="@+id/description"
             android:layout_marginTop="20dp"
-            android:id="@+id/linearLayout"
-            android:gravity="center_vertical">
+            android:checked="false" />
 
-    <CheckBox
-        android:layout_width="0dp"
-        android:layout_weight="4"
-        android:layout_height="wrap_content"
-        android:text="Title"
-        android:id="@+id/titlecheck"
-        android:onClick="onCheckBoxClicked" />
+        <Switch
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/privateswitch"
+            android:layout_below="@+id/location"
+            android:layout_alignStart="@+id/alldayswitch"
+            android:layout_marginTop="20dp"
+            android:checked="false" />
 
-    <CheckBox
-        android:layout_width="0dp"
-        android:layout_weight="8"
-        android:layout_height="wrap_content"
-        android:text="Start Date and Time"
-        android:id="@+id/datetimecheck"
-        android:checked="false"
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="18sp"
+            android:text="Title"
+            android:id="@+id/titletv"
+            android:layout_above="@+id/description"
+            android:layout_toStartOf="@+id/title"
+            android:layout_marginRight="10dp"
+            android:autoText="false" />
 
-        android:onClick="onCheckBoxClicked" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="18sp"
+            android:text="Description"
+            android:id="@+id/descriptiontv"
+            android:layout_above="@+id/allday"
+            android:layout_alignEnd="@+id/titletv" />
 
-    <CheckBox
-        android:layout_width="0dp"
-        android:layout_weight="5"
-        android:layout_height="wrap_content"
-        android:text="Location"
-        android:id="@+id/locationcheck"
-        android:checked="false"
-        android:onClick="onCheckBoxClicked" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="18sp"
+            android:text="All Day"
+            android:id="@+id/alldaytv"
+            android:layout_alignBottom="@+id/alldayswitch"
+            android:layout_alignEnd="@+id/descriptiontv" />
 
-        </LinearLayout>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="18sp"
+            android:text="Private"
+            android:id="@+id/privatetv"
+            android:layout_alignBottom="@+id/privateswitch"
+            android:layout_alignEnd="@+id/descriptiontv" />
 
-    <EditText
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/title"
-        android:layout_below="@+id/linearLayout"
-        android:layout_alignParentEnd="true"
-        android:layout_marginTop="20dp"
-        android:layout_toEndOf="@+id/headingtv" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="18sp"
+            android:text="Start Date"
+            android:id="@+id/startdatetv"
+            android:layout_marginTop="20dp"
+            android:layout_below="@+id/alldaytv"
+            android:onClick="startDateChoose"
+            android:layout_alignParentStart="true"
+            android:layout_toStartOf="@+id/alldayswitch"
+            android:gravity="center_horizontal" />
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="Title"
-        android:id="@+id/titletv"
-        android:layout_alignBottom="@+id/title"
-        android:layout_toStartOf="@+id/title"
-        android:layout_marginRight="20dp"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="18sp"
+            android:text="Start Time"
+            android:id="@+id/starttimetv"
+            android:layout_toEndOf="@+id/startdatetv"
+            android:layout_alignBottom="@+id/startdatetv"
+            android:layout_alignTop="@+id/startdatetv"
+            android:layout_alignParentEnd="true"
+            android:gravity="center_horizontal" />
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="Start Date"
-        android:id="@+id/startdatetv"
-        android:layout_marginTop="50dp"
-        android:onClick="startDateChoose"
-        android:gravity="center_horizontal"
-        android:layout_below="@+id/titletv"
-        android:layout_alignParentStart="true"
-        android:layout_toStartOf="@+id/starttimedisplay" />
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="Start Time"
-        android:id="@+id/starttimetv"
-        android:layout_toEndOf="@+id/startdatetv"
-        android:layout_alignBottom="@+id/startdatetv"
-        android:layout_alignTop="@+id/startdatetv"
-        android:layout_alignParentEnd="true"
-        android:gravity="center_horizontal"
-        android:layout_alignStart="@+id/starttimedisplay" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="18sp"
+            android:id="@+id/startdatedisplay"
+            android:layout_below="@+id/startdatetv"
+            android:layout_marginTop="5dp"
+            android:layout_alignEnd="@+id/alldaytv"
+            android:layout_alignParentStart="true"
+            android:gravity="center_horizontal" />
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:id="@+id/startdatedisplay"
-        android:layout_below="@+id/startdatetv"
-        android:layout_alignParentStart="true"
-        android:layout_toStartOf="@+id/starttimetv"
-        android:gravity="center_horizontal" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="18sp"
+            android:id="@+id/starttimedisplay"
+            android:layout_alignTop="@+id/startdatedisplay"
+            android:layout_alignStart="@+id/starttimetv"
+            android:layout_marginLeft="10dp"
+            android:layout_alignEnd="@+id/description"
+            android:gravity="center_horizontal" />
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:id="@+id/starttimedisplay"
-        android:layout_below="@+id/starttimetv"
-        android:layout_alignParentEnd="true"
-        android:layout_alignStart="@+id/title"
-        android:gravity="center_horizontal" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="18sp"
+            android:text="End Date"
+            android:id="@+id/enddatetv"
+            android:layout_below="@+id/startdatedisplay"
+            android:layout_alignParentStart="true"
+            android:layout_marginTop="20dp"
+            android:layout_alignEnd="@+id/startdatetv"
+            android:gravity="center_horizontal" />
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="Location"
-        android:id="@+id/locationtv"
-        android:layout_below="@+id/startdatedisplay"
-        android:layout_marginTop="20dp"
-        android:layout_alignEnd="@+id/titletv" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="18sp"
+            android:text="End Time"
+            android:id="@+id/endtimetv"
+            android:layout_alignBottom="@+id/enddatetv"
+            android:layout_alignStart="@+id/starttimetv"
+            android:layout_alignEnd="@+id/starttimedisplay"
+            android:gravity="center_horizontal" />
 
-    <EditText
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/location"
-        android:layout_alignBottom="@+id/locationtv"
-        android:layout_alignEnd="@+id/starttimedisplay"
-        android:layout_toEndOf="@+id/startdatedisplay" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:layout_below="@+id/enddatetv"
+            android:layout_marginTop="5dp"
+            android:layout_alignParentStart="true"
+            android:layout_alignEnd="@+id/enddatetv"
+            android:gravity="center_horizontal"
+            android:id="@+id/enddatedisplay" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:id="@+id/endtimedisplay"
+            android:layout_below="@+id/endtimetv"
+            android:layout_marginTop="5dp"
+            android:layout_alignEnd="@+id/endtimetv"
+            android:layout_alignStart="@+id/endtimetv"
+            android:gravity="center_horizontal" />
+
+        <EditText
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/location"
+            android:maxLength="50"
+            android:layout_below="@+id/endtimedisplay"
+            android:layout_marginTop="20dp"
+            android:layout_alignEnd="@+id/endtimedisplay"
+            android:layout_alignStart="@+id/title" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="18sp"
+            android:text="Location"
+            android:id="@+id/locationtv"
+            android:layout_alignBottom="@+id/location"
+            android:layout_alignEnd="@+id/titletv" />
 
     <ListView
         android:layout_width="wrap_content"
@@ -177,15 +243,6 @@
         android:layout_alignParentStart="true"
         android:background="@drawable/border" />
 
-    <Switch
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="All Day"
-        android:id="@+id/alldayswitch"
-        android:layout_below="@+id/title"
-        android:layout_margin="15dp"
-        android:layout_centerHorizontal="true"
-        android:checked="false" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -193,7 +250,7 @@
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:text="Results"
             android:id="@+id/resultstv"
-            android:layout_below="@id/location"
+            android:layout_below="@id/privateswitch"
             android:layout_marginTop="30dp"
             android:layout_centerHorizontal="true" />
 

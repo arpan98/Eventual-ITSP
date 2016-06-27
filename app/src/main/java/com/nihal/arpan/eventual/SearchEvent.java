@@ -53,12 +53,14 @@ import java.util.regex.Pattern;
 public class SearchEvent extends AppCompatActivity {
 
     String TAG = "SearchEvent", username;
-    Switch alldayswitch;
-    CheckBox titlecheck, startdatetimecheck, locationcheck;
-    TextView titletv, startdatetv, startdatedisplay, starttimetv, starttimedisplay, locationtv;
-    EditText titlefield, locationfield;
-    String title, startyear, startmonth, startdate, starthour, startminute, location;
-    DatePickerDialog.OnDateSetListener date1;
+    Switch alldayswitch, privateswitch;
+    TextView titletv, locationtv;
+    TextView startdatetv, startdatedisplay, starttimetv, starttimedisplay;
+    TextView enddatetv, enddatedisplay, endtimetv, endtimedisplay;
+    EditText titlefield, descriptionfield, locationfield;
+    String startyear, startmonth, startdate, starthour, startminute;
+    String endyear, endmonth, enddate, endhour, endminute;
+    DatePickerDialog.OnDateSetListener date1, date2;
     MyArrayAdapter adapter;
     ListView listView;
     Button search;
@@ -98,40 +100,31 @@ public class SearchEvent extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search_event);
 
-        titlecheck = (CheckBox)findViewById(R.id.titlecheck);
-        startdatetimecheck = (CheckBox)findViewById(R.id.datetimecheck);
-        locationcheck = (CheckBox)findViewById(R.id.locationcheck);
-
-        titlecheck.setTextSize(6*getResources().getDisplayMetrics().density);
-        startdatetimecheck.setTextSize(6*getResources().getDisplayMetrics().density);
-        locationcheck.setTextSize(6*getResources().getDisplayMetrics().density);
-
         alldayswitch = (Switch)findViewById(R.id.alldayswitch);
+        privateswitch = (Switch)findViewById(R.id.privateswitch);
 
         titletv = (TextView)findViewById(R.id.titletv);
+        locationtv = (TextView)findViewById(R.id.locationtv);
+
         startdatetv = (TextView)findViewById(R.id.startdatetv);
         starttimetv = (TextView)findViewById(R.id.starttimetv);
         startdatedisplay = (TextView)findViewById(R.id.startdatedisplay);
         starttimedisplay = (TextView)findViewById(R.id.starttimedisplay);
-        locationtv = (TextView)findViewById(R.id.locationtv);
+
+        enddatetv = (TextView)findViewById(R.id.enddatetv);
+        endtimetv = (TextView)findViewById(R.id.endtimetv);
+        enddatedisplay = (TextView)findViewById(R.id.enddatedisplay);
+        endtimedisplay = (TextView)findViewById(R.id.endtimedisplay);
 
         titlefield = (EditText)findViewById(R.id.title);
+        descriptionfield = (EditText)findViewById(R.id.description);
         locationfield = (EditText)findViewById(R.id.location);
         search = (Button)findViewById(R.id.searchbutton);
         listView = (ListView) findViewById(R.id.listView);
 
-        titlecheck.setChecked(true);
-        titletv.setEnabled(true);
-        titlefield.setEnabled(true);
-
-        alldayswitch.setEnabled(false);
-        startdatetv.setEnabled(false);
-        starttimetv.setEnabled(false);
-        locationtv.setEnabled(false);
-        locationfield.setEnabled(false);
-
         try {
             final Calendar startdate = Calendar.getInstance();
+            final Calendar enddate = Calendar.getInstance();
 
             date1 = new DatePickerDialog.OnDateSetListener() {
 
@@ -226,6 +219,100 @@ public class SearchEvent extends AppCompatActivity {
 
                 }
             });
+
+            date2 = new DatePickerDialog.OnDateSetListener() {
+
+                @Override
+                public void onDateSet(DatePicker view, int year, int monthOfYear,
+                                      int dayOfMonth) {
+                    // TODO Auto-generated method stub
+                    monthOfYear+=1;
+                    enddate.set(Calendar.YEAR, year);
+                    enddate.set(Calendar.MONTH, monthOfYear);
+                    enddate.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+                    String day = (String) ((dayOfMonth < 10) ? "0" + dayOfMonth
+                            : Integer.toString(dayOfMonth));
+                    String month = (String) ((monthOfYear < 10) ? "0" + monthOfYear
+                            : Integer.toString(monthOfYear));
+                    String prettyDate = day + "/" + month + "/" + String.valueOf(year);
+                    enddatedisplay.setText(prettyDate);
+                }
+
+            };
+
+            enddatetv.setOnClickListener(new View.OnClickListener() {
+
+                @Override
+                public void onClick(View v) {
+                    // TODO Auto-generated method stub
+                    new DatePickerDialog(SearchEvent.this, date2, enddate
+                            .get(Calendar.YEAR), enddate.get(Calendar.MONTH),
+                            enddate.get(Calendar.DAY_OF_MONTH)).show();
+                }
+            });
+            enddatedisplay.setOnClickListener(new View.OnClickListener() {
+
+                @Override
+                public void onClick(View v) {
+                    // TODO Auto-generated method stub
+                    new DatePickerDialog(SearchEvent.this, date2, enddate
+                            .get(Calendar.YEAR), enddate.get(Calendar.MONTH),
+                            enddate.get(Calendar.DAY_OF_MONTH)).show();
+                }
+            });
+
+            endtimetv.setOnClickListener(new View.OnClickListener() {
+
+                @Override
+                public void onClick(View v) {
+                    // TODO Auto-generated method stub
+                    Calendar mcurrentTime = Calendar.getInstance();
+                    int hour = mcurrentTime.get(Calendar.HOUR_OF_DAY);
+                    int minute = mcurrentTime.get(Calendar.MINUTE);
+                    TimePickerDialog mTimePicker;
+                    mTimePicker = new TimePickerDialog(SearchEvent.this, new TimePickerDialog.OnTimeSetListener() {
+                        @Override
+                        public void onTimeSet(TimePicker timePicker, int selectedHour, int selectedMinute) {
+                            //Add leading zeros if required
+                            String hours = (String) ((selectedHour < 10) ? "0" + selectedHour
+                                    : Integer.toString(selectedHour));
+                            String minutes = (String) ((selectedMinute < 10) ? "0" + selectedMinute
+                                    : Integer.toString(selectedMinute));
+                            String prettyTime = hours + ":" + minutes;
+                            endtimedisplay.setText( prettyTime);
+                        }
+                    }, hour, minute, true);//Yes 24 hour time
+                    mTimePicker.setTitle("Select Time");
+                    mTimePicker.show();
+
+                }
+            });
+            endtimedisplay.setOnClickListener(new View.OnClickListener() {
+
+                @Override
+                public void onClick(View v) {
+                    // TODO Auto-generated method stub
+                    Calendar mcurrentTime = Calendar.getInstance();
+                    int hour = mcurrentTime.get(Calendar.HOUR_OF_DAY);
+                    int minute = mcurrentTime.get(Calendar.MINUTE);
+                    TimePickerDialog mTimePicker;
+                    mTimePicker = new TimePickerDialog(SearchEvent.this, new TimePickerDialog.OnTimeSetListener() {
+                        @Override
+                        public void onTimeSet(TimePicker timePicker, int selectedHour, int selectedMinute) {
+                            //Add leading zeros if required
+                            String hours = (String) ((selectedHour < 10) ? "0" + selectedHour
+                                    : Integer.toString(selectedHour));
+                            String minutes = (String) ((selectedMinute < 10) ? "0" + selectedMinute
+                                    : Integer.toString(selectedMinute));
+                            String prettyTime = hours + ":" + minutes;
+                            endtimedisplay.setText( prettyTime);
+                        }
+                    }, hour, minute, true);//Yes 24 hour time
+                    mTimePicker.setTitle("Select Time");
+                    mTimePicker.show();
+
+                }
+            });
         }
         catch(Exception e) {
             Toast.makeText(getApplicationContext(), "Error in creating date and time entries", Toast.LENGTH_LONG).show();
@@ -249,71 +336,6 @@ public class SearchEvent extends AppCompatActivity {
             }
         });
 
-    }
-
-    public void onCheckBoxClicked(View v) {
-        switch (v.getId()) {
-            case R.id.titlecheck:
-                if(titlecheck.isChecked()) {
-                    titletv.setEnabled(true);
-                    titlefield.setEnabled(true);
-                    titlefield.requestFocus();
-                }
-                else {
-                    titlefield.setText("");
-                    titletv.setEnabled(false);
-                    titlefield.setEnabled(false);
-                }
-                break;
-            case R.id.datetimecheck:
-                if(startdatetimecheck.isChecked()) {
-                    startdatetv.setEnabled(true);
-                    starttimetv.setEnabled(true);
-                    startdatedisplay.setEnabled(true);
-                    starttimedisplay.setEnabled(true);
-                    alldayswitch.setEnabled(true);
-                    alldayswitch.setChecked(false);
-                    Calendar c = Calendar.getInstance();
-                    int mYear = c.get(Calendar.YEAR);
-                    int mMonth = c.get(Calendar.MONTH);
-                    int mDay = c.get(Calendar.DAY_OF_MONTH);
-                    int mHour = c.get(Calendar.HOUR_OF_DAY);
-                    int mMinute = c.get(Calendar.MINUTE);
-                    String day = (String) ((mDay < 10) ? "0" + mDay
-                            : Integer.toString(mDay));
-                    String month = (String) ((mMonth+1 < 10) ? "0" + (mMonth+1)
-                            : Integer.toString(mMonth+1));
-                    String prettyDate = day + "/" + month + "/" + String.valueOf(mYear);
-                    String hours = (String) ((mHour < 10) ? "0" + mHour
-                            : Integer.toString(mHour));
-                    String minutes = (String) ((mMinute < 10) ? "0" + mMinute
-                            : Integer.toString(mMinute));
-                    String prettyTime = hours + ":" + minutes;
-                    startdatedisplay.setText(prettyDate);
-                    starttimedisplay.setText(prettyTime);
-                }
-                else {
-                    startdatetv.setEnabled(false);
-                    startdatedisplay.setEnabled(false);
-                    starttimetv.setEnabled(false);
-                    starttimedisplay.setEnabled(false);
-                    alldayswitch.setEnabled(false);
-                    startdatedisplay.setText("");
-                    starttimedisplay.setText("");
-                }
-                break;
-            case R.id.locationcheck:
-                if(locationcheck.isChecked()) {
-                    locationtv.setEnabled(true);
-                    locationfield.setEnabled(true);
-                    locationfield.requestFocus();
-                }
-                else {
-                    locationfield.setText("");
-                    locationtv.setEnabled(false);
-                    locationfield.setEnabled(false);
-                }
-        }
     }
 
     @Override
@@ -359,78 +381,13 @@ public class SearchEvent extends AppCompatActivity {
             return;
         }
 
-        if (!(titlecheck.isChecked() || startdatetimecheck.isChecked() || locationcheck.isChecked())) {
-            AlertDialog.Builder builder = new AlertDialog.Builder(this);
-            builder
-                    .setTitle("Invalid Search")
-                    .setMessage("At least one of the search parameters must be defined!")
-                    .setIcon(android.R.drawable.ic_dialog_alert)
-                    .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int which) {
-                            //Yes button clicked, do something
-                        }
-                    })
-                    .show();
-            return;
-        }
-
-        if (startdatetimecheck.isChecked()) {
-            allday = alldayswitch.isChecked();
-
-            if (!alldayswitch.isChecked()) {
-                if (startdatedisplay.getText().toString().equals("") || starttimedisplay.getText().toString().equals("")) {
-                    AlertDialog.Builder builder = new AlertDialog.Builder(this);
-                    builder
-                            .setTitle("Invalid Entry")
-                            .setMessage("Both Date and Time fields must be filled!")
-                            .setIcon(android.R.drawable.ic_dialog_alert)
-                            .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
-                                public void onClick(DialogInterface dialog, int which) {
-                                    //Yes button clicked, do something
-                                }
-                            })
-                            .show();
-                    return;
-                } else {
-                    startdate = (startdatedisplay.getText().toString()).substring(0, 2);
-                    startmonth = (startdatedisplay.getText().toString()).substring(3, 5);
-                    startyear = (startdatedisplay.getText().toString()).substring(6, 10);
-                    starthour = (starttimedisplay.getText().toString()).substring(0, 2);
-                    startminute = (starttimedisplay.getText().toString()).substring(3, 5);
-                }
-            } else {
-                if (startdatedisplay.getText().toString().equals("")) {
-                    AlertDialog.Builder builder = new AlertDialog.Builder(this);
-                    builder
-                            .setTitle("Invalid Entry")
-                            .setMessage("Date field cannot be empty!")
-                            .setIcon(android.R.drawable.ic_dialog_alert)
-                            .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
-                                public void onClick(DialogInterface dialog, int which) {
-                                    //Yes button clicked, do something
-                                }
-                            })
-                            .show();
-                    return;
-                } else {
-                    startdate = (startdatedisplay.getText().toString()).substring(0, 2);
-                    startmonth = (startdatedisplay.getText().toString()).substring(3, 5);
-                    startyear = (startdatedisplay.getText().toString()).substring(6, 10);
-                }
-            }
-        }
-
-        if (locationcheck.isChecked()) {
-            location = locationfield.getText().toString();
-        }
-
         getUsername();
 
         /* after all checks */
-        handlerneeded = false;
-        started = false;
-        search.setEnabled(true);
-        dialog.dismiss();
+//        handlerneeded = false;
+//        started = false;
+//        search.setEnabled(true);
+//        dialog.dismiss();
         try {
             InputMethodManager inputManager = (InputMethodManager)
                     getSystemService(Context.INPUT_METHOD_SERVICE);
@@ -442,28 +399,52 @@ public class SearchEvent extends AppCompatActivity {
             err.printStackTrace();
         }
 
+        String title = titlefield.getText().toString();
+        String description = descriptionfield.getText().toString();
+        String location = locationfield.getText().toString();
+        allday = alldayswitch.isChecked();
+
+//        When date and time Textviews not clicked at all
+        String totalstartdate, totalenddate;
+        if (startdate == null) {
+            totalstartdate = "";
+        } else {
+            totalstartdate = startdate + "/" + startmonth + "/" + startyear;
+        }
+        if (enddate == null) {
+            totalenddate = "";
+        } else {
+            totalenddate = enddate + "/" + endmonth + "/" + endyear;
+        }
+
         String starttime, endtime= "00:00";
         if (allday) {
             starttime = "00:00";
             endtime = "00:00";
         } else {
-            starttime = starthour + ":" + startminute;
-//            endtime = endhour + ":" + endminute;
+            if (starthour == null) {
+                starttime = "";
+            } else {
+                starttime = starthour + ":" + startminute;
+            }
+            if (endhour == null) {
+                endtime = "";
+            } else {
+                endtime = endhour + ":" + endminute;
+            }
         }
 
-        String jsonData = "{"+ "\"allday\": \"" + allday.toString() + "\"";
-        if (titlecheck.isChecked())
-            jsonData += "\"title\": \"" + title + "\",";
-        if (locationcheck.isChecked())
-                jsonData += "\"location\": \"" + location + "\",";
-        if (startdatetimecheck.isChecked())
-            if (allday)
-                jsonData += "\"startdate\": \"" + startdate + "/" + startmonth + "/" + startyear+ "\","
-                + "\"starttime\": \"" + starttime + "\",";
-            else
-                jsonData += "\"startdate\": \"" + startdate + "/" + startmonth + "/" + startyear+ "\",";
-
-        jsonData += "}";
+        String jsonData = "{"+ "\"username\": \"" + username + "\","
+                + "\"title\": \"" + title + "\","
+                + "\"description\": \"" + description + "\","
+                + "\"location\": \"" + location + "\","
+                + "\"startdate\": \"" + totalstartdate + "\","
+                + "\"enddate\": \"" + totalenddate + "\","
+                + "\"starttime\": \"" + starttime + "\","
+                + "\"endtime\": \"" + endtime + "\","
+                + "\"allday\": \"" + allday.toString().toLowerCase() + "\","
+                + "\"private\": \"" + String.valueOf(privateswitch.isChecked()).toLowerCase() + "\""
+                + "}";
 
         RequestBody body = RequestBody.create(JSON, jsonData);
         Log.d(TAG, "search JSON = " + jsonData);
