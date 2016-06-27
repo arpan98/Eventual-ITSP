@@ -22,27 +22,45 @@ import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.google.zxing.BarcodeFormat;
 import com.parse.GetCallback;
 import com.parse.ParseException;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
+import com.squareup.okhttp.Callback;
+import com.squareup.okhttp.MediaType;
+import com.squareup.okhttp.OkHttpClient;
+import com.squareup.okhttp.RequestBody;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.lang.reflect.Type;
+import java.util.ArrayList;
+import java.util.Iterator;
 
 public class SearchResult extends AppCompatActivity {
-    EditText title,description,location;
-    Switch allday;
-    TextView startdatedisplay,starttimedisplay,enddatedisplay,endtimedisplay,starttimetv,endtimetv;
-    String TAG="swag",oId,QRStart="EVENTualQR",seq="~!#";
+    EditText title, description, location;
+    Switch alldayswitch;
+    TextView startdatedisplay, starttimedisplay, enddatedisplay, endtimedisplay, starttimetv, endtimetv;
+    String TAG="swag", oId, QRStart="EVENTualQR", seq="~!#", isPrivate;
     Bitmap b;
     QRCodeEncoder qrCodeEncoder;
     ProgressDialog dialog;
-    Boolean handlerneeded=false,started=false;
-    long stime,now;
+    Boolean handlerneeded=false, started=false;
+    long stime, now;
+
+    Gson gson = new Gson();
+    Type type = new TypeToken<ArrayList<Event>>() {
+    }.getType();
+    ArrayList<Event> arrayList;
+    private final OkHttpClient client = new OkHttpClient();
+    public static final MediaType JSON = MediaType.parse("application/json; charset=utf-8");
+    private static final String CREATE_URL = "http://wncc-iitb.org:5697/create";
+    private static final String SEARCH_URL = "http://wncc-iitb.org:5697/search";
 
     private Handler handler = new Handler();
     private Runnable timeout = new Runnable(){
@@ -77,7 +95,7 @@ public class SearchResult extends AppCompatActivity {
         title = (EditText)findViewById(R.id.title);
         description = (EditText)findViewById(R.id.description);
         location = (EditText)findViewById(R.id.location);
-        allday = (Switch)findViewById(R.id.allday);
+        alldayswitch = (Switch)findViewById(R.id.allday);
         startdatedisplay = (TextView)findViewById(R.id.startdatedisplay);
         starttimedisplay = (TextView)findViewById(R.id.starttimedisplay);
         enddatedisplay = (TextView)findViewById(R.id.enddatedisplay);
@@ -86,125 +104,71 @@ public class SearchResult extends AppCompatActivity {
         endtimetv = (TextView)findViewById(R.id.endtimetv);
 
         if(isNetworkConnected()) {
-            ParseQuery<ParseObject> query = ParseQuery.getQuery("EventData");
-            query.getInBackground(oId, new GetCallback<ParseObject>() {
-                public void done(ParseObject object, ParseException e) {
-                    handlerneeded=false;
-                    started=false;
-                    dialog.dismiss();
-                    if (e == null) {
-                        try {
-                            title.setText(object.getString("title"));
-                            description.setText(object.getString("description"));
-                            location.setText(object.getString("location"));
 
-                            String startyear = object.getString("startyear");
-                            String startmonth = object.getString("startmonth");
-                            String startdate = object.getString("startdate");
-                            String endyear = object.getString("endyear");
-                            String endmonth = object.getString("endmonth");
-                            String enddate = object.getString("enddate");
+            String jsonData = "{"+ "\"id\": \"" + oId + "\""
+                    + "}";
 
-                            String day = (String) ((Integer.parseInt(startdate) < 10) ? "0" + Integer.parseInt(startdate)
-                                    : Integer.toString(Integer.parseInt(startdate)));
-                            String month = (String) ((Integer.parseInt(startmonth) < 10) ? "0" + Integer.parseInt(startmonth)
-                                    : Integer.toString(Integer.parseInt(startmonth)));
-                            String prettyStartDate = day + "/" + month + "/" + String.valueOf(Integer.parseInt(startyear));
+            RequestBody body = RequestBody.create(JSON, jsonData);
+            Log.d(TAG, "findById JSON = " + jsonData);
 
-                            day = (String) ((Integer.parseInt(enddate) < 10) ? "0" + Integer.parseInt(enddate)
-                                    : Integer.toString(Integer.parseInt(enddate)));
-                            month = (String) ((Integer.parseInt(endmonth) < 10) ? "0" + Integer.parseInt(endmonth)
-                                    : Integer.toString(Integer.parseInt(endmonth)));
-                            String prettyEndDate = day + "/" + month + "/" + String.valueOf(Integer.parseInt(endyear));
+            com.squareup.okhttp.Request request = new com.squareup.okhttp.Request.Builder()
+                    .url(SEARCH_URL)
+                    .post(body)
+                    .build();
 
-                            startdatedisplay.setText(prettyStartDate);
-                            enddatedisplay.setText(prettyEndDate);
-                        }
-                        catch(Exception err) {
-                            err.printStackTrace();
-                            Toast.makeText(getApplicationContext(), "Error in fetching data", Toast.LENGTH_LONG).show();
-                        }
+            client.newCall(request).enqueue(new Callback() {
+                @Override
+                public void onFailure(com.squareup.okhttp.Request request, IOException throwable) {
+                    throwable.printStackTrace();
+                }
 
-                        if (object.getBoolean("allday")) {
-                            allday.setChecked(true);
-                            starttimetv.setVisibility(View.INVISIBLE);
-                            starttimedisplay.setVisibility(View.INVISIBLE);
-                            endtimedisplay.setVisibility(View.INVISIBLE);
-                            endtimetv.setVisibility(View.INVISIBLE);
-                            allday.setChecked(true);
-                        } else {
-                            allday.setChecked(false);
-                            try {
-                                String starthour = object.getString("starthour");
-                                String startminute = object.getString("startminute");
-                                String endhour = object.getString("endhour");
-                                String endminute = object.getString("endminute");
-
-                                String hours = (String) ((Integer.parseInt(starthour) < 10) ? "0" + Integer.parseInt(starthour)
-                                        : Integer.toString(Integer.parseInt(starthour)));
-                                String minutes = (String) ((Integer.parseInt(startminute) < 10) ? "0" + Integer.parseInt(startminute)
-                                        : Integer.toString(Integer.parseInt(startminute)));
-                                String prettyStartTime = hours + ":" + minutes;
-
-                                hours = (String) ((Integer.parseInt(endhour) < 10) ? "0" + Integer.parseInt(endhour)
-                                        : Integer.toString(Integer.parseInt(endhour)));
-                                minutes = (String) ((Integer.parseInt(endminute) < 10) ? "0" + Integer.parseInt(endminute)
-                                        : Integer.toString(Integer.parseInt(endminute)));
-                                String prettyEndTime = hours + ":" + minutes;
-
-                                starttimedisplay.setText(prettyStartTime);
-                                endtimedisplay.setText(prettyEndTime);
-                            } catch (Exception err) {
-                                err.printStackTrace();
-                                Toast.makeText(getApplicationContext(), "Error in fetching data", Toast.LENGTH_LONG).show();
-                            }
-                        }
-                        WindowManager manager = (WindowManager) getSystemService(WINDOW_SERVICE);
-                        Display display = manager.getDefaultDisplay();
-                        Point point = new Point();
-                        display.getSize(point);
-                        int width = point.x;
-                        int height = point.y;
-                        int smallerDimension = width < height ? width : height;
-                        smallerDimension = smallerDimension * 3 / 4;
-                        String start, end;
-                        if (allday.isChecked()) {
-                            start = startdatedisplay.getText().toString();
-                            end = enddatedisplay.getText().toString();
-                        } else {
-                            start = startdatedisplay.getText().toString() + " " + starttimedisplay.getText().toString();
-                            end = enddatedisplay.getText().toString() + " " + endtimedisplay.getText().toString();
-                        }
-
-                        String QRText = QRStart + seq + title.getText().toString() + seq + description.getText().toString() + seq + Boolean.toString(allday.isChecked()) + seq + start + seq + end + seq + location.getText().toString() + seq;
-                        Log.d(TAG,QRText);
-                        try {
-                            qrCodeEncoder = new QRCodeEncoder(QRText, null, Contents.Type.TEXT, BarcodeFormat.QR_CODE.toString(), smallerDimension);
-                            Bitmap bitmap = qrCodeEncoder.encodeAsBitmap();
-                            ImageView myImage = (ImageView) findViewById(R.id.imageView1);
-                            myImage.setImageBitmap(bitmap);
-
-                            myImage.setDrawingCacheEnabled(true);
-                            // this is the important code :)
-                            // Without it the view will have a dimension of 0,0 and the bitmap will be null
-                            myImage.measure(View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED),
-                                    View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED));
-                            myImage.layout(0, 0, myImage.getMeasuredWidth(), myImage.getMeasuredHeight());
-                            myImage.buildDrawingCache(true);
-                            b = Bitmap.createBitmap(myImage.getDrawingCache());
-                            myImage.setDrawingCacheEnabled(false); // clear drawing cache
-                        }
-                        catch (Exception err) {
-                            Toast.makeText(getApplicationContext(), "Error in QR Code creation", Toast.LENGTH_LONG).show();
-                            err.printStackTrace();
-                        }
-
-                    }
+                @Override
+                public void onResponse(com.squareup.okhttp.Response response) throws IOException {
+                    if (!response.isSuccessful())
+                        throw new IOException("Unexpected code " + response);
                     else {
-                        Log.d(TAG, "Error in getting");
+                        final String jsonData = response.body().string();
+
+                        handlerneeded=false;
+                        started=false;
+                        dialog.dismiss();
+
+                        Log.d(TAG, "Response from " + SEARCH_URL + ": " + jsonData);
+                        arrayList = gson.fromJson(jsonData, type);
+
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                Iterator itr = arrayList.iterator();
+                                while (itr.hasNext()) {
+                                    Event e = (Event) itr.next();
+                                    Log.d("Event:", "id: " + e.id + " username: " + e.username);
+                                    title.setText(e.title);
+                                    description.setText(e.description);
+                                    location.setText(e.location);
+                                    String allday = e.allday;
+                                    startdatedisplay.setText(e.startdate);
+                                    enddatedisplay.setText(e.enddate);
+
+                                    if (allday.equals("true")) {
+                                        alldayswitch.setChecked(true);
+                                        starttimetv.setVisibility(View.INVISIBLE);
+                                        starttimedisplay.setVisibility(View.INVISIBLE);
+                                        endtimedisplay.setVisibility(View.INVISIBLE);
+                                        endtimetv.setVisibility(View.INVISIBLE);
+                                    } else {
+                                        alldayswitch.setChecked(false);
+                                        starttimedisplay.setText(e.starttime);
+                                        endtimedisplay.setText(e.endtime);
+                                    }
+                                    isPrivate = e.isPrivate;
+                                }
+                            }
+                        });
                     }
                 }
             });
+
             handlerneeded=true;
             handler.post(timeout);
             dialog = ProgressDialog.show(SearchResult.this, "Loading", "Please wait...", true);

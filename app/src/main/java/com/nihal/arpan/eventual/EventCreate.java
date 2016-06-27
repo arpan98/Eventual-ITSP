@@ -71,8 +71,8 @@ public class EventCreate extends AppCompatActivity {
 
     private final OkHttpClient client = new OkHttpClient();
     public static final MediaType JSON = MediaType.parse("application/json; charset=utf-8");
-    private static final String CREATE_URL = "http://wncc-iitb.org:8000/create";
-    private static final String SEARCH_URL = "http://wncc-iitb.org:8000/search";
+    private static final String CREATE_URL = "http://wncc-iitb.org:5697/create";
+    private static final String SEARCH_URL = "http://wncc-iitb.org:5697/search";
 
     private Handler handler = new Handler();
     private Runnable timeout = new Runnable(){
@@ -465,10 +465,14 @@ public class EventCreate extends AppCompatActivity {
         while(itr.hasNext()){
             Event e=(Event)itr.next();
             Log.d("Event:", e.id + e.username);
-            objectId = e.id;
+            objectId = e.id;Intent i = new Intent(EventCreate.this, SearchResult.class);
+            i.putExtra("objectId", e.id);
+            startActivity(i);
+            finish();
         }
 
 
+        /*
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
@@ -568,7 +572,7 @@ public class EventCreate extends AppCompatActivity {
                         .show();
             }
         });
-
+        */
     }
     public void newEvent() {
         String starttime, endtime;
@@ -625,126 +629,10 @@ public class EventCreate extends AppCompatActivity {
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                handlerneeded = false;
-                started = false;
-                dialog.dismiss();
-                savebutton.setEnabled(true);
-                WindowManager manager = (WindowManager) getSystemService(WINDOW_SERVICE);
-                Display display = manager.getDefaultDisplay();
-                Point point = new Point();
-                display.getSize(point);
-                int width = point.x;
-                int height = point.y;
-                int smallerDimension = width < height ? width : height;
-                smallerDimension = smallerDimension * 3 / 4;
-                String start, end;
-                if (allday) {
-                    start = startdatedisplay.getText().toString();
-                    end = enddatedisplay.getText().toString();
-                } else {
-                    start = startdatedisplay.getText().toString() + " " + starttimedisplay.getText().toString();
-                    end = enddatedisplay.getText().toString() + " " + endtimedisplay.getText().toString();
-                }
-
-                String QRText = QRStart + seq + title + seq + description + seq + Boolean.toString(allday) + seq + start + seq + end + seq + location + seq;
-                try {
-                    qrCodeEncoder = new QRCodeEncoder(QRText, null, Contents.Type.TEXT, BarcodeFormat.QR_CODE.toString(), smallerDimension);
-                    Bitmap bitmap = qrCodeEncoder.encodeAsBitmap();
-                    ImageView myImage = (ImageView) findViewById(R.id.imageView1);
-                    myImage.setImageBitmap(bitmap);
-
-                    myImage.setDrawingCacheEnabled(true);
-                    // this is the important code :)
-                    // Without it the view will have a dimension of 0,0 and the bitmap will be null
-                    myImage.measure(View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED),
-                            View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED));
-                    myImage.layout(0, 0, myImage.getMeasuredWidth(), myImage.getMeasuredHeight());
-                    myImage.buildDrawingCache(true);
-                    b = Bitmap.createBitmap(myImage.getDrawingCache());
-                    myImage.setDrawingCacheEnabled(false); // clear drawing cache
-                } catch (Exception err) {
-                    err.printStackTrace();
-                }
-                AlertDialog.Builder builder = new AlertDialog.Builder(EventCreate.this);
-                builder
-                        .setOnKeyListener(new DialogInterface.OnKeyListener() {
-                            @Override
-                            public boolean onKey(DialogInterface dialog, int keyCode, KeyEvent event) {
-                                if (keyCode == KeyEvent.KEYCODE_BACK && event.getAction() == KeyEvent.ACTION_UP && !event.isCanceled()) {
-                                    dialog.cancel();
-                                    savebutton.setEnabled(true);
-                                    return true;
-                                }
-                                return false;
-                            }
-                        })
-                        .setTitle("Event Saved!")
-                        .setMessage("http://www.EVENTual.com/" + objectId)
-                        .setIcon(android.R.drawable.ic_menu_my_calendar)
-                        .setPositiveButton("Share Link", new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int which) {
-                                String shareBody = "EVENTual: \nEvent Title - " + title + "\nEvent Link - http://www.EVENTual.com/" + objectId;
-                                Intent sharingIntent = new Intent(android.content.Intent.ACTION_SEND);
-                                sharingIntent.setType("text/plain");
-                                sharingIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, "Event");
-                                sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT, shareBody);
-                                startActivity(Intent.createChooser(sharingIntent, getResources().getString(R.string.share_using)));
-
-                            }
-                        })
-                        .setNegativeButton("Share QR Code", new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int which) {
-                                try {
-                                    Intent share = new Intent(Intent.ACTION_SEND);
-                                    share.setType("image/jpeg");
-                                    ByteArrayOutputStream bytes = new ByteArrayOutputStream();
-                                    b.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
-                                    File f = new File(Environment.getExternalStorageDirectory() + File.separator + title + ".jpg");
-                                    try {
-                                        f.createNewFile();
-                                        FileOutputStream fo = new FileOutputStream(f);
-                                        fo.write(bytes.toByteArray());
-                                        fo.close();
-                                    } catch (IOException e) {
-                                        e.printStackTrace();
-                                    }
-                                    share.putExtra(Intent.EXTRA_STREAM, Uri.parse("file:///sdcard/" + title + ".jpg"));
-                                    startActivity(Intent.createChooser(share, "Share Image"));
-
-                                } catch (Exception e) {
-                                    e.printStackTrace();
-                                }
-                            }
-                        })
-                        .setNeutralButton("Exit", new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int which) {
-                                Intent i = new Intent();
-                                i.putExtra("title", title);
-                                i.putExtra("description", description);
-                                i.putExtra("allday", allday);
-                                i.putExtra("startyear", startyear);
-                                i.putExtra("startmonth", startmonth);
-                                i.putExtra("startdate", startdate);
-                                i.putExtra("endyear", endyear);
-                                i.putExtra("endmonth", endmonth);
-                                i.putExtra("enddate", enddate);
-                                i.putExtra("location", location);
-                                if (allday) {
-                                    i.putExtra("starthour", "");
-                                    i.putExtra("startminute", "");
-                                    i.putExtra("endhour", "");
-                                    i.putExtra("endminute", "");
-                                } else {
-                                    i.putExtra("starthour", starthour);
-                                    i.putExtra("startminute", startminute);
-                                    i.putExtra("endhour", endhour);
-                                    i.putExtra("endminute", endminute);
-                                }
-                                setResult(Activity.RESULT_OK, i);
-                                finish();
-                            }
-                        })
-                        .show();
+                Intent i = new Intent(EventCreate.this, SearchResult.class);
+                i.putExtra("objectId", objectId);
+                startActivity(i);
+                finish();
             }
         });
 
