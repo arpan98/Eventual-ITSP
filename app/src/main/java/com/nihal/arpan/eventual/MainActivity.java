@@ -240,27 +240,25 @@ public class MainActivity extends AppCompatActivity {
                             }
                         } else if (scanres.substring(0, 10).equals(QRStart)) {
                             try {
+                                //looks like EVENTualQR~!#title~!#description~!#allday~!#startdate~!#starttime~!#enddate~!#endtime~!#location~!#private
+                                // eg. EVENTualQR~!#Football match~!#England vs Iceland~!#false~!#28/06/2016/~!#00:30~!#29/06/16~!#02:30~!#Europe~!#false
+                                // or EVENTualQR~!#Football match~!#England vs Iceland~!#false~!#28/06/2016/~!#29/06/16~!#Europe~!#false
+
+                                Log.d("QR",scanres);
                                 int index1 = scanres.indexOf(QRSeperator);
                                 int index2 = scanres.indexOf(QRSeperator, index1 + 1);
                                 title = scanres.substring(index1 + 3, index2);
+                                Log.d("QR",title);
                                 index1 = index2;
                                 index2 = scanres.indexOf(QRSeperator, index1 + 1);
                                 description = scanres.substring(index1 + 3, index2);
+                                Log.d("QR",description);
                                 index1 = index2;
                                 index2 = scanres.indexOf(QRSeperator, index1 + 1);
                                 String ad = scanres.substring(index1 + 3, index2);
-                                switch (ad) {
-                                    case "true":
-                                        allday = true;
-                                        break;
-                                    case "false":
-                                        allday = false;
-                                        break;
-                                    default:
-                                        allday = false;
-                                        break;
-                                }
-                                if (!allday) {
+                                Log.d("QR",ad);
+                                if (ad.equals("false")) {
+                                    allday = false;
                                     index1 = index2;
                                     index2 = scanres.indexOf(QRSeperator, index1 + 1);
                                     startdate = scanres.substring(index1 + 3, index1 + 5);
@@ -268,6 +266,8 @@ public class MainActivity extends AppCompatActivity {
                                     startyear = scanres.substring(index1 + 9, index1 + 13);
                                     starthour = scanres.substring(index1 + 14, index1 + 16);
                                     startminute = scanres.substring(index1 + 17, index1 + 19);
+                                    Log.d("QR",scanres.substring(index1+3, index2));
+                                    Log.d("QR",startdate+startmonth+startyear+starthour+startminute);
                                     index1 = index2;
                                     index2 = scanres.indexOf(QRSeperator, index1 + 1);
                                     enddate = scanres.substring(index1 + 3, index1 + 5);
@@ -275,9 +275,12 @@ public class MainActivity extends AppCompatActivity {
                                     endyear = scanres.substring(index1 + 9, index1 + 13);
                                     endhour = scanres.substring(index1 + 14, index1 + 16);
                                     endminute = scanres.substring(index1 + 17, index1 + 19);
+                                    Log.d("QR",scanres.substring(index1+3, index2));
+                                    Log.d("QR",enddate+endmonth+endyear+endhour+endminute);
                                     index1 = index2;
                                     index2 = scanres.indexOf(QRSeperator, index1 + 1);
                                     location = scanres.substring(index1 + 3, index2);
+                                    Log.d("QR", location);
                                     //TODO:Set timezone in QR reader
 
                                     try {
@@ -296,19 +299,25 @@ public class MainActivity extends AppCompatActivity {
                                         Log.d(TAG, "FROM QR - " + e.toString());
                                     }
                                 } else {
+                                    allday = true;
                                     index1 = index2;
                                     index2 = scanres.indexOf(QRSeperator, index1 + 1);
                                     startdate = scanres.substring(index1 + 3, index1 + 5);
                                     startmonth = scanres.substring(index1 + 6, index1 + 8);
                                     startyear = scanres.substring(index1 + 9, index1 + 13);
+                                    Log.d("QR",scanres.substring(index1+3, index2));
+                                    Log.d("QR",startdate+startmonth+startyear);
                                     index1 = index2;
                                     index2 = scanres.indexOf(QRSeperator, index1 + 1);
                                     enddate = scanres.substring(index1 + 3, index1 + 5);
                                     endmonth = scanres.substring(index1 + 6, index1 + 8);
                                     endyear = scanres.substring(index1 + 9, index1 + 13);
+                                    Log.d("QR",scanres.substring(index1+3, index2));
+                                    Log.d("QR",enddate+endmonth+endyear);
                                     index1 = index2;
                                     index2 = scanres.indexOf(QRSeperator, index1 + 1);
                                     location = scanres.substring(index1 + 3, index2);
+                                    Log.d("QR", location);
                                     //TODO:Set timezone in QR reader
 
                                     try {

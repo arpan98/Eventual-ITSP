@@ -470,6 +470,7 @@ public class EventCreate extends AppCompatActivity {
             i.putExtra("objectId", e.id);
             startActivity(i);
             finish();
+            break;
         }
 
 

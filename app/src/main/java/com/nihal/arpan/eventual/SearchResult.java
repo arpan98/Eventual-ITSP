@@ -48,7 +48,7 @@ public class SearchResult extends AppCompatActivity {
     EditText title, description, location;
     Switch alldayswitch;
     TextView startdatedisplay, starttimedisplay, enddatedisplay, endtimedisplay, starttimetv, endtimetv;
-    String TAG="swag", oId, QRStart="EVENTualQR", seq="~!#", isPrivate;
+    String TAG="SearchResult", oId, QRStart="EVENTualQR", seq="~!#", isPrivate;
     Bitmap b;
     QRCodeEncoder qrCodeEncoder;
     ProgressDialog dialog;
@@ -94,6 +94,7 @@ public class SearchResult extends AppCompatActivity {
 
         Intent i = getIntent();
         oId = i.getStringExtra("objectId");
+        Log.d(TAG, "EventID: " + oId);
 
         title = (EditText)findViewById(R.id.title);
         description = (EditText)findViewById(R.id.description);
@@ -165,6 +166,7 @@ public class SearchResult extends AppCompatActivity {
                                         endtimedisplay.setText(e.endtime);
                                     }
                                     isPrivate = e.isPrivate;
+                                    break;
                                 }
 
                                 WindowManager manager = (WindowManager) getSystemService(WINDOW_SERVICE);
