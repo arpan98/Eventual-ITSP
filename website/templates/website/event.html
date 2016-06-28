@@ -47,9 +47,9 @@
 							<div class="inner" style="text-align: center">
                                 {% if eventdata.location %}<h4>Location: {{ eventdata.location }}</h4>{% endif %}
 
-                                <h4>Starts: {{ eventdata.startdate }}  &nbsp; {% if eventdata.allday == False %} {{ eventdata.starttime }}  {% endif %}</h4>
+                                <h4>Starts:  {{ eventdata.startdate }}  &nbsp; {% if eventdata.allday == "false" %} {{ eventdata.starttime }}  {% endif %}</h4>
 
-                                <h4>Ends: {{ eventdata.enddate }}   &nbsp; {% if eventdata.allday == False %} {{ eventdata.endtime }} {% endif %}</h4>
+                                <h4>Ends: {{ eventdata.enddate }}   &nbsp; {% if eventdata.allday == "false" %} {{ eventdata.endtime }} {% endif %}</h4>
 
 							</div>
 						</section>
@@ -86,8 +86,12 @@
                                "size": 300,
                                "color": "#3a3",
                                "render": "image",
-                               "background": "white",
-                               "text": "EVENTualQR" + seq + "{{ eventdata.title }}" +seq + "{{ eventdata.description }}" +seq + String("{{ eventdata.allday }}") + seq + "{{ eventdata.startdate }}" + seq + "{{ eventdata.startime }}" +seq + "{{ eventdata.enddate }}" +"{{ eventdata.endtime }}" + seq + "{{ eventdata.location }}" +seq + "{{ eventdata.private }}"
+                               "background": "white", 
+                               {% if eventdata.allday == "false" %}
+                               "text": "EVENTualQR" + seq + "{{ eventdata.title }}" +seq + "{{ eventdata.description }}" +seq + String("{{ eventdata.allday }}") + seq + "{{ eventdata.startdate|date:'d/m/Y' }}" + " " + "{{ eventdata.starttime|date:'H:i' }}" +seq + "{{ eventdata.enddate|date:'d/m/Y' }}" + " " + "{{ eventdata.endtime|date:'H:i' }}" + seq + "{{ eventdata.location }}" +seq + "{{ eventdata.private }}"
+                               {% else %}
+                               "text": "EVENTualQR" + seq + "{{ eventdata.title }}" +seq + "{{ eventdata.description }}" +seq + String("{{ eventdata.allday }}") + seq + "{{ eventdata.startdate|date:'d/m/Y' }}" +seq + "{{ eventdata.enddate|date:'d/m/Y' }}" + seq + "{{ eventdata.location }}" +seq + "{{ eventdata.private }}"
+                               {% endif %}
                            });
                            document.getElementById("linkaddress").value = "www.wncc-iitb.org:8000/event/" + "{{ eventdata.id }}";
                        });

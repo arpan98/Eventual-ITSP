@@ -154,7 +154,7 @@ def format_query_data(events):
         cleaned_event["allday"] = event.allday.encode('ascii', 'ignore')
         cleaned_event["starttime"] = event.starttime.strftime('%H:%M')
         cleaned_event["endtime"] = event.endtime.strftime('%H:%M')
-        cleaned_event["private"] = event.private.encode('ascii', 'ignore')
+        cleaned_event["isPrivate"] = event.private.encode('ascii', 'ignore')
         cleaned_events.append(cleaned_event)
     return cleaned_events
 
