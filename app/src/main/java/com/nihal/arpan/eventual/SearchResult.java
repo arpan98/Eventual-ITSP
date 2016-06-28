@@ -48,11 +48,11 @@ public class SearchResult extends AppCompatActivity {
     EditText title, description, location;
     Switch alldayswitch;
     TextView startdatedisplay, starttimedisplay, enddatedisplay, endtimedisplay, starttimetv, endtimetv;
-    String TAG="SearchResult", oId, QRStart="EVENTualQR", seq="~!#", isPrivate;
+    String TAG = "SearchResult", oId, QRStart = "EVENTualQR", seq = "~!#", isPrivate;
     Bitmap b;
     QRCodeEncoder qrCodeEncoder;
     ProgressDialog dialog;
-    Boolean handlerneeded=false, started=false;
+    Boolean handlerneeded = false, started = false;
     long stime, now;
 
     Gson gson = new Gson();
@@ -66,19 +66,19 @@ public class SearchResult extends AppCompatActivity {
     private static final String SEARCH_URL = "http://wncc-iitb.org:5697/search";
 
     private Handler handler = new Handler();
-    private Runnable timeout = new Runnable(){
+    private Runnable timeout = new Runnable() {
         public void run() {
-            if(handlerneeded) {
+            if (handlerneeded) {
 
-                if(!started) {
+                if (!started) {
                     stime = System.currentTimeMillis();
-                    started=true;
+                    started = true;
                 }
                 now = System.currentTimeMillis();
-                if(now>stime+10000) {
+                if (now > stime + 10000) {
                     dialog.dismiss();
-                    handlerneeded=false;
-                    started=false;
+                    handlerneeded = false;
+                    started = false;
                     Toast.makeText(SearchResult.this, "Cannot connect to server. Please check your connection", Toast.LENGTH_LONG).show();
                     thread.start();
                 }
@@ -96,20 +96,20 @@ public class SearchResult extends AppCompatActivity {
         oId = i.getStringExtra("objectId");
         Log.d(TAG, "EventID: " + oId);
 
-        title = (EditText)findViewById(R.id.title);
-        description = (EditText)findViewById(R.id.description);
-        location = (EditText)findViewById(R.id.location);
-        alldayswitch = (Switch)findViewById(R.id.allday);
-        startdatedisplay = (TextView)findViewById(R.id.startdatedisplay);
-        starttimedisplay = (TextView)findViewById(R.id.starttimedisplay);
-        enddatedisplay = (TextView)findViewById(R.id.enddatedisplay);
-        endtimedisplay = (TextView)findViewById(R.id.endtimedisplay);
-        starttimetv = (TextView)findViewById(R.id.starttimetv);
-        endtimetv = (TextView)findViewById(R.id.endtimetv);
+        title = (EditText) findViewById(R.id.title);
+        description = (EditText) findViewById(R.id.description);
+        location = (EditText) findViewById(R.id.location);
+        alldayswitch = (Switch) findViewById(R.id.allday);
+        startdatedisplay = (TextView) findViewById(R.id.startdatedisplay);
+        starttimedisplay = (TextView) findViewById(R.id.starttimedisplay);
+        enddatedisplay = (TextView) findViewById(R.id.enddatedisplay);
+        endtimedisplay = (TextView) findViewById(R.id.endtimedisplay);
+        starttimetv = (TextView) findViewById(R.id.starttimetv);
+        endtimetv = (TextView) findViewById(R.id.endtimetv);
 
-        if(isNetworkConnected()) {
+        if (isNetworkConnected()) {
 
-            String jsonData = "{"+ "\"id\": \"" + oId + "\""
+            String jsonData = "{" + "\"id\": \"" + oId + "\""
                     + "}";
 
             RequestBody body = RequestBody.create(JSON, jsonData);
@@ -133,8 +133,8 @@ public class SearchResult extends AppCompatActivity {
                     else {
                         final String jsonData = response.body().string();
 
-                        handlerneeded=false;
-                        started=false;
+                        handlerneeded = false;
+                        started = false;
                         dialog.dismiss();
 
                         Log.d(TAG, "Response from " + SEARCH_URL + ": " + jsonData);
@@ -179,7 +179,7 @@ public class SearchResult extends AppCompatActivity {
                                 smallerDimension = smallerDimension * 3 / 4;
 
                                 String QRText = QRStart + seq + title.getText().toString() + seq + description.getText().toString() + seq + Boolean.toString(alldayswitch.isChecked()).toLowerCase() + seq + startdatedisplay.getText().toString() + seq + starttimedisplay.getText().toString() + seq + enddatedisplay.getText().toString() + seq + endtimedisplay.getText().toString() + seq + location.getText().toString() + seq + isPrivate;
-                                Log.d(TAG,QRText);
+                                Log.d(TAG, QRText);
                                 try {
                                     qrCodeEncoder = new QRCodeEncoder(QRText, null, Contents.Type.TEXT, BarcodeFormat.QR_CODE.toString(), smallerDimension);
                                     Bitmap bitmap = qrCodeEncoder.encodeAsBitmap();
@@ -195,8 +195,7 @@ public class SearchResult extends AppCompatActivity {
                                     myImage.buildDrawingCache(true);
                                     b = Bitmap.createBitmap(myImage.getDrawingCache());
                                     myImage.setDrawingCacheEnabled(false); // clear drawing cache
-                                }
-                                catch (Exception err) {
+                                } catch (Exception err) {
                                     Toast.makeText(getApplicationContext(), "Error in QR Code creation", Toast.LENGTH_LONG).show();
                                     err.printStackTrace();
                                 }
@@ -207,11 +206,10 @@ public class SearchResult extends AppCompatActivity {
                 }
             });
 
-            handlerneeded=true;
+            handlerneeded = true;
             handler.post(timeout);
             dialog = ProgressDialog.show(SearchResult.this, "Loading", "Please wait...", true);
-        }
-        else {
+        } else {
             Toast.makeText(getApplicationContext(), "Internet Connection Required!", Toast.LENGTH_LONG).show();
             thread.start();
         }
@@ -238,8 +236,7 @@ public class SearchResult extends AppCompatActivity {
                 intent.putExtra(CalendarContract.EXTRA_EVENT_ALL_DAY, true);
                 beginTime.set(Integer.parseInt(e.startdate.split("/")[2]), Integer.parseInt(e.startdate.split("/")[1]) - 1, Integer.parseInt(e.startdate.split("/")[0]));
                 endTime.set(Integer.parseInt(e.enddate.split("/")[2]), Integer.parseInt(e.enddate.split("/")[1]) - 1, Integer.parseInt(e.enddate.split("/")[0]));
-            }
-            else {
+            } else {
                 intent.putExtra(CalendarContract.EXTRA_EVENT_ALL_DAY, false);
                 beginTime.set(Integer.parseInt(e.startdate.split("/")[2]), Integer.parseInt(e.startdate.split("/")[1]) - 1, Integer.parseInt(e.startdate.split("/")[0]), Integer.parseInt(e.starttime.split(":")[0]), Integer.parseInt(e.starttime.split(":")[1]));              //year,month,day,hour of day,minute
                 endTime.set(Integer.parseInt(e.enddate.split("/")[2]), Integer.parseInt(e.enddate.split("/")[1]) - 1, Integer.parseInt(e.enddate.split("/")[0]), Integer.parseInt(e.endtime.split(":")[0]), Integer.parseInt(e.endtime.split(":")[1]));
@@ -254,8 +251,7 @@ public class SearchResult extends AppCompatActivity {
             intent.putExtra(CalendarContract.Events.EVENT_LOCATION, e.location);
 
             startActivity(intent);
-        }
-        catch(Exception e) {
+        } catch (Exception e) {
             Toast.makeText(getApplicationContext(), "Error in opening Calendar", Toast.LENGTH_LONG).show();
             e.printStackTrace();
         }
@@ -266,7 +262,7 @@ public class SearchResult extends AppCompatActivity {
         share.setType("image/jpeg");
         ByteArrayOutputStream bytes = new ByteArrayOutputStream();
         b.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
-        File f = new File(Environment.getExternalStorageDirectory() + File.separator + title.getText().toString()+".jpg");
+        File f = new File(Environment.getExternalStorageDirectory() + File.separator + title.getText().toString() + ".jpg");
         try {
             f.createNewFile();
             FileOutputStream fo = new FileOutputStream(f);
@@ -279,7 +275,7 @@ public class SearchResult extends AppCompatActivity {
         startActivity(Intent.createChooser(share, "Share Image"));
     }
 
-    Thread thread = new Thread(){
+    Thread thread = new Thread() {
         @Override
         public void run() {
             try {
@@ -292,7 +288,7 @@ public class SearchResult extends AppCompatActivity {
     };
 
     public void ShareLink(View v) {
-        String shareBody = "EVENTual: \nEvent Title - "+title.getText().toString()+"\nEvent Link - http://www.wncc-iitb.org:5697/event/"+oId;
+        String shareBody = "EVENTual: \nEvent Title - " + title.getText().toString() + "\nEvent Link - http://www.wncc-iitb.org:5697/event/" + oId;
         Intent sharingIntent = new Intent(android.content.Intent.ACTION_SEND);
         sharingIntent.setType("text/plain");
         sharingIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, "Event");

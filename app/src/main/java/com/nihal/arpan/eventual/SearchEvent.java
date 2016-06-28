@@ -116,7 +116,7 @@ public class SearchEvent extends AppCompatActivity {
         final DisplayMetrics metrics = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(metrics);
         final TextView resultstv = (TextView) findViewById(R.id.resultstv);
-        ViewGroup.MarginLayoutParams params = (ViewGroup.MarginLayoutParams)resultstv.getLayoutParams();
+        ViewGroup.MarginLayoutParams params = (ViewGroup.MarginLayoutParams) resultstv.getLayoutParams();
         params.setMargins(0, metrics.heightPixels, 0, 0);
 
         listView = (ListView) findViewById(R.id.listView);
@@ -509,7 +509,7 @@ public class SearchEvent extends AppCompatActivity {
             Response response;
             try {
                 response = client.newCall(request).execute();
-                if(response.isSuccessful()) {
+                if (response.isSuccessful()) {
                     final String jsonResponseData = response.body().string();
                     Log.d(TAG, "Response from " + SEARCH_URL + ": " + params[0]);
                     try {
@@ -519,7 +519,7 @@ public class SearchEvent extends AppCompatActivity {
                         Type type = new TypeToken<ArrayList<Event>>() {
                         }.getType();
                         eventList = gson.fromJson(jsonArray.toString(), type);
-                        Log.d(TAG, "Retrieved " + eventList.size() + " scores");
+                        Log.d(TAG, "Retrieved " + eventList.size() + " events");
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
@@ -530,14 +530,14 @@ public class SearchEvent extends AppCompatActivity {
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    TextView resultstv = (TextView)findViewById(R.id.resultstv);
+                    TextView resultstv = (TextView) findViewById(R.id.resultstv);
                     resultstv.setVisibility(View.VISIBLE);
                     listView.setVisibility(View.VISIBLE);
                     search.setEnabled(true);
                     dialog.dismiss();
                     handlerneeded = false;
                     if (eventList.size() > 0) {
-                        ScrollView sv = (ScrollView)findViewById(R.id.scrollView);
+                        ScrollView sv = (ScrollView) findViewById(R.id.scrollView);
                         sv.scrollTo(0, listView.getTop());
                         List<String> titlelist = new ArrayList<String>();
                         List<String> locationlist = new ArrayList<String>();
@@ -550,6 +550,7 @@ public class SearchEvent extends AppCompatActivity {
                         adapter = new MyArrayAdapter(SearchEvent.this, titlelist, locationlist, objectIdlist);
                         listView.setAdapter(adapter);
 
+                        // Click on listitem opens the event in SearchResult page
                         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                             @Override
                             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {

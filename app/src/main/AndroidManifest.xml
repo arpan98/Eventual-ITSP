@@ -16,13 +16,14 @@
       IMPORTANT: Change "com.parse.starter.permission.C2D_MESSAGE" in the lines below
       to match your app's package name + ".permission.C2D_MESSAGE".
     -->
-    <permission android:protectionLevel="signature"
-        android:name="com.nihal.arpan.eventual.permission.C2D_MESSAGE" />
+    <permission
+        android:name="com.nihal.arpan.eventual.permission.C2D_MESSAGE"
+        android:protectionLevel="signature" />
+
     <uses-permission android:name="com.nihal.arpan.eventual.permission.C2D_MESSAGE" />
 
-
     <application
-        android:name="com.nihal.arpan.eventual.ParseInitialize"
+        android:name=".ParseInitialize"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
@@ -34,14 +35,14 @@
         <meta-data
             android:name="com.parse.CLIENT_KEY"
             android:value="wc5raEbirQuUBLrAPAArVPnidPUPSMjTzX5Xe5Wg" />
-        <meta-data android:name="com.parse.push.notification_icon"
-            android:resource="@drawable/icon_bw"/>
+        <meta-data
+            android:name="com.parse.push.notification_icon"
+            android:resource="@drawable/icon_bw" />
 
         <activity
-            android:name="com.nihal.arpan.eventual.MainActivity"
+            android:name=".MainActivity"
             android:label="@string/app_name"
-            android:screenOrientation="portrait"
-            >
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -60,23 +61,25 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="com.nihal.arpan.eventual.EventCreate"
+            android:name=".EventCreate"
             android:label="@string/title_activity_event_create"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name="com.nihal.arpan.eventual.SearchEvent"
+            android:name=".SearchEvent"
             android:label="@string/title_activity_search_event"
-            android:theme="@style/AppTheme.NoActionBar"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name="com.nihal.arpan.eventual.SearchResult"
+            android:name=".SearchResult"
             android:label="@string/title_activity_search_result"
-            android:theme="@style/AppTheme.NoActionBar"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar" />
 
         <service android:name="com.parse.PushService" />
-        <receiver android:name="com.nihal.arpan.eventual.PushReceiver"
+
+        <receiver
+            android:name=".PushReceiver"
             android:exported="false">
             <intent-filter>
                 <action android:name="com.parse.push.intent.RECEIVE" />
@@ -84,8 +87,8 @@
                 <action android:name="com.parse.push.intent.OPEN" />
             </intent-filter>
         </receiver>
-
-        <receiver android:name="com.parse.GcmBroadcastReceiver"
+        <receiver
+            android:name="com.parse.GcmBroadcastReceiver"
             android:permission="com.google.android.c2dm.permission.SEND">
             <intent-filter>
                 <action android:name="com.google.android.c2dm.intent.RECEIVE" />
@@ -95,8 +98,7 @@
             </intent-filter>
         </receiver>
 
-
-
+        <activity android:name=".MyEvents"></activity>
     </application>
 
 </manifest>

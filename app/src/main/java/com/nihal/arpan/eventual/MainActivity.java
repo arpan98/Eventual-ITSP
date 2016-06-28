@@ -163,6 +163,11 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    public void onMyEventsClicked(View view) {
+        Intent intent = new Intent(MainActivity.this, MyEvents.class);
+        startActivity(intent);
+    }
+
     public void onActivityResult(int requestCode, int resultCode, final Intent intent) {
 
         try {
