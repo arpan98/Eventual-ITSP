@@ -62,8 +62,8 @@ public class SearchResult extends AppCompatActivity {
     Event e;
     private final OkHttpClient client = new OkHttpClient();
     public static final MediaType JSON = MediaType.parse("application/json; charset=utf-8");
-    private static final String CREATE_URL = "http://www.eventual.co.in";
-    private static final String SEARCH_URL = "http://www.eventual.co.in";
+    private static final String CREATE_URL = "http://www.eventual.co.in/create";
+    private static final String SEARCH_URL = "http://www.eventual.co.in/search";
 
     private Handler handler = new Handler();
     private Runnable timeout = new Runnable() {
@@ -288,7 +288,7 @@ public class SearchResult extends AppCompatActivity {
     };
 
     public void ShareLink(View v) {
-        String shareBody = "EVENTual: \nEvent Title - " + title.getText().toString() + "\nEvent Link - http://www.wncc-iitb.org:5697/event/" + oId;
+        String shareBody = "EVENTual: \nEvent Title - " + title.getText().toString() + "\nEvent Link - http://www.eventual.co.in/event/" + oId;
         Intent sharingIntent = new Intent(android.content.Intent.ACTION_SEND);
         sharingIntent.setType("text/plain");
         sharingIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, "Event");

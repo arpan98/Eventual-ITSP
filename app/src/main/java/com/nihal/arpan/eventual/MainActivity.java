@@ -48,8 +48,8 @@ public class MainActivity extends AppCompatActivity {
     long stime, now;
     private final OkHttpClient client = new OkHttpClient();
     public static final MediaType JSON = MediaType.parse("application/json; charset=utf-8");
-    private static final String CREATE_URL = "http://www.eventual.co.in";
-    private static final String SEARCH_URL = "http://www.eventual.co.in";
+    private static final String CREATE_URL = "http://www.eventual.co.in/create";
+    private static final String SEARCH_URL = "http://www.eventual.co.in/search";
 
     private Handler handler = new Handler();
     private Runnable timeout = new Runnable(){

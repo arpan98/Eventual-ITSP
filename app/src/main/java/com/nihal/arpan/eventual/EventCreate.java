@@ -71,8 +71,8 @@ public class EventCreate extends AppCompatActivity {
 
     private final OkHttpClient client = new OkHttpClient();
     public static final MediaType JSON = MediaType.parse("application/json; charset=utf-8");
-    private static final String CREATE_URL = "http://www.eventual.co.in";
-    private static final String SEARCH_URL = "http://www.eventual.co.in";
+    private static final String CREATE_URL = "http://www.eventual.co.in/create";
+    private static final String SEARCH_URL = "http://www.eventual.co.in/search";
 
     private Handler handler = new Handler();
     private Runnable timeout = new Runnable(){
@@ -394,188 +394,6 @@ public class EventCreate extends AppCompatActivity {
         return (starttimedisplay.getText().toString().equals("") || endtimedisplay.getText().toString().equals(""));
     }
 
-    public void checkIfEventAlreadyExists() {
-        String starttime, endtime;
-        if (allday) {
-            starttime = "00:00";
-            endtime = "00:00";
-        } else {
-            starttime = starthour + ":" + startminute;
-            endtime = endhour + ":" + endminute;
-        }
-
-        String jsonData = "{"+ "\"username\": \"" + username + "\","
-                + "\"title\": \"" + title + "\","
-                + "\"description\": \"" + description + "\","
-                + "\"location\": \"" + location + "\","
-                + "\"startdate\": \"" + startdate + "/" + startmonth + "/" + startyear+ "\","
-                + "\"enddate\": \"" + enddate + "/" + endmonth + "/" + endyear + "\","
-                + "\"starttime\": \"" + starttime + "\","
-                + "\"endtime\": \"" + endtime + "\","
-                + "\"allday\": \"" + allday.toString() + "\","
-                + "\"private\": \"" + privateswitch.toString().toLowerCase() + "\""
-                + "}";
-
-        RequestBody body = RequestBody.create(JSON, jsonData);
-        Log.d(TAG, "search JSON = " + jsonData);
-
-        com.squareup.okhttp.Request request = new com.squareup.okhttp.Request.Builder()
-                .url(SEARCH_URL)
-                .post(body)
-                .build();
-
-        client.newCall(request).enqueue(new Callback() {
-            @Override
-            public void onFailure(com.squareup.okhttp.Request request, IOException throwable) {
-                throwable.printStackTrace();
-            }
-
-            @Override
-            public void onResponse(com.squareup.okhttp.Response response) throws IOException {
-                if (!response.isSuccessful())
-                    throw new IOException("Unexpected code " + response);
-                else {
-                    final String jsonData = response.body().string();
-                    Log.d(TAG, "Response from " + SEARCH_URL + ": " + jsonData);
-                    if (jsonData.equals("[]"))
-                    {
-                        Log.d(TAG, "New Event");
-                        duplicate = false;
-                        newEvent();
-                    }
-                    else
-                    {
-                        Log.d(TAG, "Existing Event");
-                        duplicate = true;
-                        existingEvent(jsonData);
-                    }
-                }
-            }
-        });
-    }
-
-    public void existingEvent(String jsonData) {
-
-        Gson gson = new Gson();
-        Type type = new TypeToken<ArrayList<Event>>() {
-        }.getType();
-        ArrayList<Event> arrayList = gson.fromJson(jsonData, type);
-
-        Iterator itr = arrayList.iterator();
-        while(itr.hasNext()){
-            Event e=(Event)itr.next();
-            Log.d("Event:", e.id + e.username);
-            objectId = String.valueOf(e.id);
-            Intent i = new Intent(EventCreate.this, SearchResult.class);
-            i.putExtra("objectId", e.id);
-            startActivity(i);
-            finish();
-            break;
-        }
-
-
-        /*
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                handlerneeded = false;
-                started = false;
-                dialog.dismiss();
-                savebutton.setEnabled(true);
-                //existingOId = object.getObjectId(); Object ID ka kuch karna hai
-                WindowManager manager = (WindowManager) getSystemService(WINDOW_SERVICE);
-                Display display = manager.getDefaultDisplay();
-                Point point = new Point();
-                display.getSize(point);
-                int width = point.x;
-                int height = point.y;
-                int smallerDimension = width < height ? width : height;
-                smallerDimension = smallerDimension * 3 / 4;
-                String start, end;
-                AlertDialog.Builder builder = new AlertDialog.Builder(EventCreate.this);
-                builder
-                        .setOnKeyListener(new DialogInterface.OnKeyListener() {
-                            @Override
-                            public boolean onKey(DialogInterface dialog, int keyCode, KeyEvent event) {
-                                if (keyCode == KeyEvent.KEYCODE_BACK && event.getAction() == KeyEvent.ACTION_UP && !event.isCanceled()) {
-                                    dialog.cancel();
-                                    savebutton.setEnabled(true);
-                                    return true;
-                                }
-                                return false;
-                            }
-                        })
-                        .setTitle("Event already exists!!")
-                        .setMessage("http://www.EVENTual.com/" + objectId)
-                        .setIcon(android.R.drawable.ic_menu_my_calendar)
-                        .setPositiveButton("Share Link", new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int which) {
-                                String shareBody = "EVENTual: \nEvent Title - " + title + "\nEvent Link - http://www.EVENTual.com/" + objectId;
-                                Intent sharingIntent = new Intent(android.content.Intent.ACTION_SEND);
-                                sharingIntent.setType("text/plain");
-                                sharingIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, "Event");
-                                sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT, shareBody);
-                                startActivity(Intent.createChooser(sharingIntent, getResources().getString(R.string.share_using)));
-
-                            }
-                        })
-                        .setNegativeButton("Exit", new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int which) {
-                                Intent i = new Intent();
-                                i.putExtra("title", title);
-                                i.putExtra("description", description);
-                                i.putExtra("allday", allday);
-                                i.putExtra("startyear", startyear);
-                                i.putExtra("startmonth", startmonth);
-                                i.putExtra("startdate", startdate);
-                                i.putExtra("endyear", endyear);
-                                i.putExtra("endmonth", endmonth);
-                                i.putExtra("enddate", enddate);
-                                i.putExtra("location", location);
-                                if (allday) {
-                                    i.putExtra("starthour", "");
-                                    i.putExtra("startminute", "");
-                                    i.putExtra("endhour", "");
-                                    i.putExtra("endminute", "");
-                                } else {
-                                    i.putExtra("starthour", starthour);
-                                    i.putExtra("startminute", startminute);
-                                    i.putExtra("endhour", endhour);
-                                    i.putExtra("endminute", endminute);
-                                }
-                                setResult(Activity.RESULT_OK, i);
-                                finish();
-                            }
-                        })
-                        .setNeutralButton("Share QR Code", new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int which) {
-                                try {
-                                    Intent share = new Intent(Intent.ACTION_SEND);
-                                    share.setType("image/jpeg");
-                                    ByteArrayOutputStream bytes = new ByteArrayOutputStream();
-                                    b.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
-                                    File f = new File(Environment.getExternalStorageDirectory() + File.separator + "temporary_file.jpg");
-                                    try {
-                                        f.createNewFile();
-                                        FileOutputStream fo = new FileOutputStream(f);
-                                        fo.write(bytes.toByteArray());
-                                        fo.close();
-                                    } catch (IOException e) {
-                                        e.printStackTrace();
-                                    }
-                                    share.putExtra(Intent.EXTRA_STREAM, Uri.parse("file:///sdcard/temporary_file.jpg"));
-                                    startActivity(Intent.createChooser(share, "Share Image"));
-
-                                } catch (Exception e) {
-                                    e.printStackTrace();
-                                }
-                            }
-                        })
-                        .show();
-            }
-        });
-        */
-    }
     public void newEvent() {
         String starttime, endtime;
         if (allday) {
@@ -812,7 +630,7 @@ public class EventCreate extends AppCompatActivity {
             return;
         }
 
-        checkIfEventAlreadyExists();
+        newEvent();
 
         handlerneeded=true;
         started=false;
