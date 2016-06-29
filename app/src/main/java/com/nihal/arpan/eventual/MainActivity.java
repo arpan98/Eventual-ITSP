@@ -101,45 +101,6 @@ public class MainActivity extends AppCompatActivity {
         catch(Exception e) {
             Log.d(TAG,"Deep link");
         }
-        try {
-            Uri data = intent.getData();
-            if (data != null) {
-                website = data.getHost();
-                link = data.getPath();
-            }
-
-            if (data != null && website.equals(HOST)) {
-                final String objectId = link.substring(1, link.length());
-                Log.d(TAG, "ObjectId = " + objectId);
-                AlertDialog.Builder builder = new AlertDialog.Builder(this);
-                builder
-                        .setTitle("Add event")
-                        .setMessage("Do you want to add this event to calendar?")
-                        .setIcon(android.R.drawable.ic_dialog_alert)
-                        .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int which) {
-                                //Yes button clicked, do something
-                                Button addButton = (Button) findViewById(R.id.add);
-                                setOnClick(addButton, objectId);
-                                addButton.performClick();
-                            }
-                        })
-                        .setNegativeButton("No", null)                        //Do nothing on no
-                        .show();
-            }
-        }
-        catch(Exception e) {
-            Toast.makeText(getApplicationContext(), "Error in obtaining link", Toast.LENGTH_LONG).show();
-            e.printStackTrace();
-        }
-        try {
-            Bundle extras = intent.getExtras();
-            String pushNotif = extras.getString( "com.parse.Data" );
-            Log.d(TAG,pushNotif);
-        }
-        catch(Exception err) {
-            err.printStackTrace();
-        }
 
         Button make = (Button)findViewById(R.id.make_button);
         Log.d(TAG,String.valueOf(getResources().getDisplayMetrics().density));
@@ -171,50 +132,7 @@ public class MainActivity extends AppCompatActivity {
     public void onActivityResult(int requestCode, int resultCode, final Intent intent) {
 
         try {
-            if (requestCode == MAKE_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
-                AlertDialog.Builder builder = new AlertDialog.Builder(this);
-                builder
-                        .setTitle("Add event")
-                        .setMessage("Do you want to add your newly made event to calendar?")
-                        .setIcon(android.R.drawable.ic_menu_my_calendar)
-                        .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int which) {
-
-                                String title = intent.getStringExtra("title");
-                                String description = intent.getStringExtra("description");
-                                String location = intent.getStringExtra("location");
-                                Boolean allday = intent.getBooleanExtra("allday", false);
-                                String startyear = intent.getStringExtra("startyear");
-                                String startmonth = intent.getStringExtra("startmonth");
-                                String startdate = intent.getStringExtra("startdate");
-                                String endyear = intent.getStringExtra("endyear");
-                                String endmonth = intent.getStringExtra("endmonth");
-                                String enddate = intent.getStringExtra("enddate");
-                                long startMillis = 0;
-                                long endMillis = 0;
-                                Calendar beginTime = Calendar.getInstance();
-                                Calendar endTime = Calendar.getInstance();
-                                if (!allday) {
-                                    String starthour = intent.getStringExtra("starthour");
-                                    String startminute = intent.getStringExtra("startminute");
-                                    String endhour = intent.getStringExtra("endhour");
-                                    String endminute = intent.getStringExtra("endminute");
-                                    beginTime.set(Integer.parseInt(startyear), Integer.parseInt(startmonth) - 1, Integer.parseInt(startdate), Integer.parseInt(starthour), Integer.parseInt(startminute));               //year,month,day,hour of day,minute
-                                    endTime.set(Integer.parseInt(endyear), Integer.parseInt(endmonth) - 1, Integer.parseInt(enddate), Integer.parseInt(endhour), Integer.parseInt(endminute));
-                                } else {
-                                    beginTime.set(Integer.parseInt(startyear), Integer.parseInt(startmonth) - 1, Integer.parseInt(startdate));
-                                    endTime.set(Integer.parseInt(endyear), Integer.parseInt(endmonth) - 1, Integer.parseInt(enddate));
-                                }
-                                startMillis = beginTime.getTimeInMillis();
-                                endMillis = endTime.getTimeInMillis();
-                                insertEntry(title, description, location, startMillis, endMillis, allday);
-                            }
-                        })
-                        .setNegativeButton("No", null)                    //Do nothing on no
-                        .show();
-            } else if (requestCode == MAKE_REQUEST_CODE && resultCode == Activity.RESULT_CANCELED) {
-                //Do nothing
-            } else if (requestCode != MAKE_REQUEST_CODE) {
+           if (requestCode != MAKE_REQUEST_CODE) {
                 IntentResult scanResult = IntentIntegrator.parseActivityResult(requestCode, resultCode, intent);
                 if (scanResult.getContents() != null) {
                     String scanres = intent.getStringExtra("SCAN_RESULT");
