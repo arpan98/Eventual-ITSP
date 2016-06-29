@@ -76,15 +76,6 @@
             android:layout_marginTop="20dp"
             android:checked="false" />
 
-        <Switch
-            android:id="@+id/privateswitch"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignStart="@+id/alldayswitch"
-            android:layout_below="@+id/location"
-            android:layout_marginTop="20dp"
-            android:checked="false" />
-
         <TextView
             android:id="@+id/titletv"
             android:layout_width="wrap_content"
@@ -112,15 +103,6 @@
             android:layout_alignBottom="@+id/alldayswitch"
             android:layout_alignEnd="@+id/descriptiontv"
             android:text="All Day"
-            android:textSize="18sp" />
-
-        <TextView
-            android:id="@+id/privatetv"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignBottom="@+id/privateswitch"
-            android:layout_alignEnd="@+id/descriptiontv"
-            android:text="Private"
             android:textSize="18sp" />
 
         <TextView

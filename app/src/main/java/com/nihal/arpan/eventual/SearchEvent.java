@@ -66,7 +66,7 @@ import java.util.regex.Pattern;
 public class SearchEvent extends AppCompatActivity {
 
     String TAG = "SearchEvent", username;
-    Switch alldayswitch, privateswitch;
+    Switch alldayswitch;
     TextView titletv, locationtv;
     TextView startdatetv, startdatedisplay, starttimetv, starttimedisplay;
     TextView enddatetv, enddatedisplay, endtimetv, endtimedisplay;
@@ -81,11 +81,12 @@ public class SearchEvent extends AppCompatActivity {
     Boolean handlerneeded = false, started = false, allday;
     long stime, now;
     ArrayList<Event> eventList;
+    int searchRequestsRemaining = 2;    //We're running two queries simultaneously in two AsyncTasks
 
     private final OkHttpClient client = new OkHttpClient();
     public static final MediaType JSON = MediaType.parse("application/json; charset=utf-8");
-    private static final String CREATE_URL = "http://www.eventual.co.in";
-    private static final String SEARCH_URL = "http://www.eventual.co.in";
+    private static final String CREATE_URL = "http://www.eventual.co.in/create";
+    private static final String SEARCH_URL = "http://www.eventual.co.in/search";
 
     private Handler handler = new Handler();
     private Runnable timeout = new Runnable() {
@@ -131,7 +132,6 @@ public class SearchEvent extends AppCompatActivity {
         });
 
         alldayswitch = (Switch) findViewById(R.id.alldayswitch);
-        privateswitch = (Switch) findViewById(R.id.privateswitch);
 
         titletv = (TextView) findViewById(R.id.titletv);
         locationtv = (TextView) findViewById(R.id.locationtv);
@@ -461,38 +461,55 @@ public class SearchEvent extends AppCompatActivity {
             }
         }
 
-        String jsonData = "{" + "\"username\": \"" + username + "\",";
+        String jsonData = "{";
+        String jsonData1 = "{" + "\"username\": \"" + username + "\",";
         // Add param to json if not left blank ie ""
         if (!title.equals("")) {
             jsonData += "\"title\": \"" + title + "\",";
+            jsonData1 += "\"title\": \"" + title + "\",";
         }
         if (!description.equals("")) {
             jsonData += "\"description\": \"" + description + "\",";
+            jsonData1 += "\"description\": \"" + description + "\",";
         }
         if (!location.equals("")) {
             jsonData += "\"location\": \"" + location + "\",";
+            jsonData1 += "\"location\": \"" + location + "\",";
         }
         if (!totalstartdate.equals("")) {
             jsonData += "\"startdate\": \"" + totalstartdate + "\",";
+            jsonData1 += "\"startdate\": \"" + totalstartdate + "\",";
         }
         if (!totalenddate.equals("")) {
             jsonData += "\"enddate\": \"" + totalenddate + "\",";
+            jsonData1 += "\"enddate\": \"" + totalenddate + "\",";
         }
         if (!starttime.equals("")) {
             jsonData += "\"starttime\": \"" + starttime + "\",";
+            jsonData1 += "\"starttime\": \"" + starttime + "\",";
         }
         if (!endtime.equals("")) {
             jsonData += "\"endtime\": \"" + endtime + "\",";
+            jsonData1 += "\"endtime\": \"" + endtime + "\",";
         }
         jsonData += "\"allday\": \"" + allday.toString().toLowerCase() + "\","
-                + "\"private\": \"" + String.valueOf(privateswitch.isChecked()).toLowerCase() + "\""
+                + "\"private\": \"" + "false" + "\""
+                + "}";
+        jsonData1 += "\"allday\": \"" + allday.toString().toLowerCase() + "\","
+                + "\"private\": \"" + "true" + "\""
                 + "}";
         search.setEnabled(false);
         handlerneeded = true;
         handler.post(timeout);
         dialog = ProgressDialog.show(SearchEvent.this, "Retrieving", "Please wait...", true);
+
+        // Querying according to filled in data and private=false
         SearchRequest searchRequest = new SearchRequest();
         searchRequest.execute(jsonData);
+
+        // Querying according to filled in data, username and private=true
+        SearchRequest searchRequest1 = new SearchRequest();
+        searchRequest1.execute(jsonData1);
     }
 
     class SearchRequest extends AsyncTask<String, Void, Void> {
@@ -518,7 +535,9 @@ public class SearchEvent extends AppCompatActivity {
                         Gson gson = new Gson();
                         Type type = new TypeToken<ArrayList<Event>>() {
                         }.getType();
-                        eventList = gson.fromJson(jsonArray.toString(), type);
+                        ArrayList<Event> temp = gson.fromJson(jsonArray.toString(), type);
+                        eventList.addAll(temp);
+                        searchRequestsRemaining -= 1;
                         Log.d(TAG, "Retrieved " + eventList.size() + " events");
                     } catch (JSONException e) {
                         e.printStackTrace();
@@ -527,47 +546,49 @@ public class SearchEvent extends AppCompatActivity {
             } catch (IOException ioe) {
                 ioe.printStackTrace();
             }
-            runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    TextView resultstv = (TextView) findViewById(R.id.resultstv);
-                    resultstv.setVisibility(View.VISIBLE);
-                    listView.setVisibility(View.VISIBLE);
-                    search.setEnabled(true);
-                    dialog.dismiss();
-                    handlerneeded = false;
-                    if (eventList.size() > 0) {
-                        ScrollView sv = (ScrollView) findViewById(R.id.scrollView);
-                        sv.scrollTo(0, listView.getTop());
-                        List<String> titlelist = new ArrayList<String>();
-                        List<String> locationlist = new ArrayList<String>();
-                        List<String> objectIdlist = new ArrayList<String>();
-                        for (int i = 0; i < eventList.size(); i++) {
-                            titlelist.add(eventList.get(i).title);
-                            locationlist.add(eventList.get(i).location);
-                            objectIdlist.add(String.valueOf(eventList.get(i).id));
-                        }
-                        adapter = new MyArrayAdapter(SearchEvent.this, titlelist, locationlist, objectIdlist);
-                        listView.setAdapter(adapter);
-
-                        // Click on listitem opens the event in SearchResult page
-                        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                            @Override
-                            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                                ListObject obj = adapter.getItem(position);
-                                Log.d(TAG, "CLICKED = " + obj.objectId);
-                                Intent i = new Intent(SearchEvent.this, SearchResult.class);
-                                i.putExtra("objectId", obj.objectId);
-                                startActivity(i);
+            if (searchRequestsRemaining == 0) {
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        TextView resultstv = (TextView) findViewById(R.id.resultstv);
+                        resultstv.setVisibility(View.VISIBLE);
+                        listView.setVisibility(View.VISIBLE);
+                        search.setEnabled(true);
+                        dialog.dismiss();
+                        handlerneeded = false;
+                        if (eventList.size() > 0) {
+                            ScrollView sv = (ScrollView) findViewById(R.id.scrollView);
+                            sv.scrollTo(0, listView.getTop());
+                            List<String> titlelist = new ArrayList<String>();
+                            List<String> locationlist = new ArrayList<String>();
+                            List<String> objectIdlist = new ArrayList<String>();
+                            for (int i = 0; i < eventList.size(); i++) {
+                                titlelist.add(eventList.get(i).title);
+                                locationlist.add(eventList.get(i).location);
+                                objectIdlist.add(String.valueOf(eventList.get(i).id));
                             }
-                        });
-                    } else {
-                        resultstv.setVisibility(View.INVISIBLE);
-                        listView.setVisibility(View.INVISIBLE);
-                        Toast.makeText(SearchEvent.this, "No events found", Toast.LENGTH_SHORT).show();
+                            adapter = new MyArrayAdapter(SearchEvent.this, titlelist, locationlist, objectIdlist);
+                            listView.setAdapter(adapter);
+
+                            // Click on listitem opens the event in SearchResult page
+                            listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                                @Override
+                                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                                    ListObject obj = adapter.getItem(position);
+                                    Log.d(TAG, "CLICKED = " + obj.objectId);
+                                    Intent i = new Intent(SearchEvent.this, SearchResult.class);
+                                    i.putExtra("objectId", obj.objectId);
+                                    startActivity(i);
+                                }
+                            });
+                        } else {
+                            resultstv.setVisibility(View.INVISIBLE);
+                            listView.setVisibility(View.INVISIBLE);
+                            Toast.makeText(SearchEvent.this, "No events found", Toast.LENGTH_SHORT).show();
+                        }
                     }
-                }
-            });
+                });
+            }
             return null;
         }
     }
