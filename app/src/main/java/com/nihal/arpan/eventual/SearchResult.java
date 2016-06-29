@@ -62,8 +62,8 @@ public class SearchResult extends AppCompatActivity {
     Event e;
     private final OkHttpClient client = new OkHttpClient();
     public static final MediaType JSON = MediaType.parse("application/json; charset=utf-8");
-    private static final String CREATE_URL = "http://wncc-iitb.org:5697/create";
-    private static final String SEARCH_URL = "http://wncc-iitb.org:5697/search";
+    private static final String CREATE_URL = "http://www.eventual.co.in";
+    private static final String SEARCH_URL = "http://www.eventual.co.in";
 
     private Handler handler = new Handler();
     private Runnable timeout = new Runnable() {
