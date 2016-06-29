@@ -59,22 +59,22 @@
                 <script type="text/javascript" src="{% static "website/js/jquery.qrcode-0.12.0.js" %}"></script>
                 <script type="text/javascript" src="{% static "website/js/jquery.qrcode-0.12.0.min.js" %}"></script>
 
-            <div id="result" style="text-align: center; background-color: #FF3B30" >
+            <div id="result" style="text-align: center; background-color: #ff5c61" >
 
                 <h3 id="resulth">Event link and QR code:</h3>
-                <br/><br/>
+                <br/>
                 <center>
                 <input type="text" id ="linkaddress" name="linkaddress" size="40" style="text-align: center" readonly>
                 <br/>
                 <button id="copylink" onClick="linkcopy()">Double Click To Copy</button>
 
-                <br/><br/>
+                <br/><br/><br>
 
                 <div id="qrcode"></div>
-                <br/><br/>
+                <br/>
 
                 <a class= "downloadqrcode button" href="#" onclick="prepHref(this)" download>Download QR Code</a>
-                </center>
+                </center><br>
                 <p id="resultp">Share the link and QR Code generated with others to allow them to save this event to their calendars automatically by opening the link with EVENTual or scanning the QR Code using EVENTual QR Code Scanner.</p>
             </div>
                 <script>
