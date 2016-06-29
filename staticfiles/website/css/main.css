@@ -29,7 +29,6 @@
 	}
 
 	blockquote:before, blockquote:after, q:before, q:after {
-		content: '';
 		content: none;
 	}
 
@@ -82,19 +81,19 @@
 	}
 
 	.row.\30 \25 > * {
-		padding: 0 0 0 0em;
+		padding: 0 0 0 0;
 	}
 
 	.row.\30 \25 {
-		margin: 0 0 -1px 0em;
+		margin: 0 0 -1px 0;
 	}
 
 	.row.uniform.\30 \25 > * {
-		padding: 0em 0 0 0em;
+		padding: 0 0 0 0;
 	}
 
 	.row.uniform.\30 \25 {
-		margin: 0em 0 -1px 0em;
+		margin: 0 0 -1px 0;
 	}
 
 	.row > * {
@@ -1443,14 +1442,9 @@
 		-webkit-transition: color 0.2s ease, border-bottom-color 0.2s ease;
 		-ms-transition: color 0.2s ease, border-bottom-color 0.2s ease;
 		transition: color 0.2s ease, border-bottom-color 0.2s ease;
-		border-bottom: dotted 1px;
 		color: inherit;
 		text-decoration: none;
 	}
-
-		a:hover {
-			border-bottom-color: transparent;
-		}
 
 	strong, b {
 		color: #fff;
