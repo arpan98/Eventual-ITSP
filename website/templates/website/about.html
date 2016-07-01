@@ -1,0 +1,85 @@
+<!DOCTYPE HTML>
+{%  load staticfiles %}
+<html xmlns="http://www.w3.org/1999/html" xmlns="http://www.w3.org/1999/html">
+	<head>
+		<title>{{ eventdata.title }}</title>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<!--[if lte IE 8]><script src="assets/js/ie/html5shiv.js"></script><![endif]-->
+        <link rel="stylesheet"  href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" />
+		<link rel="stylesheet" href="{% static "website/css/main.css" %}"/>
+		<!--[if lte IE 8]><link rel="stylesheet" href="assets/css/ie8.css" /><![endif]-->
+		<!--[if lte IE 9]><link rel="stylesheet" href="assets/css/ie9.css" /><![endif]-->
+        		<!-- Scripts -->
+			<script src="{% static "website/js/jquery.min.js" %}"></script>
+			<script src="{% static "website/js/jquery.scrollex.min.js" %}"></script>
+			<script src="{% static "website/js/jquery.scrolly.min.js" %}"></script>
+			<script src="{% static "website/js/skel.min.js" %}"></script>
+			<script src="{% static "website/js/util.js" %}"></script>
+			<!--[if lte IE 8]><script src="assets/js/ie/respond.min.js" %}"></script><![endif]-->
+			<script src="{% static "website/js/main.js" %}"></script>
+			<script src="{%  static "website/js/save.js" %}"></script>
+	</head>
+    <!-- Place this tag in your head or just before your close body tag. -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+<script src="https://apis.google.com/js/platform.js" async defer></script>
+
+	<body>
+<div id="fb-root"></div>
+<script>(function(d, s, id) {
+  var js, fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) return;
+  js = d.createElement(s); js.id = id;
+  js.src = "//connect.facebook.net/en_US/sdk.js#xfbml=1&version=v2.6";
+  fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));</script>
+		<!-- Page Wrapper -->
+			<div id="page-wrapper" >
+
+
+		{% include "website/header.html" %}
+
+				<!-- Main -->
+					<article id="main">
+                            <section class="wrapper style5" style="background-color: #21b2a6">
+							<div class="inner" style="text-align: center" >
+                        <div class="row" style="background-color: #21b2a6">
+            <div class="col-lg-12">
+                <h2 class="page-header">Our Team</h2><br>
+            </div>
+            <div class="col-lg-4 col-sm-6 text-center">
+                <img class="img-circle img-responsive img-center" width="50%" style="margin: 0 auto" src="https://avatars2.githubusercontent.com/u/13916513?v=3&s=460" alt="Nihal Singh">
+                <h3>Nihal Singh<br>
+                    <small><a href="https://github.com/nihal111" >@nihal111</a></small>
+                </h3>
+                <p></p>
+            </div>
+            <div class="col-lg-4 col-sm-6 text-center">
+                <img class="img-circle img-responsive img-center" style="margin: 0 auto" width="50%" src="https://avatars1.githubusercontent.com/u/14044709?v=3&s=460" alt="Akash Trehan">
+                <h3>Akash Trehan<br>
+                    <small><a href="https://github.com/CodeMaxx" >@CodeMaxx</a></small>
+                </h3>
+                <p></p>
+            </div>
+            <div class="col-lg-4 col-sm-6 text-center">
+                <img class="img-circle img-responsive img-center" width="50%" style="margin: 0 auto" src="https://avatars1.githubusercontent.com/u/13916525?v=3&s=460" alt="Arpan Banerjee">
+                <h3>Arpan Banerjee<br>
+                    <small><a href="https://github.com/arpan98" >@arpan98</a></small>
+                </h3>
+                <p></p>
+            </div>
+                        </div></div>
+                                </section>
+					</article>
+
+
+            </div>
+
+                {% include "website/footer.html" %}
+
+			</div>
+
+
+
+	</body>
+</html>

@@ -11,6 +11,10 @@ def landing(request):
     return render(request, 'website/landing.html', {})
 
 
+def about(request):
+    return render(request, 'website/about.html', {})
+
+
 def create(request):
     if request.method == 'POST':
         params = json.loads(request.body)

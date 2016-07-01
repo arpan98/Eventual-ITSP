@@ -17,4 +17,5 @@ urlpatterns = [
     url(r'^search/web/?$',
         views.search_web,
         name='search_web'),
+    url(r'about/?$', views.about, name='about')
 ]
