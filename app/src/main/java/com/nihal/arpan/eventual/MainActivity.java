@@ -43,7 +43,7 @@ public class MainActivity extends AppCompatActivity {
     boolean allday = false, handlerneeded = false, started = false;
     String TAG = "MainActivity";
     String title,description, location, startyear, startmonth, startdate, starthour, startminute, endyear, endmonth, enddate, endhour, endminute;
-    String HOST = "www.EVENTual.com", QRStart = "EVENTualQR", QRSeperator = "~!#";
+    String HOST = "www.eventual.co.in", QRStart = "EVENTualQR", QRSeperator = "~!#";
     ProgressDialog dialog;
     long stime, now;
     private final OkHttpClient client = new OkHttpClient();
@@ -90,17 +90,26 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         Intent intent = getIntent();
         try {
-            String identifier = intent.getStringExtra("identifier");
-            if(identifier.equals("SearchResult")) {
-                String objectId = intent.getStringExtra("objectId");
-                Button addButton = (Button)findViewById(R.id.add);
-                setOnClick(addButton,objectId);
-                addButton.performClick();
+            Uri data = intent.getData();
+            if (data != null) {
+                website = data.getHost();
+                link = data.getPath();
             }
+
+            if (data != null && website.equals(HOST)) {
+                final String objectId = link.substring(7, link.length());
+                Log.d(TAG, "ObjectId = " + objectId);
+                Intent i = new Intent(MainActivity.this, SearchResult.class);
+                i.putExtra("objectId", objectId);
+                startActivity(i);
+                finish();
+            }
+
         }
         catch(Exception e) {
-            Log.d(TAG,"Deep link");
+            Log.d(TAG, "Deep link");
         }
+
 
         Button make = (Button)findViewById(R.id.make_button);
         Log.d(TAG,String.valueOf(getResources().getDisplayMetrics().density));

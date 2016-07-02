@@ -47,6 +47,7 @@
         android:id="@+id/my_events"
         android:paddingLeft="10dp"
         android:text="My Events"
+        android:drawableLeft="@drawable/ic_star_white_48dp"
         android:textColor="#FFFFFF"
         android:textSize="20sp"
         android:background="@drawable/buttonshape"
