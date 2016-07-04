@@ -11,6 +11,7 @@
     <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="android.permission.VIBRATE" />
     <uses-permission android:name="android.permission.GET_ACCOUNTS" />
+    <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE" />
     <!--
       IMPORTANT: Change "com.parse.starter.permission.C2D_MESSAGE" in the lines below
@@ -21,6 +22,8 @@
         android:protectionLevel="signature" />
 
     <uses-permission android:name="com.nihal.arpan.eventual.permission.C2D_MESSAGE" />
+
+    <uses-feature android:name="android.hardware.camera" android:required="false" />
 
     <application
         android:name=".ParseInitialize"

@@ -1,16 +1,22 @@
 package com.nihal.arpan.eventual;
 
+import android.*;
+import android.Manifest;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.provider.CalendarContract;
+import android.support.design.widget.Snackbar;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -40,6 +46,8 @@ import java.util.Iterator;
 public class MainActivity extends AppCompatActivity {
 
     int MAKE_REQUEST_CODE=1;
+    private static final int CAMERA=1;
+    private static final int GET_ACCOUNTS=2;
     boolean allday = false, handlerneeded = false, started = false;
     String TAG = "MainActivity";
     String title,description, location, startyear, startmonth, startdate, starthour, startminute, endyear, endmonth, enddate, endhour, endminute;
@@ -113,18 +121,24 @@ public class MainActivity extends AppCompatActivity {
 
         Button make = (Button)findViewById(R.id.make_button);
         Log.d(TAG,String.valueOf(getResources().getDisplayMetrics().density));
-        make.setTextSize(10*getResources().getDisplayMetrics().density);
+        make.setTextSize(10 * getResources().getDisplayMetrics().density);
     }
 
     public void linkToWebsite(View v) {
-        Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("http://arpan98.github.io/EVENTual/"));
+        Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("http://www.evenyual.co.in/"));
         startActivity(browserIntent);
     }
 
     public void onQRButtonClicked(View v) {
         try {
-            IntentIntegrator integrator = new IntentIntegrator(this);
-            integrator.initiateScan();
+            if (ContextCompat.checkSelfPermission(MainActivity.this,
+                    android.Manifest.permission.CAMERA)
+                    != PackageManager.PERMISSION_GRANTED) {
+                AskCameraPermission();
+            } else {
+                IntentIntegrator integrator = new IntentIntegrator(this);
+                integrator.initiateScan();
+            }
         }
         catch(Exception e)
         {
@@ -134,8 +148,14 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void onMyEventsClicked(View view) {
-        Intent intent = new Intent(MainActivity.this, MyEvents.class);
-        startActivity(intent);
+        if (ContextCompat.checkSelfPermission(MainActivity.this,
+                android.Manifest.permission.GET_ACCOUNTS)
+                != PackageManager.PERMISSION_GRANTED) {
+            AskContactsPermission();
+        } else {
+            Intent intent = new Intent(MainActivity.this, MyEvents.class);
+            startActivity(intent);
+        }
     }
 
     public void onActivityResult(int requestCode, int resultCode, final Intent intent) {
@@ -459,5 +479,137 @@ public class MainActivity extends AppCompatActivity {
     protected void onStop() {
         super.onStop();
         handler.removeCallbacks(timeout);
+    }
+
+
+    public void AskContactsPermission(){
+
+        // Requesting GET_ACCOUNTS Permission
+        // Requesting Storage Permission
+        if (ContextCompat.checkSelfPermission(this,
+                android.Manifest.permission.GET_ACCOUNTS)
+                != PackageManager.PERMISSION_GRANTED) {
+
+            // Should we show an explanation?
+            if (ActivityCompat.shouldShowRequestPermissionRationale(this,
+                    android.Manifest.permission.GET_ACCOUNTS)) {
+
+                // Show an explanation to the user *asynchronously* -- don't block
+                // this thread waiting for the user's response! After the user
+                // sees the explanation, try again to request the permission.
+                Snackbar.make(this.getWindow().getDecorView().findViewById(android.R.id.content), "Contacts access is required to access your google username.",
+                        Snackbar.LENGTH_INDEFINITE).setAction("OK", new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        // Request the permission
+                        ActivityCompat.requestPermissions(MainActivity.this,
+                                new String[]{android.Manifest.permission.GET_ACCOUNTS},
+                                GET_ACCOUNTS);
+                    }
+                }).show();
+
+            } else {
+
+                // No explanation needed, we can request the permission.
+
+                ActivityCompat.requestPermissions(this,
+                        new String[]{android.Manifest.permission.GET_ACCOUNTS},
+                        GET_ACCOUNTS);
+
+                // MY_PERMISSIONS_REQUEST_READ_CONTACTS is an
+                // app-defined int constant. The callback method gets the
+                // result of the request.
+            }
+        }
+    }
+
+    public void AskCameraPermission(){
+
+        // Requesting Camera Permission
+        // Requesting Storage Permission
+        if (ContextCompat.checkSelfPermission(this,
+                android.Manifest.permission.CAMERA)
+                != PackageManager.PERMISSION_GRANTED) {
+
+            // Should we show an explanation?
+            if (ActivityCompat.shouldShowRequestPermissionRationale(this,
+                    Manifest.permission.CAMERA)) {
+
+                // Show an explanation to the user *asynchronously* -- don't block
+                // this thread waiting for the user's response! After the user
+                // sees the explanation, try again to request the permission.
+                Snackbar.make(this.getWindow().getDecorView().findViewById(android.R.id.content), "Camera access is required to use camera for QR Code scanning.",
+                        Snackbar.LENGTH_INDEFINITE).setAction("OK", new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        // Request the permission
+                        ActivityCompat.requestPermissions(MainActivity.this,
+                                new String[]{android.Manifest.permission.CAMERA},
+                                CAMERA);
+                    }
+                }).show();
+
+            } else {
+
+                // No explanation needed, we can request the permission.
+
+                ActivityCompat.requestPermissions(this,
+                        new String[]{Manifest.permission.CAMERA},
+                        CAMERA);
+
+                // MY_PERMISSIONS_REQUEST_READ_CONTACTS is an
+                // app-defined int constant. The callback method gets the
+                // result of the request.
+            }
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode,
+                                           String permissions[], int[] grantResults) {
+
+        switch (requestCode) {
+            case CAMERA: {
+                // If request is cancelled, the result arrays are empty.
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    // permission was granted, yay! Do the
+                    // task you need to do.
+                    IntentIntegrator integrator = new IntentIntegrator(this);
+                    integrator.initiateScan();
+
+                } else {
+
+                    // permission denied, boo! Disable the
+                    // functionality that depends on this permission.
+                    Snackbar.make(this.getWindow().getDecorView().findViewById(android.R.id.content), "Allow Camera access to allow QR Code scanning.",
+                            Snackbar.LENGTH_INDEFINITE).setAction("OK", new View.OnClickListener() {public void onClick(View view) {}})
+                            .show();
+                }
+
+                return;
+            }
+            case GET_ACCOUNTS: {
+                // If request is cancelled, the result arrays are empty.
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    // permission was granted, yay! Do the
+                    // task you need to do.
+                    onMyEventsClicked(null);
+
+                } else {
+
+                    // permission denied, boo! Disable the
+                    // functionality that depends on this permission.
+                    Snackbar.make(this.getWindow().getDecorView().findViewById(android.R.id.content), "Allow Contacts access to create an event using your google username.",
+                            Snackbar.LENGTH_INDEFINITE).setAction("OK", new View.OnClickListener() {public void onClick(View view) {}})
+                            .show();
+                }
+
+                return;
+            }
+            // other 'case' lines to check for other
+            // permissions this app might request
+        }
     }
 }

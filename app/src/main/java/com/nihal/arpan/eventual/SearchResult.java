@@ -3,6 +3,7 @@ package com.nihal.arpan.eventual;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.Point;
 import android.net.ConnectivityManager;
@@ -12,6 +13,9 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.provider.CalendarContract;
+import android.support.design.widget.Snackbar;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Display;
@@ -41,6 +45,9 @@ import java.util.Calendar;
 import java.util.Iterator;
 
 public class SearchResult extends AppCompatActivity {
+
+    private static final int WRITE_CALENDAR=4;
+    private static final int WRITE_EXTERNAL_STORAGE=3;
     EditText title, description, location;
     Switch alldayswitch;
     TextView startdatedisplay, starttimedisplay, enddatedisplay, endtimedisplay, starttimetv, endtimetv;
@@ -219,6 +226,14 @@ public class SearchResult extends AppCompatActivity {
     }
 
     public void add(View v) {
+
+        if (ContextCompat.checkSelfPermission(SearchResult.this,
+                android.Manifest.permission.GET_ACCOUNTS)
+                != PackageManager.PERMISSION_GRANTED) {
+            AskCalendarPermission();
+            return;
+        }
+
         try {
             Intent intent = new Intent(Intent.ACTION_INSERT);
             intent.setType("vnd.android.cursor.item/event");
@@ -254,6 +269,14 @@ public class SearchResult extends AppCompatActivity {
     }
 
     public void ShareQR(View v) {
+
+        if (ContextCompat.checkSelfPermission(SearchResult.this,
+                android.Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                != PackageManager.PERMISSION_GRANTED) {
+            AskStoragePermission();
+            return;
+        }
+
         Intent share = new Intent(Intent.ACTION_SEND);
         share.setType("image/jpeg");
         ByteArrayOutputStream bytes = new ByteArrayOutputStream();
@@ -296,5 +319,137 @@ public class SearchResult extends AppCompatActivity {
     protected void onStop() {
         super.onStop();
         handler.removeCallbacks(timeout);
+    }
+
+
+    public void AskCalendarPermission(){
+
+        // Requesting WRITE_CALENDAR Permission
+        // Requesting Storage Permission
+        if (ContextCompat.checkSelfPermission(this,
+                android.Manifest.permission.WRITE_CALENDAR)
+                != PackageManager.PERMISSION_GRANTED) {
+
+            // Should we show an explanation?
+            if (ActivityCompat.shouldShowRequestPermissionRationale(this,
+                    android.Manifest.permission.WRITE_CALENDAR)) {
+
+                // Show an explanation to the user *asynchronously* -- don't block
+                // this thread waiting for the user's response! After the user
+                // sees the explanation, try again to request the permission.
+                Snackbar.make(this.getWindow().getDecorView().findViewById(android.R.id.content), "Calendar access is required to add the event.",
+                        Snackbar.LENGTH_INDEFINITE).setAction("OK", new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        // Request the permission
+                        ActivityCompat.requestPermissions(SearchResult.this,
+                                new String[]{android.Manifest.permission.WRITE_CALENDAR},
+                                WRITE_CALENDAR);
+                    }
+                }).show();
+
+            } else {
+
+                // No explanation needed, we can request the permission.
+
+                ActivityCompat.requestPermissions(this,
+                        new String[]{android.Manifest.permission.WRITE_CALENDAR},
+                        WRITE_CALENDAR);
+
+                // MY_PERMISSIONS_REQUEST_READ_CONTACTS is an
+                // app-defined int constant. The callback method gets the
+                // result of the request.
+            }
+        }
+    }
+
+    public void AskStoragePermission(){
+
+        // Requesting WRITE_EXTERNAL_STORAGE Permission
+        // Requesting Storage Permission
+        if (ContextCompat.checkSelfPermission(this,
+                android.Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                != PackageManager.PERMISSION_GRANTED) {
+
+            // Should we show an explanation?
+            if (ActivityCompat.shouldShowRequestPermissionRationale(this,
+                    android.Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
+
+                // Show an explanation to the user *asynchronously* -- don't block
+                // this thread waiting for the user's response! After the user
+                // sees the explanation, try again to request the permission.
+                Snackbar.make(this.getWindow().getDecorView().findViewById(android.R.id.content), "Storage access is required to generate a QR Code.",
+                        Snackbar.LENGTH_INDEFINITE).setAction("OK", new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        // Request the permission
+                        ActivityCompat.requestPermissions(SearchResult.this,
+                                new String[]{android.Manifest.permission.WRITE_EXTERNAL_STORAGE},
+                                WRITE_EXTERNAL_STORAGE);
+                    }
+                }).show();
+
+            } else {
+
+                // No explanation needed, we can request the permission.
+
+                ActivityCompat.requestPermissions(this,
+                        new String[]{android.Manifest.permission.WRITE_EXTERNAL_STORAGE},
+                        WRITE_EXTERNAL_STORAGE);
+
+                // MY_PERMISSIONS_REQUEST_READ_CONTACTS is an
+                // app-defined int constant. The callback method gets the
+                // result of the request.
+            }
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode,
+                                           String permissions[], int[] grantResults) {
+
+        switch (requestCode) {
+            case WRITE_CALENDAR: {
+                // If request is cancelled, the result arrays are empty.
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    // permission was granted, yay! Do the
+                    // task you need to do.
+                    add(null);
+
+                } else {
+
+                    // permission denied, boo! Disable the
+                    // functionality that depends on this permission.
+                    Snackbar.make(this.getWindow().getDecorView().findViewById(android.R.id.content), "Allow Calendar access to add the event to your calendar.",
+                            Snackbar.LENGTH_INDEFINITE).setAction("OK", new View.OnClickListener() {public void onClick(View view) {}})
+                            .show();
+                }
+
+                return;
+            }
+            case WRITE_EXTERNAL_STORAGE: {
+                // If request is cancelled, the result arrays are empty.
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    // permission was granted, yay! Do the
+                    // task you need to do.
+                    ShareQR(null);
+
+                } else {
+
+                    // permission denied, boo! Disable the
+                    // functionality that depends on this permission.
+                    Snackbar.make(this.getWindow().getDecorView().findViewById(android.R.id.content), "Allow Storage access to allow creation of QR Codes.",
+                            Snackbar.LENGTH_INDEFINITE).setAction("OK", new View.OnClickListener() {public void onClick(View view) {}})
+                            .show();
+                }
+
+                return;
+            }
+
+            // other 'case' lines to check for other
+            // permissions this app might request
+        }
     }
 }
