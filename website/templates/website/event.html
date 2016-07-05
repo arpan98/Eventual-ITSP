@@ -18,6 +18,8 @@
 			<!--[if lte IE 8]><script src="assets/js/ie/respond.min.js" %}"></script><![endif]-->
 			<script src="{% static "website/js/main.js" %}"></script>
 			<script src="{%  static "website/js/save.js" %}"></script>
+      <meta name="description" content="{{ eventdata.description }}" />
+      <meta name="keywords" content="Eventual,share,events,event,calendar,phone,auto,fill,event,{{eventdata.title}},{{eventdata.description}},{{eventdata.location}}" />
 	</head>
     <!-- Place this tag in your head or just before your close body tag. -->
 <script src="https://apis.google.com/js/platform.js" async defer></script>
