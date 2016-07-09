@@ -27,6 +27,6 @@ urlpatterns = [
         views.search_web,
         name='search_web'),
     url(r'about/?$', views.about, name='about'),
-    url(r'^sitemap.xml$', 'django.contrib.sitemaps.views.sitemap', {'sitemaps': sitemaps}),
-    url(r'^robots.txt$', include('robots.urls')),
+    url(r'^sitemap.xml/?$', 'django.contrib.sitemaps.views.sitemap', {'sitemaps': sitemaps}),
+    url(r'^robots.txt/?', include('robots.urls')),
 ]
