@@ -3803,3 +3803,21 @@
 	body.is-mobile.landing #footer {
 		background-color: #1d242a;
 	}
+
+.reveal-model {
+    float: none;
+    clear: both;
+    width: 100%;
+    position: relative;
+    padding-bottom: 56.25%;
+    padding-top: 25px;
+    height: 0;
+}
+
+.reveal-model iframe, .reveal-model object, .reveal-model embed {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}

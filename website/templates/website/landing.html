@@ -3,6 +3,8 @@
 <html>
 	<head>
 		<title>EVENTual</title>
+        <link href="//cdnjs.cloudflare.com/ajax/libs/foundation/5.0.3/css/normalize.min.css" rel="stylesheet" type="text/css" />
+<link href="//cdnjs.cloudflare.com/ajax/libs/foundation/5.0.3/css/foundation.min.css" rel="stylesheet" type="text/css" />
 		<meta charset="utf-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1" />
 		<!--[if lte IE 8]><script src="{% static "website/js/ie/html5shiv.js" %}"></script><![endif]-->
@@ -121,9 +123,14 @@
 							</ul>
 						</div>
 					</section>
-
 				{% include "website/footer.html" %}
+<a href="#" id="video" data-reveal-id="myModal"></a>
 
+  <div id="myModal" class="reveal-modal" data-reveal>
+
+    <div id="player"></div>
+    <a class="close-reveal-modal">&#215;</a>
+  </div>
 			</div>
 
 		<!-- Scripts -->
@@ -134,6 +141,80 @@
 			<script src="{% static "website/js/util.js" %}"></script>
 			<!--[if lte IE 8]><script src="assets/js/ie/respond.min.js" %}"></script><![endif]-->
 			<script src="{% static "website/js/main.js" %}"></script>
+            <script src="//cdnjs.cloudflare.com/ajax/libs/foundation/5.0.3/js/vendor/jquery.min.js"></script>
+            <script src="//cdnjs.cloudflare.com/ajax/libs/foundation/5.0.3/js/foundation.min.js"></script>
+<script>
+$(document).foundation();
+    var tag = document.createElement('script');
 
+tag.src = "https://www.youtube.com/iframe_api";
+var firstScriptTag = document.getElementsByTagName('script')[0];
+firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+
+// 3. This function creates an <iframe> (and YouTube player)
+//    after the API code downloads.
+var player;
+
+function onYouTubeIframeAPIReady() {
+    player = new YT.Player('player', {
+        width: '100%',
+        videoId: 'ZxlfsJZ9StM',
+        playerVars: {
+            autoplay: 1
+        },
+        events: {
+            'onStateChange': onPlayerStateChange
+        }
+    });
+}
+
+
+function onPlayerStateChange(event) {
+    if (event.data == YT.PlayerState.PLAYING) {
+      //player is playing
+    } else {
+      //player is paused
+    }
+}
+
+function stopVideo() {
+    player.stopVideo();
+}
+
+function playVideo() {
+  player.playVideo();
+}
+
+function pauseVideo() {
+  player.pauseVideo();
+}
+
+
+$(document).on('opened.fndtn.reveal', '[data-reveal]', function () {
+    playVideo();
+});
+
+$(document).on('closed.fndtn.reveal', '[data-reveal]', function () {
+  pauseVideo();
+    document.getElementById("myModal").remove();
+});
+
+window.onload = function(){
+document.getElementById("video").click();
+
+}
+Element.prototype.remove = function() {
+    this.parentElement.removeChild(this);
+}
+NodeList.prototype.remove = HTMLCollection.prototype.remove = function() {
+    for(var i = this.length - 1; i >= 0; i--) {
+        if(this[i] && this[i].parentElement) {
+            this[i].parentElement.removeChild(this[i]);
+        }
+    }
+}
+
+
+</script>
 	</body>
 </html>
