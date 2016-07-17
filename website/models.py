@@ -28,7 +28,7 @@ class EventData(models.Model):
     starttime = models.TimeField()
     endtime = models.TimeField()
     private = models.CharField(max_length=5, default="false")
-    ukey = models.CharField(max_length=6, primary_key=True, default=pkgen())
+    ukey = models.CharField(max_length=6, primary_key=True, default=pkgen)
 
     def get_absolute_url(self):
         return '/event/' + str(self.ukey)
