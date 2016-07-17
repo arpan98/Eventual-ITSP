@@ -4,12 +4,12 @@ from django.db import models
 def pkgen():
     from base64 import b32encode
     from hashlib import sha1
-    from random import random
+    from os import urandom
     rude = ('lol', 'fuck', 'bitch', 'dog')
     bad_pk = True
     pk = ""
     while bad_pk:
-        pk = b32encode(sha1(str(random())).digest()).lower()[:6]
+        pk = b32encode(sha1(str(urandom(12))).digest()).lower()[:6]
         bad_pk = False
         for rw in rude:
             if pk.find(rw) >= 0:
@@ -31,5 +31,5 @@ class EventData(models.Model):
     ukey = models.CharField(max_length=6, primary_key=True, default=pkgen())
 
     def get_absolute_url(self):
-        return '/event/' + str(self.id)
+        return '/event/' + str(self.ukey)
 
