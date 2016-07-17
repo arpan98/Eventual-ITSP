@@ -89,7 +89,7 @@ public class MainActivity extends AppCompatActivity {
         try {
             getSupportActionBar().hide();
         }
-        catch(Exception e) {
+        catch(NullPointerException e) {
             e.printStackTrace();
         }
 
@@ -125,7 +125,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void linkToWebsite(View v) {
-        Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("http://www.evenyual.co.in/"));
+        Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("http://www.eventual.co.in/"));
         startActivity(browserIntent);
     }
 

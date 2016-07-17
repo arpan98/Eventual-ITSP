@@ -71,7 +71,7 @@ public class EventCreate extends AppCompatActivity {
     Switch alldayfield, privatefield;
     DatePickerDialog.OnDateSetListener date1, date2;
     Button savebutton;
-    Boolean allday, privateswitch, duplicate, handlerneeded=false, started=false;
+    Boolean allday, privateswitch, handlerneeded=false, started=false;
     String title, description, location, startyear, startmonth, startdate, starthour, startminute, endyear, endmonth, enddate, endhour, endminute;
     ProgressDialog dialog;
     QRCodeEncoder qrCodeEncoder;

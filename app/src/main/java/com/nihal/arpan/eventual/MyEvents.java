@@ -98,7 +98,7 @@ public class MyEvents extends AppCompatActivity {
                     throw new IOException("Unexpected code " + response);
                 else {
                     final String jsonData = response.body().string();
-                    Log.d(TAG, "Response from " + CREATE_URL + ": " + jsonData);
+                    Log.d(TAG, "Response from " + SEARCH_URL + ": " + jsonData);
                     try {
                         JSONArray jsonArray = new JSONArray(jsonData);
                         Gson gson = new Gson();
@@ -118,7 +118,7 @@ public class MyEvents extends AppCompatActivity {
                                     for (int i = 0; i < eventList.size(); i++) {
                                         titlelist.add(eventList.get(i).title);
                                         locationlist.add(eventList.get(i).location);
-                                        objectIdlist.add(String.valueOf(eventList.get(i).id));
+                                        objectIdlist.add(String.valueOf(eventList.get(i).ukey));
                                     }
                                     final MyArrayAdapter adapter = new MyArrayAdapter(MyEvents.this, titlelist, locationlist, objectIdlist);
                                     ListView listView = (ListView)findViewById(R.id.myeventslistview);

@@ -112,7 +112,7 @@ public class SearchResult extends AppCompatActivity {
 
         if (isNetworkConnected()) {
 
-            String jsonData = "{" + "\"id\": \"" + oId + "\""
+            String jsonData = "{" + "\"ukey\": \"" + oId + "\""
                     + "}";
 
             RequestBody body = RequestBody.create(JSON, jsonData);

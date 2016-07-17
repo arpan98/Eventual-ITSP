@@ -5,6 +5,7 @@ package com.nihal.arpan.eventual;
  */
 public class Event {
     int id;
+    String ukey;
     String username;
     String title;
     String description;

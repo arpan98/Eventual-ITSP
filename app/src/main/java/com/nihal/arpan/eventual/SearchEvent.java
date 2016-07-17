@@ -7,19 +7,16 @@ import android.app.DatePickerDialog;
 import android.app.ProgressDialog;
 import android.app.TimePickerDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.DisplayMetrics;
 import android.util.Log;
@@ -28,16 +25,13 @@ import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.ViewTreeObserver;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.Button;
-import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ListView;
-import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.Switch;
 import android.widget.TextView;
@@ -46,7 +40,6 @@ import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import com.squareup.okhttp.Callback;
 import com.squareup.okhttp.MediaType;
 import com.squareup.okhttp.OkHttpClient;
 import com.squareup.okhttp.RequestBody;
@@ -54,7 +47,6 @@ import com.squareup.okhttp.Response;
 
 import org.json.JSONArray;
 import org.json.JSONException;
-import org.w3c.dom.Text;
 
 import java.io.IOException;
 import java.lang.reflect.Type;
@@ -65,8 +57,8 @@ import java.util.regex.Pattern;
 
 public class SearchEvent extends AppCompatActivity {
 
-    private static final int GET_ACCOUNTS=2;
-    private static final int WRITE_EXTERNAL_STORAGE=3;
+    private static final int GET_ACCOUNTS = 2;
+    private static final int WRITE_EXTERNAL_STORAGE = 3;
     String TAG = "SearchEvent", username;
     Switch alldayswitch;
     TextView titletv, locationtv;
@@ -583,7 +575,7 @@ public class SearchEvent extends AppCompatActivity {
                             for (int i = 0; i < eventList.size(); i++) {
                                 titlelist.add(eventList.get(i).title);
                                 locationlist.add(eventList.get(i).location);
-                                objectIdlist.add(String.valueOf(eventList.get(i).id));
+                                objectIdlist.add(String.valueOf(eventList.get(i).ukey));
                             }
                             adapter = new MyArrayAdapter(SearchEvent.this, titlelist, locationlist, objectIdlist);
                             listView.setAdapter(adapter);
@@ -618,7 +610,7 @@ public class SearchEvent extends AppCompatActivity {
     }
 
 
-    public void AskContactsPermission(){
+    public void AskContactsPermission() {
 
         // Requesting GET_ACCOUNTS Permission
         // Requesting Storage Permission
@@ -659,7 +651,7 @@ public class SearchEvent extends AppCompatActivity {
         }
     }
 
-    public void AskStoragePermission(){
+    public void AskStoragePermission() {
 
         // Requesting WRITE_EXTERNAL_STORAGE Permission
         // Requesting Storage Permission
@@ -718,7 +710,10 @@ public class SearchEvent extends AppCompatActivity {
                     // permission denied, boo! Disable the
                     // functionality that depends on this permission.
                     Snackbar.make(this.getWindow().getDecorView().findViewById(android.R.id.content), "Allow Contacts access to create an event using your google username.",
-                            Snackbar.LENGTH_INDEFINITE).setAction("OK", new View.OnClickListener() {public void onClick(View view) {}})
+                            Snackbar.LENGTH_INDEFINITE).setAction("OK", new View.OnClickListener() {
+                        public void onClick(View view) {
+                        }
+                    })
                             .show();
                 }
 
@@ -737,7 +732,10 @@ public class SearchEvent extends AppCompatActivity {
                     // permission denied, boo! Disable the
                     // functionality that depends on this permission.
                     Snackbar.make(this.getWindow().getDecorView().findViewById(android.R.id.content), "Allow Storage access to allow creation of QR Codes.",
-                            Snackbar.LENGTH_INDEFINITE).setAction("OK", new View.OnClickListener() {public void onClick(View view) {}})
+                            Snackbar.LENGTH_INDEFINITE).setAction("OK", new View.OnClickListener() {
+                        public void onClick(View view) {
+                        }
+                    })
                             .show();
                 }
 
