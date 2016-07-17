@@ -19,7 +19,7 @@ def create(request):
     if request.method == 'POST':
         params = json.loads(request.body)
         ukey = event_get_or_create(params)
-        return HttpResponse(ukey)
+        return HttpResponse(str(ukey))
     elif request.method == 'GET':
         return render(request, 'website/create.html', {})
 
@@ -50,7 +50,7 @@ def create_web(request):
         elif request.POST.get('private', 'on') == 'on':
             params['private'] = "true"
         ukey = event_get_or_create(params)
-        return HttpResponse('/event/' + ukey)
+        return HttpResponse('/event/' + str(ukey))
     elif request.method == 'GET':
         return redirect('/create')
 
@@ -159,6 +159,7 @@ def format_query_data(events):
         cleaned_event["starttime"] = event.starttime.strftime('%H:%M')
         cleaned_event["endtime"] = event.endtime.strftime('%H:%M')
         cleaned_event["isPrivate"] = event.private.encode('ascii', 'ignore')
+        cleaned_event["ukey"] = event.ukey.encode('ascii', 'ignore')
         cleaned_events.append(cleaned_event)
     return cleaned_events
 

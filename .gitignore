@@ -5,3 +5,5 @@
 
 # Compiled python files
 *.pyc
+
+*.iml

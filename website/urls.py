@@ -15,7 +15,7 @@ urlpatterns = [
     url(r'^admin/', include(admin.site.urls)),
     url(r'^$', views.landing, name='landing'),
     url(r'^create/?$', views.create, name='create'),
-    url(r'^event/(?P<pk>\d+)/$',
+    url(r'^event/(?P<pk>\S+)/$',
         DetailView.as_view(model=EventData,
                            template_name="website/event.html"),
         name='event'),
