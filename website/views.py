@@ -18,8 +18,8 @@ def about(request):
 def create(request):
     if request.method == 'POST':
         params = json.loads(request.body)
-        id = event_get_or_create(params)
-        return HttpResponse(str(id))
+        ukey = event_get_or_create(params)
+        return HttpResponse(ukey)
     elif request.method == 'GET':
         return render(request, 'website/create.html', {})
 
@@ -49,8 +49,8 @@ def create_web(request):
             params['private'] = "false"
         elif request.POST.get('private', 'on') == 'on':
             params['private'] = "true"
-        id = event_get_or_create(params)
-        return HttpResponse('/event/' + str(id))
+        ukey = event_get_or_create(params)
+        return HttpResponse('/event/' + ukey)
     elif request.method == 'GET':
         return redirect('/create')
 
@@ -138,7 +138,7 @@ def event_get_or_create(params):
             int(params['endtime'].split(':')[0]),
             int(params['endtime'].split(':')[1])),
         private=params['private'])
-    return event.id
+    return event.ukey
 
 
 def format_query_data(events):
@@ -146,7 +146,7 @@ def format_query_data(events):
     for event in events:
         cleaned_event = {}
         cleaned_event["id"] = event.id
-
+        cleaned_event["ukey"] = event.ukey
         cleaned_event["username"] = event.username.encode('ascii', 'ignore')
         cleaned_event["title"] = event.title.encode('ascii', 'ignore')
         cleaned_event["description"] = event.description.encode('ascii',
