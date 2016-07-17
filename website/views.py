@@ -145,7 +145,6 @@ def format_query_data(events):
     cleaned_events = []
     for event in events:
         cleaned_event = {}
-        cleaned_event["id"] = event.id
         cleaned_event["ukey"] = event.ukey
         cleaned_event["username"] = event.username.encode('ascii', 'ignore')
         cleaned_event["title"] = event.title.encode('ascii', 'ignore')
