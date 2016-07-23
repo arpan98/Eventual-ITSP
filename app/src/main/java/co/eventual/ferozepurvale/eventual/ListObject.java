@@ -1,4 +1,4 @@
-package com.nihal.arpan.eventual;
+package co.eventual.ferozepurvale.eventual;
 
 /**
  * Created by arpan on 18/1/16.

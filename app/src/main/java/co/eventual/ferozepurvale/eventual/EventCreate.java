@@ -1,6 +1,5 @@
-package com.nihal.arpan.eventual;
+package co.eventual.ferozepurvale.eventual;
 
-import android.*;
 import android.accounts.Account;
 import android.accounts.AccountManager;
 import android.app.Activity;
@@ -40,10 +39,6 @@ import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
-import com.google.zxing.BarcodeFormat;
-import com.google.zxing.integration.android.IntentIntegrator;
 import com.squareup.okhttp.Callback;
 import com.squareup.okhttp.MediaType;
 import com.squareup.okhttp.OkHttpClient;

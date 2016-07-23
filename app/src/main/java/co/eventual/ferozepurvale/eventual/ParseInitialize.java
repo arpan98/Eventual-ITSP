@@ -1,14 +1,9 @@
-package com.nihal.arpan.eventual;
+package co.eventual.ferozepurvale.eventual;
 
 import android.accounts.Account;
 import android.accounts.AccountManager;
 import android.util.Log;
 import android.util.Patterns;
-
-import com.parse.Parse;
-import com.parse.ParseException;
-import com.parse.ParseInstallation;
-import com.parse.SaveCallback;
 
 import java.util.regex.Pattern;
 

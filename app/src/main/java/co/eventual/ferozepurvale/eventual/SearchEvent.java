@@ -1,4 +1,4 @@
-package com.nihal.arpan.eventual;
+package co.eventual.ferozepurvale.eventual;
 
 import android.accounts.Account;
 import android.accounts.AccountManager;

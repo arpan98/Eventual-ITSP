@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:paddingBottom="@dimen/activity_vertical_margin"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context="com.nihal.arpan.eventual.MainActivity"
+    tools:context="co.eventual.ferozepurvale.eventual.MainActivity"
     android:background="#b6e4fa"
     tools:showIn="@layout/activity_main">
 

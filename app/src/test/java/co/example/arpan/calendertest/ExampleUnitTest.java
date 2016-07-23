@@ -1,4 +1,4 @@
-package com.nihal.arpan.eventual;
+package co.example.arpan.calendertest;
 
 import org.junit.Test;
 

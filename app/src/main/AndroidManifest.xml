@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.nihal.arpan.eventual">
+    package="co.eventual.ferozepurvale.eventual">
 
     <uses-permission android:name="android.permission.READ_CALENDAR" />
     <uses-permission android:name="android.permission.WRITE_CALENDAR" />
@@ -18,15 +18,15 @@
       to match your app's package name + ".permission.C2D_MESSAGE".
     -->
     <permission
-        android:name="com.nihal.arpan.eventual.permission.C2D_MESSAGE"
+        android:name="co.eventual.ferozepurvale.eventual.permission.C2D_MESSAGE"
         android:protectionLevel="signature" />
 
-    <uses-permission android:name="com.nihal.arpan.eventual.permission.C2D_MESSAGE" />
+    <uses-permission android:name="co.eventual.ferozepurvale.eventual.permission.C2D_MESSAGE" />
 
     <uses-feature android:name="android.hardware.camera" android:required="false" />
 
     <application
-        android:name=".ParseInitialize"
+        android:name="co.eventual.ferozepurvale.eventual.ParseInitialize"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
@@ -43,7 +43,7 @@
             android:resource="@drawable/icon_bw" />
 
         <activity
-            android:name=".MainActivity"
+            android:name="co.eventual.ferozepurvale.eventual.MainActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait">
             <intent-filter>
@@ -65,17 +65,17 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".EventCreate"
+            android:name="co.eventual.ferozepurvale.eventual.EventCreate"
             android:label="@string/title_activity_event_create"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".SearchEvent"
+            android:name="co.eventual.ferozepurvale.eventual.SearchEvent"
             android:label="@string/title_activity_search_event"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".SearchResult"
+            android:name="co.eventual.ferozepurvale.eventual.SearchResult"
             android:label="@string/title_activity_search_result"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
@@ -83,7 +83,7 @@
         <service android:name="com.parse.PushService" />
 
         <receiver
-            android:name=".PushReceiver"
+            android:name="co.eventual.ferozepurvale.eventual.PushReceiver"
             android:exported="false">
             <intent-filter>
                 <action android:name="com.parse.push.intent.RECEIVE" />
@@ -98,11 +98,11 @@
                 <action android:name="com.google.android.c2dm.intent.RECEIVE" />
                 <action android:name="com.google.android.c2dm.intent.REGISTRATION" />
 
-                <category android:name="com.nihal.arpan.eventual" />
+                <category android:name="co.eventual.ferozepurvale.eventual" />
             </intent-filter>
         </receiver>
 
-        <activity android:name=".MyEvents"></activity>
+        <activity android:name="co.eventual.ferozepurvale.eventual.MyEvents"></activity>
     </application>
 
 </manifest>
