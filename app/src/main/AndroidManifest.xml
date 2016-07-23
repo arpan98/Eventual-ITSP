@@ -59,7 +59,8 @@
                 <!-- Accepts URIs that begin with "http://www.example.com/gizmos” -->
                 <data
                     android:host="www.eventual.co.in"
-                    android:scheme="http" />
+                    android:scheme="http"
+                    android:pathPrefix="/event"/>
                 <!-- note that the leading "/" is required for pathPrefix -->
             </intent-filter>
         </activity>

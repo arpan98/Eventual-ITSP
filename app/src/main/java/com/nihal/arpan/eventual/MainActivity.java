@@ -102,6 +102,7 @@ public class MainActivity extends AppCompatActivity {
             if (data != null) {
                 website = data.getHost();
                 link = data.getPath();
+                Log.d(TAG, link);
             }
 
             if (data != null && website.equals(HOST)) {
@@ -116,6 +117,7 @@ public class MainActivity extends AppCompatActivity {
         }
         catch(Exception e) {
             Log.d(TAG, "Deep link");
+            e.printStackTrace();
         }
 
 
