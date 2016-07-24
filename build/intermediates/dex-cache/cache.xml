@@ -1,2 +1,103 @@
 <?xml version="1.0" encoding="utf-8"?>
-<items version="2" />
+<items version="2" >
+
+    <item
+        jar="/Users/akash/Eventual-ITSP/app/build/intermediates/exploded-aar/com.android.support/support-v4/23.1.1/jars/libs/internal_impl-23.1.1.jar"
+        jumboMode="false"
+        revision="23.0.2"
+        sha1="a4de9c81ae239414e1ed0f86441b02abaf29bca9">
+        <dex dex="/Users/akash/Eventual-ITSP/app/build/intermediates/pre-dexed/release/internal_impl-23.1.1_7e447ce685083a4264b79904f34707e89dca0814.jar" />
+    </item>
+    <item
+        jar="/Users/akash/.gradle/caches/modules-2/files-2.1/com.squareup.okio/okio/1.6.0/98476622f10715998eacf9240d6b479f12c66143/okio-1.6.0.jar"
+        jumboMode="false"
+        revision="23.0.2"
+        sha1="98476622f10715998eacf9240d6b479f12c66143">
+        <dex dex="/Users/akash/Eventual-ITSP/app/build/intermediates/pre-dexed/release/okio-1.6.0_28519cff583bd99ae271e4259ed23b3d6aa1b211.jar" />
+    </item>
+    <item
+        jar="/Users/akash/.gradle/caches/modules-2/files-2.1/com.squareup.okhttp/okhttp/2.5.0/4de2b4ed3445c37ec1720a7d214712e845a24636/okhttp-2.5.0.jar"
+        jumboMode="false"
+        revision="23.0.2"
+        sha1="4de2b4ed3445c37ec1720a7d214712e845a24636">
+        <dex dex="/Users/akash/Eventual-ITSP/app/build/intermediates/pre-dexed/release/okhttp-2.5.0_b0ab0550f2863f9248e67491e40d21a7120839da.jar" />
+    </item>
+    <item
+        jar="/Users/akash/.gradle/caches/modules-2/files-2.1/com.parse/parse-android/1.13.1/ef266d93357210b530c5b400e3d40de64fd86a0d/parse-android-1.13.1.jar"
+        jumboMode="false"
+        revision="23.0.2"
+        sha1="ef266d93357210b530c5b400e3d40de64fd86a0d">
+        <dex dex="/Users/akash/Eventual-ITSP/app/build/intermediates/pre-dexed/release/parse-android-1.13.1_9887b2a532229042f19c1d829d2f6da200d18fe7.jar" />
+    </item>
+    <item
+        jar="/Users/akash/Library/Android/sdk/extras/android/m2repository/com/android/support/support-annotations/23.1.1/support-annotations-23.1.1.jar"
+        jumboMode="false"
+        revision="23.0.2"
+        sha1="8d680ba5a623724d1fb0e81c36a790f023a6cede">
+        <dex dex="/Users/akash/Eventual-ITSP/app/build/intermediates/pre-dexed/release/support-annotations-23.1.1_ae3e0ae9c459282d06f5f0a027896ac64f8b5eef.jar" />
+    </item>
+    <item
+        jar="/Applications/Android Studio.app/Contents/gradle/m2repository/com/google/code/gson/gson/2.2.4/gson-2.2.4.jar"
+        jumboMode="false"
+        revision="23.0.2"
+        sha1="a60a5e993c98c864010053cb901b7eab25306568">
+        <dex dex="/Users/akash/Eventual-ITSP/app/build/intermediates/pre-dexed/release/gson-2.2.4_d0ce76b63ce905fbab3c5d385c8e1b8692010f19.jar" />
+    </item>
+    <item
+        jar="/Users/akash/.gradle/caches/modules-2/files-2.1/com.google.zxing/core/3.2.0/e019d15a13a9786f881141d2df6654b8510bce8b/core-3.2.0.jar"
+        jumboMode="false"
+        revision="23.0.2"
+        sha1="e019d15a13a9786f881141d2df6654b8510bce8b">
+        <dex dex="/Users/akash/Eventual-ITSP/app/build/intermediates/pre-dexed/release/core-3.2.0_444fd362a61b0dd2e537e4bbf434d328797e5016.jar" />
+    </item>
+    <item
+        jar="/Users/akash/.gradle/caches/modules-2/files-2.1/com.parse.bolts/bolts-applinks/1.4.0/8ad21bf21784dacce5f2043afb97218cc377e835/bolts-applinks-1.4.0.jar"
+        jumboMode="false"
+        revision="23.0.2"
+        sha1="8ad21bf21784dacce5f2043afb97218cc377e835">
+        <dex dex="/Users/akash/Eventual-ITSP/app/build/intermediates/pre-dexed/release/bolts-applinks-1.4.0_5253ef9f9ca838b793577f43092a76da5950c312.jar" />
+    </item>
+    <item
+        jar="/Users/akash/Eventual-ITSP/app/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.1.1/jars/classes.jar"
+        jumboMode="false"
+        revision="23.0.2"
+        sha1="5c5699834e9722f1c288fea2de82725d078ba127">
+        <dex dex="/Users/akash/Eventual-ITSP/app/build/intermediates/pre-dexed/release/com.android.support-appcompat-v7-23.1.1_acb8937818f61d93959e88360d26e77b29207e77.jar" />
+    </item>
+    <item
+        jar="/Users/akash/Eventual-ITSP/app/build/intermediates/exploded-aar/com.android.support/design/23.1.1/jars/classes.jar"
+        jumboMode="false"
+        revision="23.0.2"
+        sha1="379471b2bd17d9737c050345c08e8c7d16589784">
+        <dex dex="/Users/akash/Eventual-ITSP/app/build/intermediates/pre-dexed/release/com.android.support-design-23.1.1_c8a1122b340685ad60a5dcb616f95a928b715f69.jar" />
+    </item>
+    <item
+        jar="/Users/akash/Eventual-ITSP/app/build/intermediates/exploded-aar/com.journeyapps/zxing-android-embedded/3.0.2/jars/classes.jar"
+        jumboMode="false"
+        revision="23.0.2"
+        sha1="744a4b394a9a7db8a4c4680836d8544802a9cd64">
+        <dex dex="/Users/akash/Eventual-ITSP/app/build/intermediates/pre-dexed/release/com.journeyapps-zxing-android-embedded-3.0.2_b1e9a0526d2d72120f967156673f9adff0b1aece.jar" />
+    </item>
+    <item
+        jar="/Users/akash/Eventual-ITSP/app/build/intermediates/exploded-aar/com.android.support/recyclerview-v7/23.1.1/jars/classes.jar"
+        jumboMode="false"
+        revision="23.0.2"
+        sha1="09c5e804bc67fc0580360043dff067df574a60d4">
+        <dex dex="/Users/akash/Eventual-ITSP/app/build/intermediates/pre-dexed/release/com.android.support-recyclerview-v7-23.1.1_607a571389f73722b5a686d2b856c44ee25ce63d.jar" />
+    </item>
+    <item
+        jar="/Users/akash/.gradle/caches/modules-2/files-2.1/com.parse.bolts/bolts-tasks/1.4.0/d85884acf6810a3bbbecb587f239005cbc846dc4/bolts-tasks-1.4.0.jar"
+        jumboMode="false"
+        revision="23.0.2"
+        sha1="d85884acf6810a3bbbecb587f239005cbc846dc4">
+        <dex dex="/Users/akash/Eventual-ITSP/app/build/intermediates/pre-dexed/release/bolts-tasks-1.4.0_6b0a7a8d16b609e87c228b7964a8e76cd60dad0c.jar" />
+    </item>
+    <item
+        jar="/Users/akash/Eventual-ITSP/app/build/intermediates/exploded-aar/com.android.support/support-v4/23.1.1/jars/classes.jar"
+        jumboMode="false"
+        revision="23.0.2"
+        sha1="6cbc7773921fcfedbe55657578f0cbfe614778dc">
+        <dex dex="/Users/akash/Eventual-ITSP/app/build/intermediates/pre-dexed/release/com.android.support-support-v4-23.1.1_4676b3b2ecf72d3bab397a2e96ad27a248759f52.jar" />
+    </item>
+
+</items>
