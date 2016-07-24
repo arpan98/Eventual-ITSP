@@ -23,10 +23,12 @@
 
     <uses-permission android:name="co.eventual.ferozepurvale.eventual.permission.C2D_MESSAGE" />
 
-    <uses-feature android:name="android.hardware.camera" android:required="false" />
+    <uses-feature
+        android:name="android.hardware.camera"
+        android:required="false" />
 
     <application
-        android:name="co.eventual.ferozepurvale.eventual.ParseInitialize"
+        android:name=".ParseInitialize"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
@@ -43,7 +45,7 @@
             android:resource="@drawable/icon_bw" />
 
         <activity
-            android:name="co.eventual.ferozepurvale.eventual.MainActivity"
+            android:name=".MainActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait">
             <intent-filter>
@@ -59,23 +61,23 @@
                 <!-- Accepts URIs that begin with "http://www.example.com/gizmos” -->
                 <data
                     android:host="www.eventual.co.in"
-                    android:scheme="http"
-                    android:pathPrefix="/event"/>
+                    android:pathPrefix="/event"
+                    android:scheme="http" />
                 <!-- note that the leading "/" is required for pathPrefix -->
             </intent-filter>
         </activity>
         <activity
-            android:name="co.eventual.ferozepurvale.eventual.EventCreate"
+            android:name=".EventCreate"
             android:label="@string/title_activity_event_create"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name="co.eventual.ferozepurvale.eventual.SearchEvent"
+            android:name=".SearchEvent"
             android:label="@string/title_activity_search_event"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name="co.eventual.ferozepurvale.eventual.SearchResult"
+            android:name=".SearchResult"
             android:label="@string/title_activity_search_result"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
@@ -83,7 +85,7 @@
         <service android:name="com.parse.PushService" />
 
         <receiver
-            android:name="co.eventual.ferozepurvale.eventual.PushReceiver"
+            android:name=".PushReceiver"
             android:exported="false">
             <intent-filter>
                 <action android:name="com.parse.push.intent.RECEIVE" />
@@ -102,7 +104,10 @@
             </intent-filter>
         </receiver>
 
-        <activity android:name="co.eventual.ferozepurvale.eventual.MyEvents"></activity>
+        <activity android:name=".MyEvents" />
+        <activity android:name=".PotraitCaptureActivity"
+            android:screenOrientation="portrait">
+        </activity>
     </application>
 
 </manifest>

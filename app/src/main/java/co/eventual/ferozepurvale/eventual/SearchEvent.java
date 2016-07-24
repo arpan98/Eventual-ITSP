@@ -513,6 +513,8 @@ public class SearchEvent extends AppCompatActivity {
         handler.post(timeout);
         dialog = ProgressDialog.show(SearchEvent.this, "Retrieving", "Please wait...", true);
 
+        eventList.clear();
+
         // Querying according to filled in data and private=false
         SearchRequest searchRequest = new SearchRequest();
         searchRequest.execute(jsonData);
@@ -557,6 +559,7 @@ public class SearchEvent extends AppCompatActivity {
                 ioe.printStackTrace();
             }
             if (searchRequestsRemaining == 0) {
+                searchRequestsRemaining = 2;
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {

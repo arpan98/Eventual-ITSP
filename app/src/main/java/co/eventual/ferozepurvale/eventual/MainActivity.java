@@ -115,10 +115,6 @@ public class MainActivity extends AppCompatActivity {
             e.printStackTrace();
         }
 
-
-        Button make = (Button)findViewById(R.id.make_button);
-        Log.d(TAG,String.valueOf(getResources().getDisplayMetrics().density));
-        make.setTextSize(10 * getResources().getDisplayMetrics().density);
     }
 
     public void linkToWebsite(View v) {
@@ -134,6 +130,8 @@ public class MainActivity extends AppCompatActivity {
                 AskCameraPermission();
             } else {
                 IntentIntegrator integrator = new IntentIntegrator(this);
+                integrator.setCaptureActivity(PotraitCaptureActivity.class);
+                integrator.setOrientationLocked(true);
                 integrator.initiateScan();
             }
         }
