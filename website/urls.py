@@ -5,6 +5,7 @@ from website import views
 from website.models import EventData
 from django.contrib.sitemaps.views import sitemap
 from website.sitemaps import StaticSitemap, DynamicSitemap
+from website.views import landing
 
 sitemaps = {
     'static': StaticSitemap(),
@@ -13,7 +14,7 @@ sitemaps = {
 
 urlpatterns = [
     url(r'^admin/', include(admin.site.urls)),
-    url(r'^$', views.landing, name='landing'),
+    url(r'^$', landing, name='landing'),
     url(r'^create/?$', views.create, name='create'),
     url(r'^event/(?P<pk>\S+)/$',
         DetailView.as_view(model=EventData,
