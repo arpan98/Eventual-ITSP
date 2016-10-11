@@ -8,7 +8,7 @@ from copy import deepcopy
 
 
 def landing(request):
-    return HttpResponse("HEY")
+    return render(request, 'website/landing.html', {})
 
 
 def about(request):
